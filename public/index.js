@@ -134,7 +134,7 @@ $("#slider1").slider({ // вид первого слайдера и настро
     max: 10,
 	value: 5,
     create: function (event, ui) {
-        $('.ui-slider-handle').append('<input class="sliderValue" value="50"/>');
+        $('.ui-slider-handle').append('<input class="sliderValue" value="5"/>');
         $('.ui-slider-handle').append('<div class="sliderValue_2"></div>');
     },
     slide: function (event, ui) {
