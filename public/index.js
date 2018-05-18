@@ -130,9 +130,9 @@ module.exports = __webpack_require__.p + "images/favicon.ico";
 
 $("#slider1").slider({ // вид первого слайдера и настройки
     value: '',
-    min: 0,
-    max: 100,
-	value: 50,
+    min: 1,
+    max: 10,
+	value: 5,
     create: function (event, ui) {
         $('.ui-slider-handle').append('<input class="sliderValue" value="50"/>');
         $('.ui-slider-handle').append('<div class="sliderValue_2"></div>');
