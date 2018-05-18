@@ -1,0 +1,57 @@
+.switch
+	display block
+	position relative
+	width 60px
+	height 24px
+	border-radius 34px
+	cursor pointer
+	&__input
+		position absolute
+		top 0
+		left 0
+		opacity 0
+	&__text
+		background-color #E5E5E5
+		border-radius inherit
+		color #FFFFFF
+		display block
+		font-size 0.6rem
+		font-weight bold
+		height inherit
+		position relative
+	&__text:before
+	&__text:after
+		position absolute
+		top 50%
+		margin-top -0.5em
+		line-height 1
+		transition inherit
+	&__text:before
+		content attr(data-no)
+		right 11px
+	&__text:after
+		content attr(data-yes)
+		left 13px
+		color #FFFFFF
+		font-size 0.6rem
+		font-weight bold
+		opacity 0
+	&__input:checked ~ .switch__text
+		background-color #4EB7A8
+	&__input:checked ~ .switch__text:before
+		opacity 0
+	&__input:checked ~ .switch__text:after
+		opacity 1
+	&__slider
+		position absolute
+		top 3px
+		left 3px
+		height 18px
+		width 18px
+		background-color #FFFFFF
+		border-radius 100%
+	&__input:checked ~ .switch__slider
+		left 39px
+	&__text
+	&__slider
+		transition All 0.4s ease

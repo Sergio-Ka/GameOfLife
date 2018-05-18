@@ -1,0 +1,28 @@
+doctype html
+html(class="main")
+	head
+		meta(charset = "utf-8")/
+		meta(name = "description", content = "Game Of Life by John Conway")/
+		meta(name = "keywords", content = "Life Conway")/
+		meta(name = "author", content = "Sergey Karbyshev")/
+		meta(name = "viewport", content = "initial-scale=1.0, width=device-width")/
+		link(rel = "shortcut icon", href = "./public/images/favicon.ico", type = "image/x-icon")/
+		link(href="./vendors/jquery-ui-1.12.1.custom/jquery-ui-forFlatUI.css", rel="stylesheet")/
+		script(src="./vendors/jquery-ui-1.12.1.custom/external/jquery/jquery.js")
+		script(src="./vendors/jquery-ui-1.12.1.custom/jquery-ui.js")
+		title
+			block title
+	body(class="main__page")
+		include ../main-header/main-header.pug
+		div(class="page__controls")
+			block controls1
+		div(class="page__controls")
+			block controls2
+		div(class="page__controls")
+			block controls3
+		article(class="page__article")
+			div(class="page__content-left-block")
+			div(class="page__content")
+				block content
+			div(class="page__content-right-block")
+		include ../main-footer/main-footer.pug

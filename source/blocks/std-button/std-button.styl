@@ -1,0 +1,76 @@
+.std-button
+	width 118px
+	height 35px
+	border none
+	cursor pointer
+	color #FFFFFF
+	border-radius 4px
+	font-family 'Lato', Sans-Serif
+	font-weight bold
+	&_inactive-green
+		color #4EB7A8
+		background #FFFFFF
+		border 1px solid #4EB7A8
+		border-bottom 4px solid #4EB7A8
+	&_inactive-red
+		color #E75735
+		background #FFFFFF
+		border 1px solid #E75735
+		border-bottom 4px solid #E75735
+	&_color_green
+		background #4EB7A8
+		border-bottom 4px solid #28A290
+	&_color_red
+		background #E75735
+		border-bottom 4px solid #BF3F1F
+	&_ripple-eff
+		height 32px
+		position relative
+		overflow hidden
+		border none
+	&_ripple-eff:after
+		content ''
+		position absolute
+		top 50%
+		left 50%
+		width 5px
+		height 5px
+		background rgba(255, 255, 255, .5)
+		opacity 0
+		border-radius 100%
+		transform scale(1, 1) translate(-50%)
+		transform-origin 50% 50%
+	&_ripple-eff:focus:not(:active)::after
+		animation ripple 1s ease-out
+	&_size_small
+		width 78px
+		height 22px
+		font-size 0.48rem
+		letter-spacing 0.08rem
+		font-weight bold
+	&_theme_events
+		display block
+		background #FFFFFF
+		color #4EB7A8
+		font-size 0.6rem
+		letter-spacing 0.03rem
+		width 128px
+		height 25px
+		margin 19px 9px 24px
+	&_theme_chat
+		display block
+		font-family 'Lato', Sans-Serif
+		width 244px
+		height 35px
+		margin 15px auto
+
+@keyframes ripple
+	0%
+		transform scale(0, 0)
+		opacity 1
+	20%
+		transform scale(25, 25)
+		opacity 1
+	100%
+		opacity 0
+		transform scale(40, 40)

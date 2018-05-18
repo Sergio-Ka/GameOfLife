@@ -1,0 +1,1 @@
+import './main/images/favicon.ico';
