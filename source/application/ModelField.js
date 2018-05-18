@@ -13,7 +13,7 @@ export default class ModelField {
     }
 
     set X(value) {
-        this.x = value;
+        this.x = value + 2;
     }
 
     get Y() {
@@ -21,7 +21,7 @@ export default class ModelField {
     }
 
     set Y(value) {
-        this.y = value;
+        this.y = value + 2;
     }
 
     CreateRandomField() {

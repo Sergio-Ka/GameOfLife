@@ -5,13 +5,13 @@ block title
 
 block controls1
 	div(class="controls__std-button")
-		| Ш:
-	div(class="controls__std-button controls__std-button_big")
-		input(type="number", value="5", min="5", max="80")
-	div(class="controls__std-button")
 		| В:
 	div(class="controls__std-button controls__std-button_big")
-		input(type="number", value="5", min="5", max="80")
+		input(type="number", value="40", min="5", max="80", id = "field-height")
+	div(class="controls__std-button")
+		| Ш:
+	div(class="controls__std-button controls__std-button_big")
+		input(type="number", value="40", min="5", max="80", id = "field-width")
 
 block controls2
 	div(class="controls__std-button")
@@ -25,14 +25,12 @@ block controls2
 
 block controls3
 	div(class="controls__std-button")
-		button(class="std-button std-button_color_green", onclick="location.href='index.html'") СОЗДАТЬ
+		button(class="std-button std-button_color_green", id = "create-universe") СОЗДАТЬ
 	div(class="controls__std-button")
-		button(class="std-button std-button_color_red", onclick="location.href='about.html'") СТЕРЕТЬ
+		button(class="std-button std-button_color_red", id = "clear-universe") СТЕРЕТЬ
 	div(class="controls__std-button")
-		button(class="std-button std-button_color_green", onclick="location.href='portfolio.html'") СТАРТ
+		button(class="std-button std-button_color_green") СТАРТ
 	div(class="controls__std-button")
-		button(class="std-button std-button_color_red", onclick="location.href='contacts.html'") СТОП
+		button(class="std-button std-button_color_red") СТОП
 
 block content
-	h1(class="main__text") Вселенная.
-	

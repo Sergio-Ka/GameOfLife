@@ -1,9 +1,9 @@
 /* pages*/
 .page__header {
   width: 95%;
-  min-height: 150px;
+  min-height: 130px;
   margin: 0;
-  padding: 40px 0 0 5%;
+  padding: 10px 0 0 5%;
   border: none;
   background: #111;
   color: #fff;
@@ -15,22 +15,11 @@
   line-height: 0rem;
   margin-left: 13.5%;
 }
-.header__search {
-  margin: 1.6rem 0 2rem 0;
-  height: 28px;
-  width: 100%;
-}
 .header__positioner-1 {
   position: relative;
   width: 266px;
-  height: 93px;
   margin: 30px 0 0 0;
   float: left;
-}
-.header__right-block {
-  float: left;
-  width: 17%;
-  margin-left: 40%;
 }
 .page__footer {
   background: #fff;
@@ -42,25 +31,19 @@
   height: 80px;
   padding-top: 20px;
 }
-.main__calendar {
-  display: inline-block;
-  width: 279px;
-  margin: 20px 10px 20px 0;
+.isDead {
+  width: 8px;
+  height: 8px;
+  background: #fff;
 }
-.main__events {
-  display: inline-block;
-  margin: 20px 10px;
-  width: 279px;
-  vertical-align: top;
+.isAlive {
+  width: 8px;
+  height: 8px;
+  background: #24cc08;
 }
-.main__news {
-  display: inline-block;
-  margin: 20px 10px;
-  width: 279px;
-  vertical-align: top;
-}
-.main__text {
-  display: block;
+#universe {
+  border-spacing: 1;
+  margin: 0 auto;
 }
 /* blocks*/
 .std-button {
