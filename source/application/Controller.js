@@ -130,99 +130,183 @@ class ModelField {
         SetSquareValueOnPGByCoordinate(X, Y, value) {
             this.field[X][Y].ValueOnPenultimateGeneration = value;
         }
+}
+
+var EField = new ModelField();
+
+class View {
+    UpdateView(Field) {
+        // объявление переменных, получение доступа к элементу, в котором создается таблица вселенной
+            
+        var Table, Tr, Td;
+        var Content = document.getElementsByClassName("page__content")[0];
+    
+        // проверка наличия уже созданной ранее таблицы вселенной, если есть то удаляем ее
+            
+        Table = document.getElementById("universe");    
+        if ( Table != null) {
+            Content.removeChild(Table);
+        }
+            
+        // создаем новую таблицу вселенной с id=universe
+    
+        Table = Content.appendChild(document.createElement("table"));
+        Table.setAttribute("id", "universe");
+    
+        // заполняем ячейку строками и ячейками в них
+        // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
+        // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
+        
+        var str = "";
+
+        for (var i = 0; i < Field.X; i++) {
+            Tr = Table.appendChild(document.createElement("tr"));
+            for (var j = 0; j < Field.Y; j++) {
+                Td = Tr.appendChild(document.createElement("td"));
+                Td.setAttribute("id", i.toString()+" "+j.toString());
+                str += Field.ReadSquareValueByCoordinate(i, j);
+                if (Field.ReadSquareValueByCoordinate(i, j) == 0) {
+                    Td.setAttribute("class", "universe__square universe__square_isDead");
+                }
+                else if (Field.ReadSquareValueByCoordinate(i, j) == 1) {
+                    Td.setAttribute("class", "universe__square universe__square_isAlive");
+                }
+            }
+            str+="\n";
+        }
+
+        //alert(str);
+    }
+}
+
+
+
+class ModelChangeField {
+    
+        // метод для манипуляции экземпляром поля в соответствии с алгоритмом
+    
+        FieldManipulatorByAlgorithm(Field) {
+    
+            // создаем переменные - массив для пересчета и вспомогательную
+    
+            var RecountedField = new Array(Field.X);
+            var Summ;
+            var str1 = "";
+    
+            for (var i = 0; i < Field.X; i++) {
+    
+                RecountedField[i] = new Array(Field.Y);
+    
+                for (var j = 0; j < Field.Y; j++) {
+
+                    // для ячеек по краям, обнуляем их
+
+                    if (i == 0 || i == Field.X - 1 || j == 0 || j == Field.Y - 1) {
+                        RecountedField[i][j] = 0;
+                    }
+                    else {
+    
+                        // для каждой ячейки считаем количество живых соседей
+    
+                        Summ = 0;
+                        for (var k = i - 1; k < i + 2; k++) {
+                            for (var l = j - 1; l < j + 2; l++) {
+                                Summ += Field.ReadSquareValueByCoordinate(k, l);
+                            }
+                        }
+    
+                        // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
+    
+                        if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
+                            RecountedField[i][j] = 1;
+                            str1 += RecountedField[i][j];
+                        }
+                        else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
+                            RecountedField[i][j] = 1;
+                            str1 += RecountedField[i][j];
+                        }
+                        else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
+                            RecountedField[i][j] = 0;
+                            str1 += RecountedField[i][j];
+                        }
+                    }
+                }
+                str1 += "\n";
+            }
+    
+            /* записываем данные во все поля (на текущем, прошлом и позапрошлом шаге) каждого экземпляра ячейки
+            текущего экземпляра поля в соответствии с пересчитанным новым полем */
+    
+            for (i = 0; i < Field.X; i++) {
+                for (j = 0; j < Field.Y; j++) {
+                    Field.SetSquareValueOnPGByCoordinate(i, j, Field.ReadSquareValueByCoordinateOnLastGen(i, j));
+                    Field.SetSquareValueOnLGByCoordinate(i, j, Field.ReadSquareValueByCoordinate(i, j));
+                    Field.SetSquareValueByCoordinate(i, j, RecountedField[i][j]);
+                }
+            }
+
+            console.log(str1);
+        }
     }
 
 
 
-var Field = new ModelField();
+var StartGameFlag = false;
+
+var EView = new View();
+var EModelChangeField = new ModelChangeField();
 
 // обработчик кнопки создать, присвоение координат полю, вызов метода по созданию поля
 
 var buttonCreateU = document.getElementById("create-universe");
 buttonCreateU.addEventListener("click", function() {
-    Field.X = + document.getElementById("field-width").value;
-    Field.Y = + document.getElementById("field-height").value;
-    Field.CreateRandomField();
+    EField.X = + document.getElementById("field-width").value;
+    EField.Y = + document.getElementById("field-height").value;
+    EField.CreateRandomField();
 
-    var summ = "";
-    for (var i = 0; i < Field.X; i++) {
-        for (var j = 0; j < Field.Y; j++) {
-            summ = summ + Field.field[i][j].Value;
-        }
-        summ = summ + "\n";
-    }
-
-    //alert(summ);
-    /*console.log(Field.X);
-    console.log(Field.Y);*/
-    
-    var table, tr, td;
-    var content = document.getElementsByClassName("page__content")[0];
-    table = document.getElementById("universe");
-
-    if ( table != null) {
-        content.removeChild(table);
-    }
-    
-    table = content.appendChild(document.createElement("table"));
-    table.setAttribute("id", "universe");
-
-    for (var i = 0; i < Field.X; i++) {
-        tr = table.appendChild(document.createElement("tr"));
-        for (var j = 0; j < Field.Y; j++) {
-            td = tr.appendChild(document.createElement("td"));
-            td.setAttribute("id", i.toString()+j.toString());
-            if (Field.field[i][j].Value == 0) {
-            td.setAttribute("class", "isDead");
-            }
-            else if (Field.field[i][j].Value == 1) {
-                td.setAttribute("class", "isAlive");
-                }
-        }
-    }
+    EView.UpdateView(EField);
 });
 
-// обработчик кнопки стереть, присвоение координат полю, вызов метода по стиранию поля
+// обработчик кнопки стереть, присвоение координат полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
 
 var buttonClearU = document.getElementById("clear-universe");
 buttonClearU.addEventListener("click", function() {
-    Field.X = + document.getElementById("field-width").value;
-    Field.Y = + document.getElementById("field-height").value;
-    Field.ClearField();
+    EField.X = + document.getElementById("field-width").value;
+    EField.Y = + document.getElementById("field-height").value;
+    EField.ClearField();
 
-    var summ = "";
-    for (var i = 0; i < Field.X; i++) {
-        for (var j = 0; j < Field.Y; j++) {
-            summ = summ + Field.field[i][j].Value;
-        }
-        summ = summ + "\n";
-    }
-
-    //alert(summ);
-    //console.log(summ);
-
-    var table, tr, td;
-    var content = document.getElementsByClassName("page__content")[0];
-    table = document.getElementById("universe");
-
-    if ( table != null) {
-        content.removeChild(table);
-    }
-    
-    table = content.appendChild(document.createElement("table"));
-    table.setAttribute("id", "universe");
-
-    for (var i = 0; i < Field.X; i++) {
-        tr = table.appendChild(document.createElement("tr"));
-        for (var j = 0; j < Field.Y; j++) {
-            td = tr.appendChild(document.createElement("td"));
-            td.setAttribute("id", i.toString()+j.toString());
-            if (Field.field[i][j].Value == 0) {
-            td.setAttribute("class", "isDead");
-            }
-            else if (Field.field[i][j].Value == 1) {
-                td.setAttribute("class", "isAlive");
-                }
-        }
-    }
+    EView.UpdateView(EField);
 });
+
+// обработчик кнопки старт, запускает таймер
+
+/*var buttonStartGame = document.getElementById("start-game");
+buttonStartGame.addEventListener("click", function() {
+    StartGameFlag = true;
+});*/
+
+// таймер для циклического повторения вызова метода, манипулирующего данными поля
+
+/*if (StartGameFlag) {
+    var timerId = setInterval(function() {
+        EModelChangeField.FieldManipulatorByAlgorithm(EField);
+        EView.UpdateView(EField);
+      }, 300);
+      
+}*/
+  
+  /* через 5 сек остановить повторы
+  setTimeout(function() {
+    clearInterval(timerId);
+    alert( 'стоп' );
+  }, 5000);*/
+
+  var buttonTick = document.getElementById("tick");
+  buttonTick.addEventListener("click", function() {
+    EModelChangeField.FieldManipulatorByAlgorithm(EField);
+    EView.UpdateView(EField);
+  });
+
+// обработчик клика по ячейке
+
+var squareClick;

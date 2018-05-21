@@ -2,11 +2,15 @@
 
 export default class ModelField {
 
+    // инициализация полей класса при создании
+
     constructor() {
         this.x = 3;
         this.y = 3;
         this.field;
     }
+
+    // геттеры и сеттеры для полей класса
 
     get X() {
         return this.x;
@@ -23,6 +27,8 @@ export default class ModelField {
     set Y(value) {
         this.y = value + 2;
     }
+
+    // методы создания рандомно заполненного поля и отчистки поля
 
     CreateRandomField() {
         this.field = new Array(this.x);
@@ -53,6 +59,8 @@ export default class ModelField {
         }
     }
 
+    // методы чтения данных из ячеек на текущем, последнем и предпоследнем поколении
+
     ReadSquareValueByCoordinate(X, Y) {
         return this.field[X][Y].Value;
     }
@@ -65,6 +73,8 @@ export default class ModelField {
         return this.field[X][Y].ValueOnPenultimateGeneration;
     }
 
+    // метод изменения состояния ячейки по передаваемым координатам на текущем поколении
+
     ChangeSquareValueByCoordinate(X,  Y) {
         if (X == 0 || X == this.x - 1 || Y == 0 || Y == this.y - 1) {
             this.field[X][Y].Value = 0;
@@ -73,6 +83,8 @@ export default class ModelField {
             this.field[X][Y].ChangeValue();
         }
     }
+
+    // методы записи данных в ячейки на текущем, последнем и предпоследнем поколении
 
     SetSquareValueByCoordinate(X, Y, value) {
         this.field[X][Y].Value = value;

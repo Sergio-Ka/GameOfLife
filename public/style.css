@@ -31,14 +31,14 @@
   height: 80px;
   padding-top: 20px;
 }
-.isDead {
+.universe__square {
   width: 8px;
   height: 8px;
+}
+.universe__square_isDead {
   background: #fff;
 }
-.isAlive {
-  width: 8px;
-  height: 8px;
+.universe__square_isAlive {
   background: #24cc08;
 }
 #universe {

@@ -1,41 +1,43 @@
 'use strict';
 
 export default class View {
-    UpdateView(ModelField)
-    {
-        // элементу, который выводит таблицы задаем количество столбцов и строк
-        Form1.dataGridView1.ColumnCount = ModelField.X;
-        Form1.dataGridView1.RowCount = ModelField.Y;
 
-        // устанавливаем равномерную ширину и высоту строк расчетно, делением ширины и высоты поля на количество строк и столбцов
-        for (int i = 0; i < ModelField.X; i++)
-        {
-            Form1.dataGridView1.Rows[i].Height = (int)(Form1.dataGridView1.Height / ModelField.X);
-        }
-        for (int j = 0; j < ModelField.Y; j++)
-        {
-            Form1.dataGridView1.Columns[j].Width = (int)(Form1.dataGridView1.Width / ModelField.Y);
-        }
+    // метод для отрисовки поля на странице
 
-        for (int i = 0; i < ModelField.X; i++)
-        {
-            for (int j = 0; j < ModelField.Y; j++)
-            {
-                if (ModelField.ReadSquareValueByCoordinate(i, j) == 0)
-                {
-                    Form1.dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.White;
+    UpdateView(Field) {
+        // объявление переменных, получение доступа к элементу, в котором создается таблица вселенной
+            
+        var table, tr, td;
+        var content = document.getElementsByClassName("page__content")[0];
+    
+        // проверка наличия уже созданной ранее таблицы вселенной, если есть то удаляем ее
+            
+        table = document.getElementById("universe");    
+        if ( table != null) {
+            content.removeChild(table);
+        }
+            
+        // создаем новую таблицу вселенной с id=universe
+    
+        table = content.appendChild(document.createElement("table"));
+        table.setAttribute("id", "universe");
+    
+        // заполняем ячейку строками и ячейками в них
+        // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
+        // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
+        
+        for (var i = 0; i < Field.X; i++) {
+            tr = table.appendChild(document.createElement("tr"));
+            for (var j = 0; j < Field.Y; j++) {
+                td = tr.appendChild(document.createElement("td"));
+                td.setAttribute("id", i.toString()+" "+j.toString());
+                if (Field.field[i][j].Value == 0) {
+                    td.setAttribute("class", "universe__square universe__square_isDead");
                 }
-                else if (ModelField.ReadSquareValueByCoordinate(i, j) == 1)
-                {
-                    Form1.dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Green;
-                }
-                else if (ModelField.ReadSquareValueByCoordinate(i, j) == 1)
-                {
-                    Form1.dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Green;
+                else if (Field.field[i][j].Value == 1) {
+                    td.setAttribute("class", "universe__square universe__square_isAlive");
                 }
             }
         }
-
-        Form1.dataGridView1.ClearSelection();
     }
 }
