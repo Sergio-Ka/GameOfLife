@@ -242,7 +242,7 @@ class ModelChangeField {
 
 
 
-var TimerId, Speed, Step = 0;
+var TimerId, Speed = 7, Step = 0;
 
 var Generation = document.getElementById("generation");
 
@@ -256,8 +256,9 @@ ButtonCreateU.addEventListener("click", function() {
     EField.X = +document.getElementById("field-width").value;
     EField.Y = +document.getElementById("field-height").value;
     EField.CreateRandomField();
-
     EView.UpdateView(EField);
+    Step = 1;
+    Generation.setAttribute("value", Step);
 });
 
 // обработчик кнопки стереть, присвоение координат полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
@@ -268,6 +269,8 @@ ButtonClearU.addEventListener("click", function() {
     EField.Y = + document.getElementById("field-height").value;
     EField.ClearField();
     EView.UpdateView(EField);
+    Step = 1;
+    Generation.setAttribute("value", Step);
 });
 
 // обработчик кнопки старт, запускает таймер
@@ -280,7 +283,7 @@ ButtonStartGame.addEventListener("click", function() {
         EView.UpdateView(EField);
         Step++;
         Generation.setAttribute("value", Step);
-    }, Speed*100);
+    }, (10-Speed)*100);
 });
 
 // обработчик кнопки стоп, обнуляет таймер
@@ -292,10 +295,12 @@ ButtonStopGame.addEventListener("click", function() {
 
 // обработчик кнопки для продвижения на 1 шаг
 
-  var ButtonTick = document.getElementById("tick");
-  ButtonTick.addEventListener("click", function() {
+  var ButtonStep = document.getElementById("step");
+  ButtonStep.addEventListener("click", function() {
     EModelChangeField.FieldManipulatorByAlgorithm(EField);
     EView.UpdateView(EField);
+    Step++;
+    Generation.setAttribute("value", Step);
   });
 
 // обработчик клика по ячейке
