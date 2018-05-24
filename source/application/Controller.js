@@ -74,7 +74,7 @@ class ModelField {
     
             for (var i = 0; i < this.x; i++) {
                 this.field[i] = new Array(this.y);
-                for (var j = 0; j < this.x; j++) {
+                for (var j = 0; j < this.y; j++) {
                     this.field[i][j] = new ModelSquare();
                     if (i == 0 || i == this.x - 1 || j == 0 || j == this.y - 1) {
                         this.field[i][j].Value = 0;
@@ -191,44 +191,39 @@ class ModelChangeField {
     
             var RecountedField = new Array(Field.X);
             var Summ;
-            var str1 = "";
+            var str1 = "", str2 = "";
     
-            for (var i = 0; i < Field.X; i++) {
+            for (var i = 1; i < Field.X-1; i++) {
     
                 RecountedField[i] = new Array(Field.Y);
     
-                for (var j = 0; j < Field.Y; j++) {
+                for (var j = 1; j < Field.Y-1; j++) {
+                    RecountedField[i][j]=0;
 
-                    // для ячеек по краям, обнуляем их
 
-                    if (i == 0 || i == Field.X - 1 || j == 0 || j == Field.Y - 1) {
-                        RecountedField[i][j] = 0;
+                    // для каждой ячейки считаем количество живых соседей
+    
+                    Summ = 0;
+                    for (var k = i - 1; k < i + 2; k++) {
+                        for (var l = j - 1; l < j + 2; l++) {
+                            Summ += +Field.ReadSquareValueByCoordinate(k, l);
+                        }
                     }
-                    else {
     
-                        // для каждой ячейки считаем количество живых соседей
-    
-                        Summ = 0;
-                        for (var k = i - 1; k < i + 2; k++) {
-                            for (var l = j - 1; l < j + 2; l++) {
-                                Summ += Field.ReadSquareValueByCoordinate(k, l);
-                            }
-                        }
-    
-                        // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
-    
-                        if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
-                            RecountedField[i][j] = 1;
-                            str1 += RecountedField[i][j];
-                        }
-                        else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
-                            RecountedField[i][j] = 1;
-                            str1 += RecountedField[i][j];
-                        }
-                        else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
-                            RecountedField[i][j] = 0;
-                            str1 += RecountedField[i][j];
-                        }
+                    // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
+                    str1 += Summ;
+
+                    if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
+                        RecountedField[i][j] = 1;
+                        //str1 += Field.ReadSquareValueByCoordinate(i, j);
+                    }
+                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
+                        RecountedField[i][j] = 1;
+                        //str1 += Field.ReadSquareValueByCoordinate(i, j);
+                    }
+                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
+                        RecountedField[i][j] = 0;
+                        //str1 += Field.ReadSquareValueByCoordinate(i, j);
                     }
                 }
                 str1 += "\n";
@@ -241,10 +236,17 @@ class ModelChangeField {
                 for (j = 0; j < Field.Y; j++) {
                     Field.SetSquareValueOnPGByCoordinate(i, j, Field.ReadSquareValueByCoordinateOnLastGen(i, j));
                     Field.SetSquareValueOnLGByCoordinate(i, j, Field.ReadSquareValueByCoordinate(i, j));
-                    Field.SetSquareValueByCoordinate(i, j, RecountedField[i][j]);
+                    if (i == 0 || i == Field.X-1 || j == 0 || j == Field.Y-1) {
+                        Field.SetSquareValueByCoordinate(i, j, 0);
+                    }
+                    else {
+                        Field.SetSquareValueByCoordinate(i, j, RecountedField[i][j]);
+                    }
+                    str2 += Field.ReadSquareValueByCoordinate(i, j);
                 }
+                str2 += "\n";
             }
-
+            //alert(str2);
             console.log(str1);
         }
     }
