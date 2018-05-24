@@ -322,42 +322,40 @@ class ModelChangeField {
     
             var RecountedField = new Array(Field.X);
             var Summ;
-            var str1 = "", str2 = "";
     
-            for (var i = 1; i < Field.X-1; i++) {
+            for (var i = 0; i < Field.X; i++) {
     
                 RecountedField[i] = new Array(Field.Y);
     
-                for (var j = 1; j < Field.Y-1; j++) {
-                    RecountedField[i][j]=0;
+                for (var j = 0; j < Field.Y; j++) {
 
+                    // инициализация элементов вспомогательного массива нулями, чтобы всяких там сюрпризов не было
+
+                    RecountedField[i][j] = 0;
 
                     // для каждой ячейки считаем количество живых соседей
-    
-                    Summ = 0;
-                    for (var k = i - 1; k < i + 2; k++) {
-                        for (var l = j - 1; l < j + 2; l++) {
-                            Summ += +Field.ReadSquareValueByCoordinate(k, l);
+
+                    if (i != 0 && i != Field.X-1 && j != 0 && j != Field.Y-1) {
+                        Summ = 0;
+                        for (var k = i - 1; k < i + 2; k++) {
+                            for (var l = j - 1; l < j + 2; l++) {
+                                Summ += +Field.ReadSquareValueByCoordinate(k, l);
+                            }
+                        }
+        
+                        // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
+
+                        if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
+                            RecountedField[i][j] = 1;
+                        }
+                        else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
+                            RecountedField[i][j] = 1;
+                        }
+                        else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
+                            RecountedField[i][j] = 0;
                         }
                     }
-    
-                    // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
-                    str1 += Summ;
-
-                    if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
-                        RecountedField[i][j] = 1;
-                        //str1 += Field.ReadSquareValueByCoordinate(i, j);
-                    }
-                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
-                        RecountedField[i][j] = 1;
-                        //str1 += Field.ReadSquareValueByCoordinate(i, j);
-                    }
-                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
-                        RecountedField[i][j] = 0;
-                        //str1 += Field.ReadSquareValueByCoordinate(i, j);
-                    }
                 }
-                str1 += "\n";
             }
     
             /* записываем данные во все поля (на текущем, прошлом и позапрошлом шаге) каждого экземпляра ячейки
@@ -367,34 +365,27 @@ class ModelChangeField {
                 for (j = 0; j < Field.Y; j++) {
                     Field.SetSquareValueOnPGByCoordinate(i, j, Field.ReadSquareValueByCoordinateOnLastGen(i, j));
                     Field.SetSquareValueOnLGByCoordinate(i, j, Field.ReadSquareValueByCoordinate(i, j));
-                    if (i == 0 || i == Field.X-1 || j == 0 || j == Field.Y-1) {
-                        Field.SetSquareValueByCoordinate(i, j, 0);
-                    }
-                    else {
-                        Field.SetSquareValueByCoordinate(i, j, RecountedField[i][j]);
-                    }
-                    str2 += Field.ReadSquareValueByCoordinate(i, j);
+                    Field.SetSquareValueByCoordinate(i, j, RecountedField[i][j]);
                 }
-                str2 += "\n";
             }
-            //alert(str2);
-            console.log(str1);
         }
     }
 
 
 
-var StartGameFlag = false;
+var TimerId, Speed, Step = 0;
+
+var Generation = document.getElementById("generation");
 
 var EView = new View();
 var EModelChangeField = new ModelChangeField();
 
 // обработчик кнопки создать, присвоение координат полю, вызов метода по созданию поля
 
-var buttonCreateU = document.getElementById("create-universe");
-buttonCreateU.addEventListener("click", function() {
-    EField.X = + document.getElementById("field-width").value;
-    EField.Y = + document.getElementById("field-height").value;
+var ButtonCreateU = document.getElementById("create-universe");
+ButtonCreateU.addEventListener("click", function() {
+    EField.X = +document.getElementById("field-width").value;
+    EField.Y = +document.getElementById("field-height").value;
     EField.CreateRandomField();
 
     EView.UpdateView(EField);
@@ -402,40 +393,38 @@ buttonCreateU.addEventListener("click", function() {
 
 // обработчик кнопки стереть, присвоение координат полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
 
-var buttonClearU = document.getElementById("clear-universe");
-buttonClearU.addEventListener("click", function() {
+var ButtonClearU = document.getElementById("clear-universe");
+ButtonClearU.addEventListener("click", function() {
     EField.X = + document.getElementById("field-width").value;
     EField.Y = + document.getElementById("field-height").value;
     EField.ClearField();
-
     EView.UpdateView(EField);
 });
 
 // обработчик кнопки старт, запускает таймер
 
-/*var buttonStartGame = document.getElementById("start-game");
-buttonStartGame.addEventListener("click", function() {
-    StartGameFlag = true;
-});*/
-
-// таймер для циклического повторения вызова метода, манипулирующего данными поля
-
-/*if (StartGameFlag) {
-    var timerId = setInterval(function() {
+var ButtonStartGame = document.getElementById("start-game");
+ButtonStartGame.addEventListener("click", function() {
+    TimerId = setInterval(function() {
+        Speed = +document.getElementsByClassName("sliderValue")[0].value;
         EModelChangeField.FieldManipulatorByAlgorithm(EField);
         EView.UpdateView(EField);
-      }, 300);
-      
-}*/
-  
-  /* через 5 сек остановить повторы
-  setTimeout(function() {
-    clearInterval(timerId);
-    alert( 'стоп' );
-  }, 5000);*/
+        Step++;
+        Generation.setAttribute("value", Step);
+    }, Speed*100);
+});
 
-  var buttonTick = document.getElementById("tick");
-  buttonTick.addEventListener("click", function() {
+// обработчик кнопки стоп, обнуляет таймер
+
+var ButtonStopGame = document.getElementById("stop-game");
+ButtonStopGame.addEventListener("click", function() {
+    clearInterval(TimerId);
+});
+
+// обработчик кнопки для продвижения на 1 шаг
+
+  var ButtonTick = document.getElementById("tick");
+  ButtonTick.addEventListener("click", function() {
     EModelChangeField.FieldManipulatorByAlgorithm(EField);
     EView.UpdateView(EField);
   });
