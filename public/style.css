@@ -44,6 +44,7 @@
 #universe {
   border-spacing: 1;
   margin: 0 auto;
+  background: #fff;
 }
 /* blocks*/
 .std-button {
@@ -178,28 +179,6 @@
     transform: scale(40, 40);
   }
 }
-.arr-button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: none;
-  color: #fff;
-}
-.arr-button__arrow {
-  width: 27px;
-  height: 37px;
-}
-.arr-button_color_green {
-  background: #4eb7a8;
-}
-.arr-button_color_gray {
-  background: #e5e5e5;
-}
-.arr-button_color_white {
-  background: #fff;
-  color: #4eb7a8;
-  border: 3px solid #4eb7a8;
-}
 .sliderValue {
   position: absolute;
   left: -9px;
@@ -220,89 +199,6 @@
   left: 50%;
   margin-left: -5px;
   top: -9px;
-}
-.switch {
-  display: block;
-  position: relative;
-  width: 60px;
-  height: 24px;
-  border-radius: 34px;
-  cursor: pointer;
-}
-.switch__input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-}
-.switch__text {
-  background-color: #e5e5e5;
-  border-radius: inherit;
-  color: #fff;
-  display: block;
-  font-size: 0.6rem;
-  font-weight: bold;
-  height: inherit;
-  position: relative;
-}
-.switch__text:before,
-.switch__text:after {
-  position: absolute;
-  top: 50%;
-  margin-top: -0.5em;
-  line-height: 1;
-  transition: inherit;
-}
-.switch__text:before {
-  content: attr(data-no);
-  right: 11px;
-}
-.switch__text:after {
-  content: attr(data-yes);
-  left: 13px;
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: bold;
-  opacity: 0;
-}
-.switch__input:checked ~ .switch__text {
-  background-color: #4eb7a8;
-}
-.switch__input:checked ~ .switch__text:before {
-  opacity: 0;
-}
-.switch__input:checked ~ .switch__text:after {
-  opacity: 1;
-}
-.switch__slider {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  height: 18px;
-  width: 18px;
-  background-color: #fff;
-  border-radius: 100%;
-}
-.switch__input:checked ~ .switch__slider {
-  left: 39px;
-}
-.switch__text,
-.switch__slider {
-  transition: All 0.4s ease;
-}
-.tick-box-input {
-  display: none;
-}
-.tick-box-circle-arrow {
-  display: inline-block;
-  width: 23px;
-  height: 23px;
-  margin-right: 17px;
-  background: url(images/tick-boxes.png) -30px 0 no-repeat;
-  cursor: pointer;
-}
-.tick-box-input:checked + label span {
-  background: url(images/tick-boxes.png) 0 0 no-repeat;
 }
 .main {
   font-size: 18px;

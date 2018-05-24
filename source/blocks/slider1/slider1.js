@@ -1,10 +1,10 @@
 $("#slider1").slider({ // вид первого слайдера и настройки
     value: '',
-    min: 1,
+    min: 0,
     max: 10,
-	value: 7,
+	value: 8,
     create: function (event, ui) {
-        $('.ui-slider-handle').append('<input class="sliderValue" value="7"/>');
+        $('.ui-slider-handle').append('<input class="sliderValue" value="8"/>');
         $('.ui-slider-handle').append('<div class="sliderValue_2"></div>');
     },
     slide: function (event, ui) {
