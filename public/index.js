@@ -288,14 +288,12 @@ class View {
         // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
         // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
         
-        var str = "";
 
         for (var i = 0; i < Field.X; i++) {
             Tr = Table.appendChild(document.createElement("tr"));
             for (var j = 0; j < Field.Y; j++) {
                 Td = Tr.appendChild(document.createElement("td"));
                 Td.setAttribute("id", i.toString()+" "+j.toString());
-                str += Field.ReadSquareValueByCoordinate(i, j);
                 if (Field.ReadSquareValueByCoordinate(i, j) == 0) {
                     Td.setAttribute("class", "universe__square universe__square_isDead");
                 }
@@ -303,10 +301,7 @@ class View {
                     Td.setAttribute("class", "universe__square universe__square_isAlive");
                 }
             }
-            str+="\n";
         }
-
-        //alert(str);
     }
 }
 
@@ -518,7 +513,72 @@ ButtonStopGame.addEventListener("click", function() {
 
 // обработчик клика по ячейке
 
-var squareClick;
+document.body.addEventListener("click", function(event
+) {
+    if (event.target.nodeName == "TD") {
+        var Coordinate = event.target.getAttribute("id").split(" ");
+        EField.ChangeSquareValueByCoordinate(Coordinate[0],  Coordinate[1]);
+        EView.UpdateView(EField);
+    }
+});
+
+// обработчик анфокуса поля ввода высоты
+
+var HeightInput = document.getElementById("field-height");
+HeightInput.onblur = function() {
+    if (document.getElementById("field-height").value / 2 == 0) {
+        document.getElementById("field-height").value = 38;
+    }
+    if (+document.getElementById("field-height").value > 100) {
+        EField.X = 100;
+        document.getElementById("field-height").value = 100;
+    }
+    else {
+        EField.X = +document.getElementById("field-height").value;
+    }
+    if (document.getElementById("field-width").value / 2 == 0) {
+        document.getElementById("field-width").value = 100;
+    }
+    if (+document.getElementById("field-width").value > 100) {
+        EField.Y = 100;
+        document.getElementById("field-width").value = 100;
+    }
+    else {
+        EField.Y = +document.getElementById("field-width").value;
+    }
+
+    EField.CreateRandomField();
+    EView.UpdateView(EField);
+}
+
+// обработчик анфокуса поля ввода ширины
+
+var WidthInput = document.getElementById("field-width");
+WidthInput.onblur = function() {
+    if (document.getElementById("field-height").value / 2 == 0) {
+        document.getElementById("field-height").value = 38;
+    }
+    if (+document.getElementById("field-height").value > 100) {
+        EField.X = 100;
+        document.getElementById("field-height").value = 100;
+    }
+    else {
+        EField.X = +document.getElementById("field-height").value;
+    }
+    if (document.getElementById("field-width").value / 2 == 0) {
+        document.getElementById("field-width").value = 100;
+    }
+    if (+document.getElementById("field-width").value > 100) {
+        EField.Y = 100;
+        document.getElementById("field-width").value = 100;
+    }
+    else {
+        EField.Y = +document.getElementById("field-width").value;
+    }
+
+    EField.CreateRandomField();
+    EView.UpdateView(EField);
+}
 
 /***/ })
 /******/ ]);
