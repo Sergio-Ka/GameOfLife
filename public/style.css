@@ -34,7 +34,7 @@
 .universe__square {
   width: 8px;
   height: 8px;
-  border: 1px solid #fff;
+  border: 1px solid #eee;
 }
 .universe__square_isDead {
   background: #fff;
