@@ -271,6 +271,7 @@ function Timer() {
         Generation.setAttribute("value", Step);
         if (EModelStopGame.StopGame(EField)) {
             clearInterval(TimerId);
+            StartFlag = false;
             alert("Игра остановлена, так как сложились устойчивые комбинации либо во вселенной не осталось жизни!");
         }
     }, (10 - Speed) * 100);
