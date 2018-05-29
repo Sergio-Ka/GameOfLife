@@ -127,52 +127,248 @@ $("#slider1").slider({ // вид первого слайдера и настро
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/*import ModelSquare from './ModelSquare';
-import ModelField from './ModelField';*/
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelField__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ModelChangeField__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ModelStopGame__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__View__ = __webpack_require__(11);
+
+
+
+
+
+var TimerId, Speed = 7, Step = 0, StartFlag = false, CreateFieldFlag = false;
+
+var Generation = document.getElementById("generation");
+
+var EField = new __WEBPACK_IMPORTED_MODULE_0__ModelField__["a" /* default */]();
+var EView = new __WEBPACK_IMPORTED_MODULE_3__View__["a" /* default */]();
+var EModelChangeField = new __WEBPACK_IMPORTED_MODULE_1__ModelChangeField__["a" /* default */]();
+var EModelStopGame = new __WEBPACK_IMPORTED_MODULE_2__ModelStopGame__["a" /* default */]();
+
+// обработчик кнопки создать, присвоение размеров полю, вызов метода по созданию поля
+
+var ButtonCreateU = document.getElementById("create-universe");
+ButtonCreateU.addEventListener("click", function () {
+    MakeFieldWithStep();
+    CreateFieldFlag = true;
+});
+
+// обработчик кнопки стереть, присвоение размеров полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
+
+var ButtonClearU = document.getElementById("clear-universe");
+ButtonClearU.addEventListener("click", function () {
+    SetSizeOfField();
+
+    EField.ClearField();
+    EView.UpdateView(EField);
+    Step = 1;
+    Generation.setAttribute("value", Step);
+    CreateFieldFlag = true;
+});
+
+// обработчик кнопки старт, запускает таймер
+
+var ButtonStartGame = document.getElementById("start-game");
+ButtonStartGame.addEventListener("click", function () {
+    Timer();
+    StartFlag = true;
+});
+
+// обработчик кнопки стоп, обнуляет таймер
+
+var ButtonStopGame = document.getElementById("stop-game");
+ButtonStopGame.addEventListener("click", function () {
+    clearInterval(TimerId);
+    StartFlag = false;
+});
+
+// обработчик кнопки для продвижения на 1 шаг
+
+var ButtonStep = document.getElementById("step");
+ButtonStep.addEventListener("click", function () {
+    EModelChangeField.FieldManipulatorByAlgorithm(EField);
+    EView.UpdateView(EField);
+    Step++;
+    Generation.setAttribute("value", Step);
+});
+
+// обработчик клика по ячейке
+
+document.body.addEventListener("click", function (event) {
+    if (event.target.nodeName == "TD") {
+        var Coordinate = event.target.getAttribute("id").split(" ");
+        EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
+        EView.UpdateView(EField);
+    }
+});
+
+// обработчик анфокуса поля ввода высоты
+
+var HeightInput = document.getElementById("field-height");
+HeightInput.onblur = function () {
+    var X = +document.getElementById("field-height").value;
+
+    if (CreateFieldFlag) {
+        if (X < EField.X) {
+            EField.CropFieldOnX(X);
+        }
+        else if (X > EField.X) {
+            EField.EnlargeFieldOnX(X);
+        }
+
+        EView.UpdateView(EField);
+    }
+}
+
+// обработчик анфокуса поля ввода ширины
+
+var WidthInput = document.getElementById("field-width");
+WidthInput.onblur = function () {
+    var Y = +document.getElementById("field-width").value;
+
+    if (CreateFieldFlag) {
+        if (Y < EField.Y) {
+            EField.CropFieldOnY(Y);
+        }
+        else if (Y > EField.Y) {
+            EField.EnlargeFieldOnY(Y);
+        }
+
+        EView.UpdateView(EField);
+    }
+}
+
+// обработчики контрола скорости для динамического ее изменения
+
+var Slider = document.getElementsByClassName("ui-slider-handle")[0];
+Slider.addEventListener("mouseup", function () {
+    TimerWithCond();
+});
+
+Slider.addEventListener("mousemove", function () {
+    TimerWithCond();
+});
+
+// функции +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+function TimerWithCond() {
+    if (StartFlag) {
+        Timer();
+    }
+}
+
+function Timer() {
+    Speed = +document.getElementsByClassName("sliderValue")[0].value;
+    clearInterval(TimerId);
+    TimerId = setInterval(function () {
+        EModelChangeField.FieldManipulatorByAlgorithm(EField);
+        EView.UpdateView(EField);
+        Step++;
+        Generation.setAttribute("value", Step);
+        if (EModelStopGame.StopGame(EField)) {
+            clearInterval(TimerId);
+            alert("Игра остановлена, так как сложились устойчивые комбинации либо во вселенной не осталось жизни!");
+        }
+    }, (10 - Speed) * 100);
+}
+
+function MakeFieldWithStep() {
+    MakeField();
+    Step = 1;
+    Generation.setAttribute("value", Step);
+}
+
+function MakeField() {
+    SetSizeOfField();
+
+    EField.CreateRandomField();
+    EView.UpdateView(EField);
+}
+
+function SetSizeOfField() {
+    if (document.getElementById("field-height").value / 2 == 0) {
+        document.getElementById("field-height").value = 38;
+    }
+    if (+document.getElementById("field-height").value > 100) {
+        EField.X = 100;
+        document.getElementById("field-height").value = 100;
+    }
+    else {
+        EField.X = +document.getElementById("field-height").value;
+    }
+    if (document.getElementById("field-width").value / 2 == 0) {
+        document.getElementById("field-width").value = 100;
+    }
+    if (+document.getElementById("field-width").value > 100) {
+        EField.Y = 100;
+        document.getElementById("field-width").value = 100;
+    }
+    else {
+        EField.Y = +document.getElementById("field-width").value;
+    }
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
 
 class ModelSquare {
 
-    constructor() {
-        this.value = 0;
-        this.valueOnLG = 0;
-        this.valueOnPG = 0;
-    }
+	constructor() {
+		this.value = 0;
+		this.valueOnLG = 0;
+		this.valueOnPG = 0;
+	}
 
-    get Value() {
-        return this.value;
-    }
+	get Value() {
+		return this.value;
+	}
 
-    set Value(val) {
-        this.value = val;
-    }
+	set Value(val) {
+		this.value = val;
+	}
 
-    get ValueOnLastGeneration() {
-        return this.valueOnLG;
-    }
+	get ValueOnLastGeneration() {
+		return this.valueOnLG;
+	}
 
-    set ValueOnLastGeneration(val) {
-        this.valueOnLG = val;
-    }
+	set ValueOnLastGeneration(val) {
+		this.valueOnLG = val;
+	}
 
-    get ValueOnPenultimateGeneration() {
-        return this.valueOnPG;
-    }
+	get ValueOnPenultimateGeneration() {
+		return this.valueOnPG;
+	}
 
-    set ValueOnPenultimateGeneration(val) {
-        this.valueOnPG = val;
-    }
+	set ValueOnPenultimateGeneration(val) {
+		this.valueOnPG = val;
+	}
 
-    ChangeValue() {
-        if (this.value == 0) {
-            this.value = 1;
-        }
-        else {
-            this.value = 0;
-        }
-    }
+	ChangeValue() {
+		if (this.value == 0) {
+			this.value = 1;
+		}
+		else {
+			this.value = 0;
+		}
+	}
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = ModelSquare;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelSquare__ = __webpack_require__(7);
 
 
 
@@ -206,7 +402,7 @@ class ModelField {
         for (var i = 0; i < this.x; i++) {
             this.field[i] = new Array(this.y);
             for (var j = 0; j < this.y; j++) {
-                this.field[i][j] = new ModelSquare();
+                this.field[i][j] = new __WEBPACK_IMPORTED_MODULE_0__ModelSquare__["a" /* default */]();
                 if (i == 0 || i == this.x - 1 || j == 0 || j == this.y - 1) {
                     this.field[i][j].Value = 0;
                 }
@@ -223,7 +419,7 @@ class ModelField {
         for (var i = 0; i < this.x; i++) {
             this.field[i] = new Array(this.y);
             for (var j = 0; j < this.y; j++) {
-                this.field[i][j] = new ModelSquare();
+                this.field[i][j] = new __WEBPACK_IMPORTED_MODULE_0__ModelSquare__["a" /* default */]();
                 this.field[i][j].Value = 0;
             }
         }
@@ -263,7 +459,7 @@ class ModelField {
             for (var i = this.field.length; i < X + 2; i++) {
                 this.field[i] = new Array(this.y);
                 for (var j = 0; j < this.y; j++) {
-                    this.field[i][j] = new ModelSquare();
+                    this.field[i][j] = new __WEBPACK_IMPORTED_MODULE_0__ModelSquare__["a" /* default */]();
                 }
             }
         }
@@ -276,7 +472,7 @@ class ModelField {
 
             for (var i = 0; i < this.X; i++) {
                 for (var j = OldY; j < this.y; j++) {
-                    this.field[i][j] = new ModelSquare();
+                    this.field[i][j] = new __WEBPACK_IMPORTED_MODULE_0__ModelSquare__["a" /* default */]();
                 }
             }
         }
@@ -315,7 +511,14 @@ class ModelField {
         this.field[X][Y].ValueOnPenultimateGeneration = value;
     }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = ModelField;
 
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 
 
 class ModelChangeField {
@@ -376,12 +579,21 @@ class ModelChangeField {
         }
     }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = ModelChangeField;
 
+
+/***/ }),
+/* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 
 
 class ModelStopGame {
     StopGame(Field) {
+
         // оставновка программы, если во вселенной не осталось жизни
+
         var SummAllField = 0;
 
         for (var i = 1; i < Field.X - 1; i++) {
@@ -395,10 +607,12 @@ class ModelStopGame {
         }
 
         // оставновка программы, если во вселенной складываются устойчивые комбинации
+
         var EndOfGame1 = 0;
         var EndOfGame2 = 0;
 
         // сравнение массивов на 2х и 3х последних шагах
+        
         for (i = 0; i < Field.X; i++) {
             for (j = 0; j < Field.Y; j++) {
                 if (Field.ReadSquareValueByCoordinateOnLastGen(i, j) == Field.ReadSquareValueByCoordinate(i, j)) {
@@ -415,11 +629,19 @@ class ModelStopGame {
         }
     }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = ModelStopGame;
 
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 
 
 class View {
     UpdateView(Field) {
+        
         // объявление переменных, получение доступа к элементу, в котором создается таблица вселенной
 
         var Table, Tr, Td;
@@ -441,7 +663,6 @@ class View {
         // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
         // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
 
-
         for (var i = 0; i < Field.X; i++) {
             Tr = Table.appendChild(document.createElement("tr"));
             for (var j = 0; j < Field.Y; j++) {
@@ -457,172 +678,8 @@ class View {
         }
     }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = View;
 
-
-var TimerId, Speed = 7, Step = 0, StartFlag = false;
-
-var Generation = document.getElementById("generation");
-
-var EField = new ModelField();
-var EView = new View();
-var EModelChangeField = new ModelChangeField();
-var EModelStopGame = new ModelStopGame();
-
-// обработчик кнопки создать, присвоение размеров полю, вызов метода по созданию поля
-
-var ButtonCreateU = document.getElementById("create-universe");
-ButtonCreateU.addEventListener("click", function () {
-    MakeFieldWithStep();
-});
-
-// обработчик кнопки стереть, присвоение размеров полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
-
-var ButtonClearU = document.getElementById("clear-universe");
-ButtonClearU.addEventListener("click", function () {
-    SetSizeOfField();
-
-    EField.ClearField();
-    EView.UpdateView(EField);
-    Step = 1;
-    Generation.setAttribute("value", Step);
-});
-
-// обработчик кнопки старт, запускает таймер
-
-var ButtonStartGame = document.getElementById("start-game");
-ButtonStartGame.addEventListener("click", function () {
-    Timer();
-    StartFlag = true;
-});
-
-// обработчик кнопки стоп, обнуляет таймер
-
-var ButtonStopGame = document.getElementById("stop-game");
-ButtonStopGame.addEventListener("click", function () {
-    clearInterval(TimerId);
-    StartFlag = false;
-});
-
-// обработчик кнопки для продвижения на 1 шаг
-
-var ButtonStep = document.getElementById("step");
-ButtonStep.addEventListener("click", function () {
-    EModelChangeField.FieldManipulatorByAlgorithm(EField);
-    EView.UpdateView(EField);
-    Step++;
-    Generation.setAttribute("value", Step);
-});
-
-// обработчик клика по ячейке
-
-document.body.addEventListener("click", function (event) {
-    if (event.target.nodeName == "TD") {
-        var Coordinate = event.target.getAttribute("id").split(" ");
-        EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
-        EView.UpdateView(EField);
-    }
-});
-
-// обработчик анфокуса поля ввода высоты
-
-var HeightInput = document.getElementById("field-height");
-HeightInput.onblur = function () {
-    var X = +document.getElementById("field-height").value;
-
-    if (X < EField.X) {
-        EField.CropFieldOnX(X);
-    }
-    else if (X > EField.X) {
-        EField.EnlargeFieldOnX(X);
-    }
-
-    EView.UpdateView(EField);
-}
-
-// обработчик анфокуса поля ввода ширины
-
-var WidthInput = document.getElementById("field-width");
-WidthInput.onblur = function () {
-    var Y = +document.getElementById("field-width").value;
-
-    if (Y < EField.Y) {
-        EField.CropFieldOnY(Y);
-    }
-    else if (Y > EField.Y) {
-        EField.EnlargeFieldOnY(Y);
-    }
-
-    EView.UpdateView(EField);
-}
-
-// обработчики контрола скорости для динамического ее изменения
-
-var Slider = document.getElementsByClassName("ui-slider-handle")[0];
-Slider.addEventListener("mouseup", function () {
-    TimerWithCond();
-});
-
-Slider.addEventListener("mousemove", function () {
-    TimerWithCond();
-});
-
-// функции +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-function TimerWithCond() {
-    if (StartFlag) {
-        Timer();
-    }
-}
-
-function Timer() {
-    Speed = +document.getElementsByClassName("sliderValue")[0].value;
-    clearInterval(TimerId);
-    TimerId = setInterval(function () {
-        EModelChangeField.FieldManipulatorByAlgorithm(EField);
-        EView.UpdateView(EField);
-        Step++;
-        Generation.setAttribute("value", Step);
-        if (EModelStopGame.StopGame(EField)) {
-            clearInterval(TimerId);
-        }
-    }, (10 - Speed) * 100);
-}
-
-function MakeFieldWithStep() {
-    MakeField();
-    Step = 1;
-    Generation.setAttribute("value", Step);
-}
-
-function MakeField() {
-    SetSizeOfField();
-
-    EField.CreateRandomField();
-    EView.UpdateView(EField);
-}
-
-function SetSizeOfField() {
-    if (document.getElementById("field-height").value / 2 == 0) {
-        document.getElementById("field-height").value = 38;
-    }
-    if (+document.getElementById("field-height").value > 100) {
-        EField.X = 100;
-        document.getElementById("field-height").value = 100;
-    }
-    else {
-        EField.X = +document.getElementById("field-height").value;
-    }
-    if (document.getElementById("field-width").value / 2 == 0) {
-        document.getElementById("field-width").value = 100;
-    }
-    if (+document.getElementById("field-width").value > 100) {
-        EField.Y = 100;
-        document.getElementById("field-width").value = 100;
-    }
-    else {
-        EField.Y = +document.getElementById("field-width").value;
-    }
-}
 
 /***/ })
 /******/ ]);

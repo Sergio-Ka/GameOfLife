@@ -1,16 +1,13 @@
 'use strict';
+import ModelSquare from './ModelSquare';
 
 export default class ModelField {
-
-    // инициализация полей класса при создании
 
     constructor() {
         this.x = 3;
         this.y = 3;
         this.field;
     }
-
-    // геттеры и сеттеры для полей класса
 
     get X() {
         return this.x;
@@ -28,14 +25,12 @@ export default class ModelField {
         this.y = value + 2;
     }
 
-    // методы создания рандомно заполненного поля и отчистки поля
-
     CreateRandomField() {
         this.field = new Array(this.x);
 
         for (var i = 0; i < this.x; i++) {
             this.field[i] = new Array(this.y);
-            for (var j = 0; j < this.x; j++) {
+            for (var j = 0; j < this.y; j++) {
                 this.field[i][j] = new ModelSquare();
                 if (i == 0 || i == this.x - 1 || j == 0 || j == this.y - 1) {
                     this.field[i][j].Value = 0;
@@ -59,7 +54,58 @@ export default class ModelField {
         }
     }
 
-    // методы чтения данных из ячеек на текущем, последнем и предпоследнем поколении
+    CropFieldOnX(X) {
+        if (this.field != undefined) {
+            this.x = X + 2;
+
+            for (var i = this.field.length; this.field.length > X + 2; i--) {
+                this.field.pop();
+            }
+
+            for (var j = 0; j < this.field[X + 1].length; j++) {
+                this.field[X + 1][j].Value = 0;
+            }
+        }
+    }
+
+    CropFieldOnY(Y) {
+        if (this.field != undefined) {
+            this.y = Y + 2;
+
+            for (var i = 0; i < this.field.length; i++) {
+                for (var j = this.field[i].length; this.field[i].length > Y + 2; j--) {
+                    this.field[i].pop();
+                }
+                this.field[i][Y + 1].Value = 0;
+            }
+        }
+    }
+
+    EnlargeFieldOnX(X) {
+        if (this.field != undefined) {
+            this.x = X + 2;
+
+            for (var i = this.field.length; i < X + 2; i++) {
+                this.field[i] = new Array(this.y);
+                for (var j = 0; j < this.y; j++) {
+                    this.field[i][j] = new ModelSquare();
+                }
+            }
+        }
+    }
+
+    EnlargeFieldOnY(Y) {
+        if (this.field != undefined) {
+            var OldY = this.y;
+            this.y = Y + 2;
+
+            for (var i = 0; i < this.X; i++) {
+                for (var j = OldY; j < this.y; j++) {
+                    this.field[i][j] = new ModelSquare();
+                }
+            }
+        }
+    }
 
     ReadSquareValueByCoordinate(X, Y) {
         return this.field[X][Y].Value;
@@ -73,9 +119,7 @@ export default class ModelField {
         return this.field[X][Y].ValueOnPenultimateGeneration;
     }
 
-    // метод изменения состояния ячейки по передаваемым координатам на текущем поколении
-
-    ChangeSquareValueByCoordinate(X,  Y) {
+    ChangeSquareValueByCoordinate(X, Y) {
         if (X == 0 || X == this.x - 1 || Y == 0 || Y == this.y - 1) {
             this.field[X][Y].Value = 0;
         }
@@ -83,8 +127,6 @@ export default class ModelField {
             this.field[X][Y].ChangeValue();
         }
     }
-
-    // методы записи данных в ячейки на текущем, последнем и предпоследнем поколении
 
     SetSquareValueByCoordinate(X, Y, value) {
         this.field[X][Y].Value = value;

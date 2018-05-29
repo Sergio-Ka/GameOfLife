@@ -1,334 +1,9 @@
-/*import ModelSquare from './ModelSquare';
-import ModelField from './ModelField';*/
-
-class ModelSquare {
-
-    constructor() {
-        this.value = 0;
-        this.valueOnLG = 0;
-        this.valueOnPG = 0;
-    }
-
-    get Value() {
-        return this.value;
-    }
-
-    set Value(val) {
-        this.value = val;
-    }
-
-    get ValueOnLastGeneration() {
-        return this.valueOnLG;
-    }
-
-    set ValueOnLastGeneration(val) {
-        this.valueOnLG = val;
-    }
-
-    get ValueOnPenultimateGeneration() {
-        return this.valueOnPG;
-    }
-
-    set ValueOnPenultimateGeneration(val) {
-        this.valueOnPG = val;
-    }
-
-    ChangeValue() {
-        if (this.value == 0) {
-            this.value = 1;
-        }
-        else {
-            this.value = 0;
-        }
-    }
-}
-
-
-
-class ModelField {
-
-    constructor() {
-        this.x = 3;
-        this.y = 3;
-        this.field;
-    }
-
-    get X() {
-        return this.x;
-    }
-
-    set X(value) {
-        this.x = value + 2;
-    }
-
-    get Y() {
-        return this.y;
-    }
-
-    set Y(value) {
-        this.y = value + 2;
-    }
-
-    CreateRandomField() {
-        this.field = new Array(this.x);
-
-        for (var i = 0; i < this.x; i++) {
-            this.field[i] = new Array(this.y);
-            for (var j = 0; j < this.y; j++) {
-                this.field[i][j] = new ModelSquare();
-                if (i == 0 || i == this.x - 1 || j == 0 || j == this.y - 1) {
-                    this.field[i][j].Value = 0;
-                }
-                else {
-                    this.field[i][j].Value = Math.round(Math.random());
-                }
-            }
-        }
-    }
-
-    ClearField() {
-        this.field = new Array(this.x);
-
-        for (var i = 0; i < this.x; i++) {
-            this.field[i] = new Array(this.y);
-            for (var j = 0; j < this.y; j++) {
-                this.field[i][j] = new ModelSquare();
-                this.field[i][j].Value = 0;
-            }
-        }
-    }
-
-    CropFieldOnX(X) {
-        if (this.field != undefined) {
-            this.x = X + 2;
-
-            for (var i = this.field.length; this.field.length > X + 2; i--) {
-                this.field.pop();
-            }
-
-            for (var j = 0; j < this.field[X + 1].length; j++) {
-                this.field[X + 1][j].Value = 0;
-            }
-        }
-    }
-
-    CropFieldOnY(Y) {
-        if (this.field != undefined) {
-            this.y = Y + 2;
-
-            for (var i = 0; i < this.field.length; i++) {
-                for (var j = this.field[i].length; this.field[i].length > Y + 2; j--) {
-                    this.field[i].pop();
-                }
-                this.field[i][Y + 1].Value = 0;
-            }
-        }
-    }
-
-    EnlargeFieldOnX(X) {
-        if (this.field != undefined) {
-            this.x = X + 2;
-
-            for (var i = this.field.length; i < X + 2; i++) {
-                this.field[i] = new Array(this.y);
-                for (var j = 0; j < this.y; j++) {
-                    this.field[i][j] = new ModelSquare();
-                }
-            }
-        }
-    }
-
-    EnlargeFieldOnY(Y) {
-        if (this.field != undefined) {
-            var OldY = this.y;
-            this.y = Y + 2;
-
-            for (var i = 0; i < this.X; i++) {
-                for (var j = OldY; j < this.y; j++) {
-                    this.field[i][j] = new ModelSquare();
-                }
-            }
-        }
-    }
-
-    ReadSquareValueByCoordinate(X, Y) {
-        return this.field[X][Y].Value;
-    }
-
-    ReadSquareValueByCoordinateOnLastGen(X, Y) {
-        return this.field[X][Y].ValueOnLastGeneration;
-    }
-
-    ReadSquareValueByCoordinateOnPenultGen(X, Y) {
-        return this.field[X][Y].ValueOnPenultimateGeneration;
-    }
-
-    ChangeSquareValueByCoordinate(X, Y) {
-        if (X == 0 || X == this.x - 1 || Y == 0 || Y == this.y - 1) {
-            this.field[X][Y].Value = 0;
-        }
-        else {
-            this.field[X][Y].ChangeValue();
-        }
-    }
-
-    SetSquareValueByCoordinate(X, Y, value) {
-        this.field[X][Y].Value = value;
-    }
-
-    SetSquareValueOnLGByCoordinate(X, Y, value) {
-        this.field[X][Y].ValueOnLastGeneration = value;
-    }
-
-    SetSquareValueOnPGByCoordinate(X, Y, value) {
-        this.field[X][Y].ValueOnPenultimateGeneration = value;
-    }
-}
-
-
-
-class ModelChangeField {
-
-    // метод для манипуляции экземпляром поля в соответствии с алгоритмом
-
-    FieldManipulatorByAlgorithm(Field) {
-
-        // создаем переменные - массив для пересчета и вспомогательную
-
-        var RecountedField = new Array(Field.X);
-        var Summ;
-
-        for (var i = 0; i < Field.X; i++) {
-
-            RecountedField[i] = new Array(Field.Y);
-
-            for (var j = 0; j < Field.Y; j++) {
-
-                // инициализация элементов вспомогательного массива нулями, чтобы всяких там сюрпризов не было
-
-                RecountedField[i][j] = 0;
-
-                // для каждой ячейки считаем количество живых соседей
-
-                if (i != 0 && i != Field.X - 1 && j != 0 && j != Field.Y - 1) {
-                    Summ = 0;
-                    for (var k = i - 1; k < i + 2; k++) {
-                        for (var l = j - 1; l < j + 2; l++) {
-                            Summ += +Field.ReadSquareValueByCoordinate(k, l);
-                        }
-                    }
-
-                    // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
-
-                    if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
-                        RecountedField[i][j] = 1;
-                    }
-                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
-                        RecountedField[i][j] = 1;
-                    }
-                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
-                        RecountedField[i][j] = 0;
-                    }
-                }
-            }
-        }
-
-        /* записываем данные во все поля (на текущем, прошлом и позапрошлом шаге) каждого экземпляра ячейки
-        текущего экземпляра поля в соответствии с пересчитанным новым полем */
-
-        for (i = 0; i < Field.X; i++) {
-            for (j = 0; j < Field.Y; j++) {
-                Field.SetSquareValueOnPGByCoordinate(i, j, Field.ReadSquareValueByCoordinateOnLastGen(i, j));
-                Field.SetSquareValueOnLGByCoordinate(i, j, Field.ReadSquareValueByCoordinate(i, j));
-                Field.SetSquareValueByCoordinate(i, j, RecountedField[i][j]);
-            }
-        }
-    }
-}
-
-
-
-class ModelStopGame {
-    StopGame(Field) {
-        // оставновка программы, если во вселенной не осталось жизни
-        var SummAllField = 0;
-
-        for (var i = 1; i < Field.X - 1; i++) {
-            for (var j = 1; j < Field.Y - 1; j++) {
-                SummAllField += Field.ReadSquareValueByCoordinate(i, j);
-            }
-        }
-
-        if (SummAllField == 0) {
-            return true;
-        }
-
-        // оставновка программы, если во вселенной складываются устойчивые комбинации
-        var EndOfGame1 = 0;
-        var EndOfGame2 = 0;
-
-        // сравнение массивов на 2х и 3х последних шагах
-        for (i = 0; i < Field.X; i++) {
-            for (j = 0; j < Field.Y; j++) {
-                if (Field.ReadSquareValueByCoordinateOnLastGen(i, j) == Field.ReadSquareValueByCoordinate(i, j)) {
-                    EndOfGame1++;
-                }
-                if (Field.ReadSquareValueByCoordinate(i, j) == Field.ReadSquareValueByCoordinateOnPenultGen(i, j)) {
-                    EndOfGame2++;
-                }
-            }
-        }
-
-        if (EndOfGame1 == Field.X * Field.Y || EndOfGame2 == Field.X * Field.Y) {
-            return true;
-        }
-    }
-}
-
-
-
-class View {
-    UpdateView(Field) {
-        // объявление переменных, получение доступа к элементу, в котором создается таблица вселенной
-
-        var Table, Tr, Td;
-        var Content = document.getElementsByClassName("page__content")[0];
-
-        // проверка наличия уже созданной ранее таблицы вселенной, если есть то удаляем ее
-
-        Table = document.getElementById("universe");
-        if (Table != null) {
-            Content.removeChild(Table);
-        }
-
-        // создаем новую таблицу вселенной с id=universe
-
-        Table = Content.appendChild(document.createElement("table"));
-        Table.setAttribute("id", "universe");
-
-        // заполняем ячейку строками и ячейками в них
-        // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
-        // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
-
-
-        for (var i = 0; i < Field.X; i++) {
-            Tr = Table.appendChild(document.createElement("tr"));
-            for (var j = 0; j < Field.Y; j++) {
-                Td = Tr.appendChild(document.createElement("td"));
-                Td.setAttribute("id", i.toString() + " " + j.toString());
-                if (Field.ReadSquareValueByCoordinate(i, j) == 0) {
-                    Td.setAttribute("class", "universe__square universe__square_isDead");
-                }
-                else if (Field.ReadSquareValueByCoordinate(i, j) == 1) {
-                    Td.setAttribute("class", "universe__square universe__square_isAlive");
-                }
-            }
-        }
-    }
-}
-
-
-var TimerId, Speed = 7, Step = 0, StartFlag = false;
+import ModelField from './ModelField';
+import ModelChangeField from './ModelChangeField';
+import ModelStopGame from './ModelStopGame';
+import View from './View';
+
+var TimerId, Speed = 7, Step = 0, StartFlag = false, CreateFieldFlag = false;
 
 var Generation = document.getElementById("generation");
 
@@ -342,6 +17,7 @@ var EModelStopGame = new ModelStopGame();
 var ButtonCreateU = document.getElementById("create-universe");
 ButtonCreateU.addEventListener("click", function () {
     MakeFieldWithStep();
+    CreateFieldFlag = true;
 });
 
 // обработчик кнопки стереть, присвоение размеров полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
@@ -354,6 +30,7 @@ ButtonClearU.addEventListener("click", function () {
     EView.UpdateView(EField);
     Step = 1;
     Generation.setAttribute("value", Step);
+    CreateFieldFlag = true;
 });
 
 // обработчик кнопки старт, запускает таймер
@@ -398,14 +75,16 @@ var HeightInput = document.getElementById("field-height");
 HeightInput.onblur = function () {
     var X = +document.getElementById("field-height").value;
 
-    if (X < EField.X) {
-        EField.CropFieldOnX(X);
-    }
-    else if (X > EField.X) {
-        EField.EnlargeFieldOnX(X);
-    }
+    if (CreateFieldFlag) {
+        if (X < EField.X) {
+            EField.CropFieldOnX(X);
+        }
+        else if (X > EField.X) {
+            EField.EnlargeFieldOnX(X);
+        }
 
-    EView.UpdateView(EField);
+        EView.UpdateView(EField);
+    }
 }
 
 // обработчик анфокуса поля ввода ширины
@@ -414,14 +93,16 @@ var WidthInput = document.getElementById("field-width");
 WidthInput.onblur = function () {
     var Y = +document.getElementById("field-width").value;
 
-    if (Y < EField.Y) {
-        EField.CropFieldOnY(Y);
-    }
-    else if (Y > EField.Y) {
-        EField.EnlargeFieldOnY(Y);
-    }
+    if (CreateFieldFlag) {
+        if (Y < EField.Y) {
+            EField.CropFieldOnY(Y);
+        }
+        else if (Y > EField.Y) {
+            EField.EnlargeFieldOnY(Y);
+        }
 
-    EView.UpdateView(EField);
+        EView.UpdateView(EField);
+    }
 }
 
 // обработчики контрола скорости для динамического ее изменения
@@ -453,6 +134,7 @@ function Timer() {
         Generation.setAttribute("value", Step);
         if (EModelStopGame.StopGame(EField)) {
             clearInterval(TimerId);
+            alert("Игра остановлена, так как сложились устойчивые комбинации либо во вселенной не осталось жизни!");
         }
     }, (10 - Speed) * 100);
 }

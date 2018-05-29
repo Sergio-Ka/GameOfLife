@@ -6,36 +6,42 @@ export default class ModelChangeField {
 
     FieldManipulatorByAlgorithm(Field) {
 
-        // создаем переменные - массив для перещета и вспомогательную
+        // создаем переменные - массив для пересчета и вспомогательную
 
         var RecountedField = new Array(Field.X);
         var Summ;
 
-        for (var i = 1; i < Field.X-1; i++) {
+        for (var i = 0; i < Field.X; i++) {
 
             RecountedField[i] = new Array(Field.Y);
 
-            for (var j = 1; j < Field.Y-1; j++) {
+            for (var j = 0; j < Field.Y; j++) {
+
+                // инициализация элементов вспомогательного массива нулями, чтобы всяких там сюрпризов не было
+
+                RecountedField[i][j] = 0;
 
                 // для каждой ячейки считаем количество живых соседей
 
-                Summ = 0;
-                for (var k = i - 1; k < i + 2; k++) {
-                    for (var l = j - 1; l < j + 2; l++) {
-                        Summ += Field.ReadSquareValueByCoordinate(k, l);
+                if (i != 0 && i != Field.X - 1 && j != 0 && j != Field.Y - 1) {
+                    Summ = 0;
+                    for (var k = i - 1; k < i + 2; k++) {
+                        for (var l = j - 1; l < j + 2; l++) {
+                            Summ += +Field.ReadSquareValueByCoordinate(k, l);
+                        }
                     }
-                }
 
-                // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
+                    // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
 
-                if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
-                    RecountedField[i][j] = 1;
-                }
-                else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
-                    RecountedField[i][j] = 1;
-                }
-                else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
-                    RecountedField[i][j] = 0;
+                    if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
+                        RecountedField[i][j] = 1;
+                    }
+                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
+                        RecountedField[i][j] = 1;
+                    }
+                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
+                        RecountedField[i][j] = 0;
+                    }
                 }
             }
         }
