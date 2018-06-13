@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,47 +68,98 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_styl__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_styl___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__pages_styl__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl__);
 
-__webpack_require__(2);
 
-__webpack_require__(5);
-__webpack_require__(6);
+class ModelSquare {
+
+	constructor() {
+		this.value = 0;
+		this.valueOnLG = 0;
+		this.valueOnPG = 0;
+	}
+
+	get Value() {
+		return this.value;
+	}
+
+	set Value(val) {
+		this.value = val;
+	}
+
+	get ValueOnLastGeneration() {
+		return this.valueOnLG;
+	}
+
+	set ValueOnLastGeneration(val) {
+		this.valueOnLG = val;
+	}
+
+	get ValueOnPenultimateGeneration() {
+		return this.valueOnPG;
+	}
+
+	set ValueOnPenultimateGeneration(val) {
+		this.valueOnPG = val;
+	}
+
+	ChangeValue() {
+		if (this.value == 0) {
+			this.value = 1;
+		}
+		else {
+			this.value = 0;
+		}
+	}
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = ModelSquare;
+
 
 /***/ }),
 /* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_styl__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_styl___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__pages_styl__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl__);
+
+__webpack_require__(3);
+
+__webpack_require__(6);
+__webpack_require__(7);
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_images_favicon_ico__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_images_favicon_ico__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_images_favicon_ico___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__main_images_favicon_ico__);
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "images/favicon.ico";
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 $("#slider1").slider({ // вид первого слайдера и настройки
@@ -126,7 +177,7 @@ $("#slider1").slider({ // вид первого слайдера и настро
 });
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -314,62 +365,11 @@ function SetSizeOfField() {
 }
 
 /***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-
-class ModelSquare {
-
-	constructor() {
-		this.value = 0;
-		this.valueOnLG = 0;
-		this.valueOnPG = 0;
-	}
-
-	get Value() {
-		return this.value;
-	}
-
-	set Value(val) {
-		this.value = val;
-	}
-
-	get ValueOnLastGeneration() {
-		return this.valueOnLG;
-	}
-
-	set ValueOnLastGeneration(val) {
-		this.valueOnLG = val;
-	}
-
-	get ValueOnPenultimateGeneration() {
-		return this.valueOnPG;
-	}
-
-	set ValueOnPenultimateGeneration(val) {
-		this.valueOnPG = val;
-	}
-
-	ChangeValue() {
-		if (this.value == 0) {
-			this.value = 1;
-		}
-		else {
-			this.value = 0;
-		}
-	}
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = ModelSquare;
-
-
-/***/ }),
 /* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelSquare__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelSquare__ = __webpack_require__(0);
 
 
 

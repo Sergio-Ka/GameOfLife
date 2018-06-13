@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test GoL</title>
+    <meta name = "description" content = "Test Game Of Life" />
+    <meta name = "keywords" content = "Life Conway test" />
+    <meta name = "author" content = "Sergey Karbyshev" />
+    <meta name = "viewport" content = "initial-scale=1.0, width=device-width" />
+    <link rel = "shortcut icon" href = "./public/images/favicon.ico" type = "image/x-icon" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"></script>
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"></script>
+    <script>
+        var assert = chai.assert;
+    </script>
+</head>
+<body>
+    <script src="./source/test/test.js"></script>
+    <div id="mocha"></div>
+    <script>
+        mocha.run();
+    </script>
+</body>
+</html>
