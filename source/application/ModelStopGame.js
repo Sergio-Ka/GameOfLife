@@ -29,7 +29,7 @@ export default class ModelStopGame {
                 if (Field.ReadSquareValueByCoordinateOnLastGen(i, j) == Field.ReadSquareValueByCoordinate(i, j)) {
                     EndOfGame1++;
                 }
-                if (Field.ReadSquareValueByCoordinate(i, j) == Field.ReadSquareValueByCoordinateOnPenultGen(i, j)) {
+                if (Field.ReadSquareValueByCoordinateOnPenultGen(i, j) == Field.ReadSquareValueByCoordinate(i, j)) {
                     EndOfGame2++;
                 }
             }

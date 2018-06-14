@@ -5,7 +5,7 @@ class ModelSquare {
 
     constructor() {
         this.value = 0;
-        this.valueOnLG = 0;
+        this.value = 0;
         this.valueOnPG = 0;
     }
 
@@ -18,11 +18,11 @@ class ModelSquare {
     }
 
     get ValueOnLastGeneration() {
-        return this.valueOnLG;
+        return this.value;
     }
 
     set ValueOnLastGeneration(val) {
-        this.valueOnLG = val;
+        this.value = val;
     }
 
     get ValueOnPenultimateGeneration() {
@@ -174,7 +174,7 @@ class ModelField {
         this.field[X][Y].Value = value;
     }
 
-    SetSquareValueOnLGByCoordinate(X, Y, value) {
+    SetSquareValueByCoordinate(X, Y, value) {
         this.field[X][Y].ValueOnLastGeneration = value;
     }
 
@@ -183,8 +183,151 @@ class ModelField {
     }
 }
 
+class ModelChangeField {
+
+    // метод для манипуляции экземпляром поля в соответствии с алгоритмом
+
+    FieldManipulatorByAlgorithm(Field) {
+
+        // создаем переменные - массив для пересчета и вспомогательную
+
+        var RecountedField = new Array(Field.X);
+        var Summ;
+
+        for (var i = 0; i < Field.X; i++) {
+
+            RecountedField[i] = new Array(Field.Y);
+
+            for (var j = 0; j < Field.Y; j++) {
+
+                // инициализация элементов вспомогательного массива нулями, чтобы всяких там сюрпризов не было
+
+                RecountedField[i][j] = 0;
+
+                // для каждой ячейки считаем количество живых соседей
+
+                if (i != 0 && i != Field.X - 1 && j != 0 && j != Field.Y - 1) {
+                    Summ = 0;
+                    for (var k = i - 1; k < i + 2; k++) {
+                        for (var l = j - 1; l < j + 2; l++) {
+                            Summ += +Field.ReadSquareValueByCoordinate(k, l);
+                        }
+                    }
+
+                    // заполняем вспомогательный массив на основе значения самой ячейки и количества живых соседей
+
+                    if (Field.ReadSquareValueByCoordinate(i, j) == 0 && Summ == 3) {
+                        RecountedField[i][j] = 1;
+                    }
+                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ == 3 || Summ == 4)) {
+                        RecountedField[i][j] = 1;
+                    }
+                    else if (Field.ReadSquareValueByCoordinate(i, j) == 1 && (Summ < 3 || Summ > 4)) {
+                        RecountedField[i][j] = 0;
+                    }
+                }
+            }
+        }
+
+        /* записываем данные во все поля (на текущем, прошлом и позапрошлом шаге) каждого экземпляра ячейки
+        текущего экземпляра поля в соответствии с пересчитанным новым полем */
+
+        for (i = 0; i < Field.X; i++) {
+            for (j = 0; j < Field.Y; j++) {
+                Field.SetSquareValueOnPGByCoordinate(i, j, Field.ReadSquareValueByCoordinateOnLastGen(i, j));
+                Field.SetSquareValueByCoordinate(i, j, Field.ReadSquareValueByCoordinate(i, j));
+                Field.SetSquareValueByCoordinate(i, j, RecountedField[i][j]);
+            }
+        }
+    }
+}
+
+class ModelStopGame {
+    StopGame(Field) {
+
+        // оставновка программы, если во вселенной не осталось жизни
+
+        var SummAllField = 0;
+
+        for (var i = 1; i < Field.X - 1; i++) {
+            for (var j = 1; j < Field.Y - 1; j++) {
+                SummAllField += Field.ReadSquareValueByCoordinate(i, j);
+            }
+        }
+
+        if (SummAllField == 0) {
+            return true;
+        }
+
+        // оставновка программы, если во вселенной складываются устойчивые комбинации
+
+        var EndOfGame1 = 0;
+        var EndOfGame2 = 0;
+
+        // сравнение массивов на 2х и 3х последних шагах
+
+        for (i = 0; i < Field.X; i++) {
+            for (j = 0; j < Field.Y; j++) {
+                if (Field.ReadSquareValueByCoordinateOnLastGen(i, j) == Field.ReadSquareValueByCoordinate(i, j)) {
+                    EndOfGame1++;
+                }
+                if (Field.ReadSquareValueByCoordinateOnPenultGen(i, j) == Field.ReadSquareValueByCoordinate(i, j)) {
+                    EndOfGame2++;
+                }
+            }
+        }
+
+        if (EndOfGame1 == Field.X * Field.Y || EndOfGame2 == Field.X * Field.Y) {
+            return true;
+        }
+    }
+}
+
+class View {
+    UpdateView(Field) {
+
+        // объявление переменных, получение доступа к элементу, в котором создается таблица вселенной
+
+        var Table, Tr, Td;
+        var Content = document.getElementsByClassName("page__content")[0];
+
+        // проверка наличия уже созданной ранее таблицы вселенной, если есть то удаляем ее
+
+        Table = document.getElementById("universe");
+        if (Table != null) {
+            Content.removeChild(Table);
+        }
+
+        // создаем новую таблицу вселенной с id=universe
+
+        Table = Content.appendChild(document.createElement("table"));
+        Table.setAttribute("id", "universe");
+
+        // заполняем ячейку строками и ячейками в них
+        // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
+        // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
+
+        for (var i = 0; i < Field.X; i++) {
+            Tr = Table.appendChild(document.createElement("tr"));
+            for (var j = 0; j < Field.Y; j++) {
+                Td = Tr.appendChild(document.createElement("td"));
+                Td.setAttribute("id", i.toString() + " " + j.toString());
+                if (Field.ReadSquareValueByCoordinate(i, j) == 0) {
+                    Td.setAttribute("class", "universe__square universe__square_isDead");
+                }
+                else if (Field.ReadSquareValueByCoordinate(i, j) == 1) {
+                    Td.setAttribute("class", "universe__square universe__square_isAlive");
+                }
+            }
+        }
+    }
+}
+
 var Cell = new ModelSquare();
 var Field = new ModelField();
+var ChangeField = new ModelChangeField();
+var EndOfGame = new ModelStopGame();
+var EView = new View();
 
 describe("Тест JS кода игры Жизнь Конвея", function () {
 
@@ -359,7 +502,7 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
                 for (var i = 0; i < Field.field.length; i++) {
                     for (var j = 0; j < Field.field[i].length; j++) {
                         Field.SetSquareValueByCoordinate(i, j, 0);
-                        Field.SetSquareValueOnLGByCoordinate(i, j, 0);
+                        Field.SetSquareValueByCoordinate(i, j, 0);
                         Field.SetSquareValueOnPGByCoordinate(i, j, 0);
                         assert.equal(Field.ReadSquareValueByCoordinate(i, j), 0);
                         assert.equal(Field.ReadSquareValueByCoordinateOnLastGen(i, j), 0);
@@ -381,38 +524,108 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
 
     // проверка класса с логикой игры
     describe("Проверка класса ModelChangeField", function () {
-        describe("проверка методов чтения и записи значений ячейки в текущем, прошлом и позапрошлом поколении", function () {
-            it("установка значения всех ячеек поля в состояние 1 на всех поколениях и проверка методов чтения по значениям", function () {
+        describe("проверка метода FieldManipulatorByAlgorithm отвечающего за изменение состояния поля в соответствии с алгоритмом", function () {
+            it("создание поля 4*4, передача определенного рисунка (планер) поля методу и проверка состояния ячеек на втором поколении", function () {
+                Field.X = 4;
+                Field.Y = 4;
                 Field.ClearField();
-                for (var i = 0; i < Field.field.length; i++) {
-                    for (var j = 0; j < Field.field[i].length; j++) {
-                        Field.field[i][j].Value = 1;
-                        Field.field[i][j].ValueOnLastGeneration = 1;
-                        Field.field[i][j].ValueOnPenultimateGeneration = 1;
-                        assert(Field.ReadSquareValueByCoordinate(i, j) === 1);
-                        assert(Field.ReadSquareValueByCoordinateOnLastGen(i, j) === 1);
-                        assert(Field.ReadSquareValueByCoordinateOnPenultGen(i, j) === 1);
-                    }
-                }
+
+                Field.SetSquareValueByCoordinate(1, 2, 1);
+                Field.SetSquareValueByCoordinate(2, 3, 1);
+                Field.SetSquareValueByCoordinate(3, 1, 1);
+                Field.SetSquareValueByCoordinate(3, 2, 1);
+                Field.SetSquareValueByCoordinate(3, 3, 1);
+
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                assert.equal(Field.ReadSquareValueByCoordinate(2, 1), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(2, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 2), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 2), 1);
             });
-            it("установка значения всех ячеек поля в состояние 0 c помощью методов записи на всех поколениях и проверка значений", function () {
-                for (var i = 0; i < Field.field.length; i++) {
-                    for (var j = 0; j < Field.field[i].length; j++) {
-                        Field.SetSquareValueByCoordinate(i, j, 0);
-                        Field.SetSquareValueOnLGByCoordinate(i, j, 0);
-                        Field.SetSquareValueOnPGByCoordinate(i, j, 0);
-                        assert.equal(Field.ReadSquareValueByCoordinate(i, j), 0);
-                        assert.equal(Field.ReadSquareValueByCoordinateOnLastGen(i, j), 0);
-                        assert.equal(Field.ReadSquareValueByCoordinateOnPenultGen(i, j), 0);
-                    }
-                }
+            it("второй вызов метода пересчета поля и проверка состояния ячеек на третьем поколении", function () {
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                assert.equal(Field.ReadSquareValueByCoordinate(2, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 1), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 2), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 3), 1);
             });
-            it("проверка метода смены значения ячейки на противоположное на текущем поколении по передаваемым координатам в рабочей области поля (за исключением крайних ячеек)", function () {
-                Field.ClearField();
-                for (var i = 1; i < Field.field.length - 1; i++) {
-                    for (var j = 1; j < Field.field[i].length - 1; j++) {
-                        Field.ChangeSquareValueByCoordinate(i, j);
-                        assert.equal(Field.ReadSquareValueByCoordinate(i, j), 1);
+            it("третий вызов метода пересчета поля и проверка состояния ячеек на четвертом поколении", function () {
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                assert.equal(Field.ReadSquareValueByCoordinate(2, 2), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 4), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 2), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 3), 1);
+            });
+            it("четвертый вызов метода пересчета поля и проверка состояния ячеек на пятом поколении", function () {
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                assert.equal(Field.ReadSquareValueByCoordinate(2, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 4), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 2), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 4), 1);
+            });
+            it("пятый вызов метода пересчета поля и проверка состояния ячеек на шестом поколении", function () {
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 2), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 4), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 4), 1);
+            });
+            it("шестой вызов метода пересчета поля и проверка состояния ячеек на седьмом поколении", function () {
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 4), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 4), 1);
+            });
+            it("седьмой вызов метода пересчета поля и проверка состояния ячеек на восьмом поколении", function () {
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(3, 4), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 3), 1);
+                assert.equal(Field.ReadSquareValueByCoordinate(4, 4), 1);
+            });
+            it("проверка полей ячеек на прошлом поколении для 8 поколения (соответствие рисунку 7)", function () {
+                assert.equal(Field.field[3][4].ValueOnLastGeneration, 1);
+                assert.equal(Field.field[4][3].ValueOnLastGeneration, 1);
+                assert.equal(Field.field[4][4].ValueOnLastGeneration, 1);
+                
+            });
+            /*it("проверка полей ячеек на позапрошлом поколении для 8 поколения (соответствие рисунку 6 поколения)", function () {
+                assert.equal(Field.field[3][2].ValueOnPenultimateGeneration, 1);
+                assert.equal(Field.field[3][4].ValueOnPenultimateGeneration, 1);
+                assert.equal(Field.field[4][3].ValueOnPenultimateGeneration, 1);
+                assert.equal(Field.field[4][4].ValueOnPenultimateGeneration, 1);
+                /*var Summ = "";
+                for (var i = 0; i < Field.length; i++) {
+                    for (var j = 0; j < Field[i].length; j++) {
+                        Summ += Field.field[i][j].ValueOnPenultimateGeneration;
+                    }
+                    Summ += "\n";
+                    alert(Summ);
+                }
+            });*/
+
+            it("проверка того что на 8 поколении остальные ячейки мертвы", function () {
+                ChangeField.FieldManipulatorByAlgorithm(Field);
+
+                Field.SetSquareValueByCoordinate(3, 3, 0);
+                Field.SetSquareValueByCoordinate(3, 4, 0);
+                Field.SetSquareValueByCoordinate(4, 3, 0);
+                Field.SetSquareValueByCoordinate(4, 4, 0);
+
+                for (var i = 0; i < Field.field.length; i++) {
+                    for (var j = 0; j < Field.field[0].length; j++) {
+                        assert.equal(Field.field[i][j].Value, 0);
                     }
                 }
             });
@@ -420,14 +633,104 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
     });
 
     describe("Проверка класса ModelStopGame", function () {
+        describe("проверка метода StopGame отвечающего за отсановку игры по определенным условиям", function () {
+            it("передача методу поля с отсутствющей жизнью вызывает остановку игры", function () {
+                Field.ClearField();
+                assert.isTrue(EndOfGame.StopGame(Field));
+            });
+            it("передача методу поля с одинаковым рисунком на последних двух поколениях вызывает остановку игры", function () {
+                Field.field[1][1].Value = 1;
+                Field.field[1][2].Value = 1;
+                Field.field[2][1].Value = 1;
+                Field.field[2][2].Value = 1;
 
+                Field.field[1][1].ValueOnLastGeneration = 1;
+                Field.field[1][2].ValueOnLastGeneration = 1;
+                Field.field[2][1].ValueOnLastGeneration = 1;
+                Field.field[2][2].ValueOnLastGeneration = 1;
+
+                assert.isTrue(EndOfGame.StopGame(Field));
+            });
+
+            it("передача методу поля с одинаковым рисунком на текущем и предпоследнем поколениях вызывает остановку игры", function () {
+                Field.ClearField();
+
+                Field.field[1][1].Value = 1;
+                Field.field[1][2].Value = 1;
+                Field.field[2][1].Value = 1;
+                Field.field[2][2].Value = 1;
+
+                Field.field[1][1].ValueOnPenultimateGeneration = 1;
+                Field.field[1][2].ValueOnPenultimateGeneration = 1;
+                Field.field[2][1].ValueOnPenultimateGeneration = 1;
+                Field.field[2][2].ValueOnPenultimateGeneration = 1;
+
+                assert.isTrue(EndOfGame.StopGame(Field));
+            });
+        });
     });
 
     describe("Проверка класса View", function () {
+        describe("проверка метода UpdateView отвечающего за отрисовку таблицы поля", function () {
+            it("передача методу поля 5*5 с отсутствующей жизнью и проверка того, что создана таблица 5*5", function () {
+                Field.X = 5;
+                Field.Y = 5;
+                Field.ClearField();
+                EView.UpdateView(Field);
 
+                assert.isNotNull(document.getElementById("universe"));
+                assert.equal(document.getElementsByTagName("tr").length, 7);
+                assert.equal(document.getElementsByTagName("td").length, 49);
+            });
+            it("проверка того, что ячейкам присвоены соотвествующие классы и id = координаты", function () {
+                var Cell, Coordinate;
+                assert.equal(document.getElementsByClassName("universe__square universe__square_isDead").length, 49);
+                for (var i = 0; i < 7; i++) {
+                    for (var j = 0; j < 7; j++) {
+                        Cell = document.getElementsByClassName("universe__square universe__square_isDead")[i * 7 + j];
+                        Coordinate = Cell.getAttribute("id").split(" ");
+                        assert.equal(i, Coordinate[0]);
+                        assert.equal(j, Coordinate[1]);
+                    }
+                }
+            });
+            it("передача методу поля с определенным рисунком (квадрат в верхнем левом углу) и проверка присвоения соответствующих классов соответствующим ячейкам", function () {
+                Field.field[1][1].Value = 1;
+                Field.field[1][2].Value = 1;
+                Field.field[2][1].Value = 1;
+                Field.field[2][2].Value = 1;
+                EView.UpdateView(Field);
+
+                var Cell, Coordinate, Td;
+                Cell = document.getElementsByClassName("universe__square universe__square_isAlive");
+                for (var i = 0; i < Cell.length / 2; i++) {
+                    for (var j = 0; j < Cell.length / 2; j++) {
+                        Coordinate = Cell[i * 2 + j].getAttribute("id").split(" ");
+                        Td = document.getElementById((i + 1) + " " + (j + 1));
+                        assert.equal(Td.getAttribute("class"), "universe__square universe__square_isAlive");
+                    }
+                }
+            });
+            it("присвоение \"живым\" ячейкам класса \"мертвых\" и проверка всех ячеек на предмет наличия у них \"мертвого\" класса", function () {
+                Field.field[1][1].Value = 0;
+                Field.field[1][2].Value = 0;
+                Field.field[2][1].Value = 0;
+                Field.field[2][2].Value = 0;
+                EView.UpdateView(Field);
+
+                assert.equal(document.getElementsByClassName("universe__square universe__square_isDead").length, 49);
+            });
+        });
     });
 
     describe("Проверка класса Controller", function () {
+        describe("Не врубимо как тестить этот класс", function () {
+            it("как-то чего-то надо потестить, а как - не ясно", function () {
+                Field.ClearField();
+                EView.UpdateView(Field);
 
+                assert.equal(document.getElementsByClassName("universe__square universe__square_isDead").length, 49);
+            });
+        });
     });
 });
