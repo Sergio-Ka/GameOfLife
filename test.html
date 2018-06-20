@@ -36,24 +36,11 @@
     <script>
         mocha.run();
     </script>
-    <div class="page__controls">
-
-        <div class="controls__std-button controls__std-button_big">
-            Высота (5 - 100):
-            <input type="number" value="38" min="5" max="100" id="field-height">
-        </div>
-        <div class="controls__std-button controls__std-button_big">
-            Ширина (5 - 100):
-            <input type="number" value="100" min="5" max="100" id="field-width">
-        </div>
-        <div class="controls__std-button controls__std-button_big">
-            Скорость:
-            <div id="slider1"></div>
-        </div>
-        <div class="controls__std-button controls__std-button_big">
-            Поколение:
-            <input type="text" value="1" id="generation" disabled>
-        </div>
+    <div style="display: none;">
+        <input type="number" value="38" min="5" max="100" id="field-height">
+        <input type="number" value="100" min="5" max="100" id="field-width">
+        <div id="slider1"></div>
+        <input type="text" value="1" id="generation" disabled>
         <button class="std-button std-button_color_green" id="create-universe">СОЗДАТЬ</button>
         <button class="std-button std-button_color_red" id="clear-universe">СТЕРЕТЬ</button>
         <button class="std-button std-button_color_green" id="start-game">СТАРТ</button>
