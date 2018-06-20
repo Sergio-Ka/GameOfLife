@@ -7,6 +7,8 @@ export default class ModelField {
         this.x = 3;
         this.y = 3;
         this.field;
+        this.numberOfGeneraton = 1;
+        this.gameOver = 0;
     }
 
     get X() {
@@ -14,7 +16,12 @@ export default class ModelField {
     }
 
     set X(value) {
-        this.x = value + 2;
+        if (value >= 1) {
+            this.x = value + 2;
+        }
+        else {
+            this.x = 3;
+        }
     }
 
     get Y() {
@@ -22,11 +29,44 @@ export default class ModelField {
     }
 
     set Y(value) {
-        this.y = value + 2;
+        if (value >= 1) {
+            this.y = value + 2;
+        }
+        else {
+            this.y = 3;
+        }
+    }
+
+    get NumberOfGeneration() {
+        return this.numberOfGeneraton;
+    }
+
+    set NumberOfGeneration(value) {
+        if (value >= 1) {
+            this.numberOfGeneraton = value;
+        }
+        else {
+            this.numberOfGeneraton = 1;
+        }
+    }
+
+    get GameOver() {
+        return this.gameOver;
+    }
+
+    set GameOver(value) {
+        if (value == 0 || value == 1 || value == 2 || value == 3) {
+            this.gameOver = value;
+        }
+        else {
+            this.gameOver = 0;
+        }
     }
 
     CreateRandomField() {
         this.field = new Array(this.x);
+        this.numberOfGeneraton = 1;
+        this.gameOver = 0;
 
         for (var i = 0; i < this.x; i++) {
             this.field[i] = new Array(this.y);
@@ -44,12 +84,16 @@ export default class ModelField {
 
     ClearField() {
         this.field = new Array(this.x);
+        this.numberOfGeneraton = 1;
+        this.gameOver = 0;
 
         for (var i = 0; i < this.x; i++) {
             this.field[i] = new Array(this.y);
             for (var j = 0; j < this.y; j++) {
                 this.field[i][j] = new ModelSquare();
                 this.field[i][j].Value = 0;
+                this.field[i][j].ValueOnLastGeneration = 0;
+                this.field[i][j].ValueOnPenultimateGeneration = 0;
             }
         }
     }

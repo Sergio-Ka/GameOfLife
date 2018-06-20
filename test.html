@@ -1,30 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Test GoL</title>
-    <meta name = "description" content = "Test Game Of Life" />
-    <meta name = "keywords" content = "Life Conway test" />
-    <meta name = "author" content = "Sergey Karbyshev" />
-    <meta name = "viewport" content = "initial-scale=1.0, width=device-width" />
-    <link rel = "shortcut icon" href = "./public/images/favicon.ico" type = "image/x-icon" />
+    <meta name="description" content="Test Game Of Life" />
+    <meta name="keywords" content="Life Conway test" />
+    <meta name="author" content="Sergey Karbyshev" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <link rel="shortcut icon" href="./public/images/favicon.ico" type="image/x-icon" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"></script>
+    <link href="./vendors/jquery-ui-1.12.1.custom/jquery-ui-forFlatUI.css" rel="stylesheet" />
+    <script src="./vendors/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+    <script src="./vendors/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+
+    <script src="./vendors/sinon/sinon.js"></script>
+    <!-- script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/3.2.1/sinon.min.js"></script -->
+    <link rel="stylesheet" href="./vendors/mocha/mocha.css">
+    <!-- link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css" -->
+    <script src="./vendors/mocha/mocha.js"></script>
+    <!-- script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"></script -->
     <script>
         mocha.setup('bdd');
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"></script>
+    <script src="./vendors/chai/chai.js"></script>
+    <!-- script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"></script -->
     <script>
         var assert = chai.assert;
     </script>
 </head>
+
 <body>
     <script src="./source/test/test.js"></script>
     <div id="mocha"></div>
     <script>
         mocha.run();
     </script>
+    <div class="page__controls">
+
+        <div class="controls__std-button controls__std-button_big">
+            Высота (5 - 100):
+            <input type="number" value="38" min="5" max="100" id="field-height">
+        </div>
+        <div class="controls__std-button controls__std-button_big">
+            Ширина (5 - 100):
+            <input type="number" value="100" min="5" max="100" id="field-width">
+        </div>
+        <div class="controls__std-button controls__std-button_big">
+            Скорость:
+            <div id="slider1"></div>
+        </div>
+        <div class="controls__std-button controls__std-button_big">
+            Поколение:
+            <input type="text" value="1" id="generation" disabled>
+        </div>
+        <button class="std-button std-button_color_green" id="create-universe">СОЗДАТЬ</button>
+        <button class="std-button std-button_color_red" id="clear-universe">СТЕРЕТЬ</button>
+        <button class="std-button std-button_color_green" id="start-game">СТАРТ</button>
+        <button class="std-button std-button_color_red" id="stop-game">СТОП</button>
+        <button class="std-button std-button_inactive-green" id="step">1 ШАГ</button>
+    </div>
     <div class="page__content"></div>
+    <script src="./source/blocks/slider1/slider1.js"></script>
 </body>
+
 </html>

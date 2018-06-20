@@ -7,6 +7,7 @@ export default class View {
 
         var Table, Tr, Td;
         var Content = document.getElementsByClassName("page__content")[0];
+        var Generation = document.getElementById("generation");
 
         // проверка наличия уже созданной ранее таблицы вселенной, если есть то удаляем ее
 
@@ -36,6 +37,17 @@ export default class View {
                     Td.setAttribute("class", "universe__square universe__square_isAlive");
                 }
             }
+        }
+
+        Generation.setAttribute("value", Field.NumberOfGeneration);
+
+        switch(Field.GameOver) {
+            case 1: alert("Игра закончена, так как во вселенной не осталось жизни!");
+            break;
+            case 2: alert("Игра закончена, так как во вселенной сложились устойчивые комбинации на 2-х последних поколениях!");
+            break;
+            case 3: alert("Игра закончена, так как во вселенной сложились устойчивые комбинации на текущем и предпоследнем поколениях!");
+            break;
         }
     }
 }
