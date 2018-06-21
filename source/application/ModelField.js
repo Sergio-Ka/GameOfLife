@@ -1,4 +1,5 @@
 'use strict';
+
 import ModelSquare from './ModelSquare';
 
 export default class ModelField {

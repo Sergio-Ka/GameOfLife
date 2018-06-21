@@ -1,3 +1,5 @@
+'use strict';
+
 import ModelField from './ModelField';
 import ModelChangeField from './ModelChangeField';
 import View from './View';
