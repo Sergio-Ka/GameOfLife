@@ -60,101 +60,85 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+
+class ModelSquare {
+
+	constructor() {
+		this.value = 0;
+		this.valueOnLG = 0;
+		this.valueOnPG = 0;
+	}
+
+	get Value() {
+		return this.value;
+	}
+
+	set Value(val) {
+		this.value = val;
+	}
+
+	get ValueOnLastGeneration() {
+		return this.valueOnLG;
+	}
+
+	set ValueOnLastGeneration(val) {
+		this.valueOnLG = val;
+	}
+
+	get ValueOnPenultimateGeneration() {
+		return this.valueOnPG;
+	}
+
+	set ValueOnPenultimateGeneration(val) {
+		this.valueOnPG = val;
+	}
+
+	ChangeValue() {
+		if (this.value == 0) {
+			this.value = 1;
+		}
+		else {
+			this.value = 0;
+		}
+	}
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = ModelSquare;
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
-$("#slider1").slider({ // вид первого слайдера и настройки
-    value: '',
-    min: 0,
+var $slider1 = $('.js-slider-1');
+$slider1.slider({
+    min: 1,
     max: 10,
-	value: 8,
+    value: 8,
     create: function (event, ui) {
-        $('.ui-slider-handle').append('<input class="sliderValue" value="8"/>');
-        $('.ui-slider-handle').append('<div class="sliderValue_2"></div>');
+        var $sliderhandle = $('.ui-slider-handle');
+        $sliderhandle.append('<input class="slider-value js-slider-value" value="8"/><div class="slider-value__tail"></div>');
     },
     slide: function (event, ui) {
-        $(".sliderValue").val(ui.value);
+        var $slidervalue = $(".js-slider-value");
+        $slidervalue.val(ui.value);
     }
 });
 
 /***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_styl__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_styl___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__pages_styl__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__blocks_slider1_slider1_styl__);
-
-__webpack_require__(3);
-
-__webpack_require__(0);
-__webpack_require__(6);
-
-/***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_images_favicon_ico__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_images_favicon_ico___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__main_images_favicon_ico__);
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "images/favicon.ico";
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelField__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ModelChangeField__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__View__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Controller__ = __webpack_require__(11);
-
-
-
-
-
-
-
-var EField = new __WEBPACK_IMPORTED_MODULE_0__ModelField__["a" /* default */]();
-var EModelChangeField = new __WEBPACK_IMPORTED_MODULE_1__ModelChangeField__["a" /* default */]();
-var EView = new __WEBPACK_IMPORTED_MODULE_2__View__["a" /* default */]();
-var EController = new __WEBPACK_IMPORTED_MODULE_3__Controller__["a" /* default */]();
-
-EController.Main(EField, EModelChangeField, EView);
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelSquare__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelSquare__ = __webpack_require__(0);
 
 
 
@@ -346,58 +330,7 @@ class ModelField {
 
 
 /***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-
-class ModelSquare {
-
-	constructor() {
-		this.value = 0;
-		this.valueOnLG = 0;
-		this.valueOnPG = 0;
-	}
-
-	get Value() {
-		return this.value;
-	}
-
-	set Value(val) {
-		this.value = val;
-	}
-
-	get ValueOnLastGeneration() {
-		return this.valueOnLG;
-	}
-
-	set ValueOnLastGeneration(val) {
-		this.valueOnLG = val;
-	}
-
-	get ValueOnPenultimateGeneration() {
-		return this.valueOnPG;
-	}
-
-	set ValueOnPenultimateGeneration(val) {
-		this.valueOnPG = val;
-	}
-
-	ChangeValue() {
-		if (this.value == 0) {
-			this.value = 1;
-		}
-		else {
-			this.value = 0;
-		}
-	}
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = ModelSquare;
-
-
-/***/ }),
-/* 9 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -515,7 +448,7 @@ class ModelChangeField {
 
 
 /***/ }),
-/* 10 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -528,28 +461,29 @@ class View {
 
         var Table, Tr, Td;
         var Content = document.getElementsByClassName("page__content")[0];
-        var Generation = document.getElementById("generation");
+        var Generation = document.getElementsByClassName("generation")[0];
 
         // проверка наличия уже созданной ранее таблицы вселенной, если есть то удаляем ее
 
-        Table = document.getElementById("universe");
+        Table = document.getElementsByClassName("universe")[0];
         if (Table != null) {
             Content.removeChild(Table);
         }
 
         // создаем новую таблицу вселенной с id=universe
 
-        Table = Content.appendChild(document.createElement("table"));
-        Table.setAttribute("id", "universe");
+        Table = Content.appendChild(document.createElement("div"));
+        Table.setAttribute("class", "universe");
 
         // заполняем ячейку строками и ячейками в них
         // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
         // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
 
         for (var i = 0; i < Field.X; i++) {
-            Tr = Table.appendChild(document.createElement("tr"));
+            Tr = Table.appendChild(document.createElement("div"));
+            Tr.setAttribute("class", "universe__line");
             for (var j = 0; j < Field.Y; j++) {
-                Td = Tr.appendChild(document.createElement("td"));
+                Td = Tr.appendChild(document.createElement("div"));
                 Td.setAttribute("id", i.toString() + " " + j.toString());
                 if (Field.ReadSquareValueByCoordinate(i, j) == 0) {
                     Td.setAttribute("class", "universe__square universe__square_isDead");
@@ -576,7 +510,7 @@ class View {
 
 
 /***/ }),
-/* 11 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -588,7 +522,7 @@ class Controller {
 
         // обработчик кнопки создать, присвоение размеров полю, вызов метода по созданию поля
 
-        var ButtonCreateU = document.getElementById("create-universe");
+        var ButtonCreateU = document.getElementsByClassName("create-universe")[0];
         ButtonCreateU.addEventListener("click", function () {
             SetSizeOfField();
             EField.CreateRandomField();
@@ -598,7 +532,7 @@ class Controller {
 
         // обработчик кнопки стереть, присвоение размеров полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
 
-        var ButtonClearU = document.getElementById("clear-universe");
+        var ButtonClearU = document.getElementsByClassName("clear-universe")[0];
         ButtonClearU.addEventListener("click", function () {
             SetSizeOfField();
             EField.ClearField();
@@ -608,7 +542,7 @@ class Controller {
 
         // обработчик кнопки старт, запускает таймер
 
-        var ButtonStartGame = document.getElementById("start-game");
+        var ButtonStartGame = document.getElementsByClassName("start-game")[0];
         ButtonStartGame.addEventListener("click", function () {
             Timer();
             StartFlag = true;
@@ -616,7 +550,7 @@ class Controller {
 
         // обработчик кнопки стоп, обнуляет таймер
 
-        var ButtonStopGame = document.getElementById("stop-game");
+        var ButtonStopGame = document.getElementsByClassName("stop-game")[0];
         ButtonStopGame.addEventListener("click", function () {
             clearInterval(TimerId);
             StartFlag = false;
@@ -624,7 +558,7 @@ class Controller {
 
         // обработчик кнопки для продвижения на 1 шаг
 
-        var ButtonStep = document.getElementById("step");
+        var ButtonStep = document.getElementsByClassName("step")[0];
         ButtonStep.addEventListener("click", function () {
             EModelChangeField.FieldManipulatorByAlgorithm(EField);
             EView.UpdateView(EField);
@@ -633,18 +567,20 @@ class Controller {
         // обработчик клика по ячейке
 
         document.body.addEventListener("click", function (event) {
-            if (event.target.nodeName == "TD") {
-                var Coordinate = event.target.getAttribute("id").split(" ");
-                EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
-                EView.UpdateView(EField);
+            if (event.target.nodeName == "DIV") {
+                if(event.target.getAttribute("id") != null) {
+                    var Coordinate = event.target.getAttribute("id").split(" ");
+                    EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
+                    EView.UpdateView(EField);
+                }
             }
         });
 
         // обработчик анфокуса поля ввода высоты
 
-        var HeightInput = document.getElementById("field-height");
+        var HeightInput = document.getElementsByClassName("field-height")[0];
         HeightInput.onblur = function () {
-            var X = +document.getElementById("field-height").value;
+            var X = +document.getElementsByClassName("field-height")[0].value;
 
             if (CreateFieldFlag) {
                 if (X < EField.X) {
@@ -660,9 +596,9 @@ class Controller {
 
         // обработчик анфокуса поля ввода ширины
 
-        var WidthInput = document.getElementById("field-width");
+        var WidthInput = document.getElementsByClassName("field-width")[0];
         WidthInput.onblur = function () {
-            var Y = +document.getElementById("field-width").value;
+            var Y = +document.getElementsByClassName("field-width")[0].value;
 
             if (CreateFieldFlag) {
                 if (Y < EField.Y) {
@@ -694,7 +630,7 @@ class Controller {
         // функции +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         function Timer() {
-            var Speed = +document.getElementsByClassName("sliderValue")[0].value;
+            var Speed = +document.getElementsByClassName("js-slider-value")[0].value;
             clearInterval(TimerId);
             TimerId = setInterval(function () {
                 EModelChangeField.StopGame(EField);
@@ -709,31 +645,73 @@ class Controller {
         }
 
         function SetSizeOfField() {
-            if (document.getElementById("field-height").value / 2 == 0) {
-                document.getElementById("field-height").value = 38;
+            if (document.getElementsByClassName("field-height")[0].value / 2 == 0) {
+                document.getElementsByClassName("field-height")[0].value = 47;
             }
-            if (+document.getElementById("field-height").value > 100) {
+            if (+document.getElementsByClassName("field-height")[0].value > 100) {
                 EField.X = 100;
-                document.getElementById("field-height").value = 100;
+                document.getElementsByClassName("field-height")[0].value = 100;
             }
             else {
-                EField.X = +document.getElementById("field-height").value;
+                EField.X = +document.getElementsByClassName("field-height")[0].value;
             }
-            if (document.getElementById("field-width").value / 2 == 0) {
-                document.getElementById("field-width").value = 100;
+            if (document.getElementsByClassName("field-width")[0].value / 2 == 0) {
+                document.getElementsByClassName("field-width")[0].value = 100;
             }
-            if (+document.getElementById("field-width").value > 100) {
+            if (+document.getElementsByClassName("field-width")[0].value > 100) {
                 EField.Y = 100;
-                document.getElementById("field-width").value = 100;
+                document.getElementsByClassName("field-width")[0].value = 100;
             }
             else {
-                EField.Y = +document.getElementById("field-width").value;
+                EField.Y = +document.getElementsByClassName("field-width")[0].value;
             }
         }
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Controller;
 
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index_styl__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index_styl___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__index_styl__);
+
+__webpack_require__(1);
+__webpack_require__(8);
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelField__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ModelChangeField__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__View__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Controller__ = __webpack_require__(5);
+
+
+
+
+
+
+
+var EField = new __WEBPACK_IMPORTED_MODULE_0__ModelField__["a" /* default */]();
+var EModelChangeField = new __WEBPACK_IMPORTED_MODULE_1__ModelChangeField__["a" /* default */]();
+var EView = new __WEBPACK_IMPORTED_MODULE_2__View__["a" /* default */]();
+var EController = new __WEBPACK_IMPORTED_MODULE_3__Controller__["a" /* default */]();
+
+EController.Main(EField, EModelChangeField, EView);
 
 /***/ })
 /******/ ]);

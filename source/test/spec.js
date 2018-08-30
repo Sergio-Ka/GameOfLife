@@ -346,7 +346,7 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
         });
     });
 
-    // проверка класса с отображения
+    // проверка класса с отображением
     describe("Проверка класса View", function () {
         describe("проверка метода UpdateView отвечающего за отрисовку таблицы поля", function () {
             it("передача методу поля 5*5 с отсутствующей жизнью и проверка того, что создана таблица 5*5", function () {
@@ -355,9 +355,9 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
                 Field.ClearField();
                 EView.UpdateView(Field);
 
-                assert.isNotNull(document.getElementById("universe"));
-                assert.equal(document.getElementsByTagName("tr").length, 7);
-                assert.equal(document.getElementsByTagName("td").length, 49);
+                assert.isNotNull(document.getElementsByClassName("universe"));
+                assert.equal(document.getElementsByClassName("universe__line").length, 7);
+                assert.equal(document.getElementsByClassName("universe__square").length, 49);
             });
             it("проверка того, что ячейкам присвоены соотвествующие классы и id = координаты", function () {
                 var Cell, Coordinate;
@@ -400,6 +400,7 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
         });
     });
 
+    // проверка класса контроллера
     describe("Проверка класса Controller", function () {
         describe("проверка метода Main, отвечающего за обработку событий, возникающих при взаимодействии с контролами", function () {
             var spy_updateview = sinon.spy(EView, 'UpdateView');
@@ -412,74 +413,74 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
 
             it('нажатие на кнопку СОЗДАТЬ вызывает функцию установки размеров поля с предварительной валидацией', function () {
                 EController.Main(Field, ChangeField, EView);
-                document.getElementById("field-height").value = 38;
-                document.getElementById("field-width").value = 100;
-                $('#create-universe').trigger('click');
-                assert.equal(Field.X, 40);
+                document.getElementsByClassName("field-height")[0].value = 47;
+                document.getElementsByClassName("field-width")[0].value = 100;
+                $('create-universe').trigger('click');
+                assert.equal(Field.X, 49);
                 assert.equal(Field.Y, 102);
             });
             it('нажатие на кнопку СОЗДАТЬ вызывает метод создания поля', function () {
                 var spy_create = sinon.spy(Field, 'CreateRandomField');
-                $('#create-universe').trigger('click');
+                $('create-universe').trigger('click');
                 sinon.assert.called(spy_create);
             });
             it('нажатие на кнопку СОЗДАТЬ вызывает метод отрисовки поля', function () {
-                $('#create-universe').trigger('click');
+                $('create-universe').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('нажатие на кнопку СТЕРЕТЬ вызывает функцию установки размеров поля с предварительной валидацией', function () {
-                document.getElementById("field-height").value = 38;
-                document.getElementById("field-width").value = 100;
-                $('#clear-universe').trigger('click');
+                document.getElementsByClassName("field-height")[0].value = 38;
+                document.getElementsByClassName("field-width")[0].value = 100;
+                $('clear-universe').trigger('click');
                 assert.equal(Field.X, 40);
                 assert.equal(Field.Y, 102);
             });
             it('нажатие на кнопку СТЕРЕТЬ вызывает метод стирания поля', function () {
                 var spy_create = sinon.spy(Field, 'ClearField');
-                $('#clear-universe').trigger('click');
+                $('clear-universe').trigger('click');
                 sinon.assert.called(spy_create);
             });
             it('нажатие на кнопку СТЕРЕТЬ вызывает метод отрисовки поля', function () {
-                $('#clear-universe').trigger('click');
+                $('clear-universe').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('нажатие на кнопку СТАРТ вызывает функцию остановки таймера clearInterval (отчистка, если был запущен ранее)', function () {
-                $('#start-game').trigger('click');
+                $('start-game').trigger('click');
                 sinon.assert.called(spy_clearInt);
             });
             it('нажатие на кнопку СТАРТ вызывает функцию запуска таймера setInterval', function () {
                 var spy_setInt = sinon.spy(window, 'setInterval');
-                $('#start-game').trigger('click');
+                $('start-game').trigger('click');
                 sinon.assert.called(spy_setInt);
             });
             it('нажатие на кнопку СТОП вызывает функцию остановки таймера clearInterval', function () {
-                $('#stop-game').trigger('click');
+                $('stop-game').trigger('click');
                 sinon.assert.called(spy_clearInt);
             });
             it('нажатие на кнопку 1 ШАГ вызывает метод пересчета поля', function () {
-                $('#step').trigger('click');
+                $('step').trigger('click');
                 sinon.assert.called(spy_changefield);
             });
             it('нажатие на кнопку 1 ШАГ вызывает метод отрисовки поля', function () {
-                $('#step').trigger('click');
+                $('step').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('нажатие на ячейку поля вызывает метод изменения ее состояния', function () {
                 var spy_changesquare = sinon.spy(Field, 'ChangeSquareValueByCoordinate');
-                $('td').trigger('click');
+                $('div').trigger('click');
                 sinon.assert.called(spy_changesquare);
             });
             it('нажатие на ячейку поля вызывает метод отрисовки поля', function () {
-                $('td').trigger('click');
+                $('div').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('анфокус поля высоты в случае уменьшения высоты вызывает метод CropFieldOnX', function () {
-                document.getElementById("field-height").value = 30;
+                document.getElementsByClassName("field-height")[0].value = 30;
                 $('field-height').trigger('blur');
                 sinon.assert.called(spy_onblurheightcrop);
             });
             it('анфокус поля высоты в случае увеличения высоты вызывает метод EnlargeFieldOnX', function () {
-                document.getElementById("field-height").value = 38;
+                document.getElementsByClassName("field-height")[0].value = 47;
                 $('field-height').trigger('blur');
                 sinon.assert.called(spy_onblurheightenlarge);
             });
@@ -488,12 +489,12 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
                 sinon.assert.called(spy_updateview);
             });
             it('анфокус поля ширины в случае уменьшения высоты вызывает метод CropFieldOnY', function () {
-                document.getElementById("field-width").value = 50;
+                document.getElementsByClassName("field-width")[0].value = 50;
                 $('field-width').trigger('blur');
                 sinon.assert.called(spy_onblurwidthcrop);
             });
             it('анфокус поля ширины в случае увеличения высоты вызывает метод EnlargeFieldOnY', function () {
-                document.getElementById("field-width").value = 100;
+                document.getElementsByClassName("field-width")[0].value = 100;
                 $('field-width').trigger('blur');
                 sinon.assert.called(spy_onblurwidthtenlarge);
             });

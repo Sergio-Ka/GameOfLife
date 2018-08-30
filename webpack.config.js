@@ -6,7 +6,7 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: {
-    index: './source/pages/main/main.js',
+    index: './source/index.js',
     test: './source/test/test.js'
     },
 
@@ -16,8 +16,9 @@ module.exports = {
     },
 
     plugins: [
-        new HtmlWebpackPlugin({template: 'source/pages/main/main.pug', filename: '../index.html', chunks: ['index']}),
-        new HtmlWebpackPlugin({template: 'source/test/test.pug', filename: '../test.html', chunks: ['test']})
+        new ExtractTextPlugin('style.css'),
+        new HtmlWebpackPlugin({template: 'source/index.pug', filename: 'index.html', chunks: ['index']}),
+        new HtmlWebpackPlugin({template: 'source/test/test.pug', filename: 'test.html', chunks: ['test']})
     ],
 
     module: {
@@ -29,12 +30,12 @@ module.exports = {
             loader: 'pug-loader'
         },
         {
-            test: /\.css$/,
-            loader: ExtractTextPlugin.extract('css-loader')
-        },
-        {
             test: /\.styl$/,
             loader: ExtractTextPlugin.extract('css-loader!stylus-loader')
+        },
+        {
+            test: /\.css$/,
+            loader: ExtractTextPlugin.extract('css-loader')
         },
         {
             test: /\.(svg|ttf|otf|eot|woff)$/,

@@ -1,0 +1,85 @@
+/* blocks*/
+@import './blocks/std-button/std-button.styl'
+@import './blocks/slider1/slider1.styl'
+
+.main
+  font-size 18px
+  background #111111
+  height 100%
+  &__page
+    display flex
+    flex-direction column
+    height 100%
+    width 100%
+    margin 0
+    background #FFFFFF
+    color #FFFFFF
+
+.page__controls
+  flex 0 0 auto
+  display flex
+  flex-wrap wrap
+  justify-content center
+  width 100%
+  padding-top 25px
+  background #111111
+
+.page__article
+  flex 1 0 auto
+  width 100%
+  background #FFFFFF
+
+.page__content
+  width 100%
+
+.controls__std-button
+  margin 10px
+
+.controls__std-button_small
+  width 100px
+
+.controls__std-button_big
+  width 157px
+
+.page__header
+  flex 0 0 auto
+  display flex
+  flex-wrap wrap
+  justify-content center
+  width 100%
+  background #111111
+  color #FFFFFF
+
+.header__title
+  font-size 2rem
+  font-weight bold
+
+.page__footer
+  flex 0 0 auto
+  background #FFFFFF
+  color #111111
+  text-align center
+  font-weight bold
+  border-top 2px solid #111111
+  width 100%
+  padding 20px 0
+
+.universe
+  display table
+  margin 0 auto
+  background #FFFFFF
+
+.universe__line
+  display table-row
+
+.universe__square
+  display table-cell
+  width 8px
+  height 8px
+  border 1px solid #EEE
+
+.universe__square_isDead
+  background #FFFFFF
+
+.universe__square_isAlive
+  background #24CC08

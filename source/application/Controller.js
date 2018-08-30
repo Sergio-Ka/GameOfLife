@@ -6,7 +6,7 @@ export default class Controller {
 
         // обработчик кнопки создать, присвоение размеров полю, вызов метода по созданию поля
 
-        var ButtonCreateU = document.getElementById("create-universe");
+        var ButtonCreateU = document.getElementsByClassName("create-universe")[0];
         ButtonCreateU.addEventListener("click", function () {
             SetSizeOfField();
             EField.CreateRandomField();
@@ -16,7 +16,7 @@ export default class Controller {
 
         // обработчик кнопки стереть, присвоение размеров полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
 
-        var ButtonClearU = document.getElementById("clear-universe");
+        var ButtonClearU = document.getElementsByClassName("clear-universe")[0];
         ButtonClearU.addEventListener("click", function () {
             SetSizeOfField();
             EField.ClearField();
@@ -26,7 +26,7 @@ export default class Controller {
 
         // обработчик кнопки старт, запускает таймер
 
-        var ButtonStartGame = document.getElementById("start-game");
+        var ButtonStartGame = document.getElementsByClassName("start-game")[0];
         ButtonStartGame.addEventListener("click", function () {
             Timer();
             StartFlag = true;
@@ -34,7 +34,7 @@ export default class Controller {
 
         // обработчик кнопки стоп, обнуляет таймер
 
-        var ButtonStopGame = document.getElementById("stop-game");
+        var ButtonStopGame = document.getElementsByClassName("stop-game")[0];
         ButtonStopGame.addEventListener("click", function () {
             clearInterval(TimerId);
             StartFlag = false;
@@ -42,7 +42,7 @@ export default class Controller {
 
         // обработчик кнопки для продвижения на 1 шаг
 
-        var ButtonStep = document.getElementById("step");
+        var ButtonStep = document.getElementsByClassName("step")[0];
         ButtonStep.addEventListener("click", function () {
             EModelChangeField.FieldManipulatorByAlgorithm(EField);
             EView.UpdateView(EField);
@@ -51,18 +51,20 @@ export default class Controller {
         // обработчик клика по ячейке
 
         document.body.addEventListener("click", function (event) {
-            if (event.target.nodeName == "TD") {
-                var Coordinate = event.target.getAttribute("id").split(" ");
-                EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
-                EView.UpdateView(EField);
+            if (event.target.nodeName == "DIV") {
+                if(event.target.getAttribute("id") != null) {
+                    var Coordinate = event.target.getAttribute("id").split(" ");
+                    EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
+                    EView.UpdateView(EField);
+                }
             }
         });
 
         // обработчик анфокуса поля ввода высоты
 
-        var HeightInput = document.getElementById("field-height");
+        var HeightInput = document.getElementsByClassName("field-height")[0];
         HeightInput.onblur = function () {
-            var X = +document.getElementById("field-height").value;
+            var X = +document.getElementsByClassName("field-height")[0].value;
 
             if (CreateFieldFlag) {
                 if (X < EField.X) {
@@ -78,9 +80,9 @@ export default class Controller {
 
         // обработчик анфокуса поля ввода ширины
 
-        var WidthInput = document.getElementById("field-width");
+        var WidthInput = document.getElementsByClassName("field-width")[0];
         WidthInput.onblur = function () {
-            var Y = +document.getElementById("field-width").value;
+            var Y = +document.getElementsByClassName("field-width")[0].value;
 
             if (CreateFieldFlag) {
                 if (Y < EField.Y) {
@@ -112,7 +114,7 @@ export default class Controller {
         // функции +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         function Timer() {
-            var Speed = +document.getElementsByClassName("sliderValue")[0].value;
+            var Speed = +document.getElementsByClassName("js-slider-value")[0].value;
             clearInterval(TimerId);
             TimerId = setInterval(function () {
                 EModelChangeField.StopGame(EField);
@@ -127,25 +129,25 @@ export default class Controller {
         }
 
         function SetSizeOfField() {
-            if (document.getElementById("field-height").value / 2 == 0) {
-                document.getElementById("field-height").value = 38;
+            if (document.getElementsByClassName("field-height")[0].value / 2 == 0) {
+                document.getElementsByClassName("field-height")[0].value = 47;
             }
-            if (+document.getElementById("field-height").value > 100) {
+            if (+document.getElementsByClassName("field-height")[0].value > 100) {
                 EField.X = 100;
-                document.getElementById("field-height").value = 100;
+                document.getElementsByClassName("field-height")[0].value = 100;
             }
             else {
-                EField.X = +document.getElementById("field-height").value;
+                EField.X = +document.getElementsByClassName("field-height")[0].value;
             }
-            if (document.getElementById("field-width").value / 2 == 0) {
-                document.getElementById("field-width").value = 100;
+            if (document.getElementsByClassName("field-width")[0].value / 2 == 0) {
+                document.getElementsByClassName("field-width")[0].value = 100;
             }
-            if (+document.getElementById("field-width").value > 100) {
+            if (+document.getElementsByClassName("field-width")[0].value > 100) {
                 EField.Y = 100;
-                document.getElementById("field-width").value = 100;
+                document.getElementsByClassName("field-width")[0].value = 100;
             }
             else {
-                EField.Y = +document.getElementById("field-width").value;
+                EField.Y = +document.getElementsByClassName("field-width")[0].value;
             }
         }
     }

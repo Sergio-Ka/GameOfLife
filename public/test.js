@@ -60,39 +60,85 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+
+class ModelSquare {
+
+	constructor() {
+		this.value = 0;
+		this.valueOnLG = 0;
+		this.valueOnPG = 0;
+	}
+
+	get Value() {
+		return this.value;
+	}
+
+	set Value(val) {
+		this.value = val;
+	}
+
+	get ValueOnLastGeneration() {
+		return this.valueOnLG;
+	}
+
+	set ValueOnLastGeneration(val) {
+		this.valueOnLG = val;
+	}
+
+	get ValueOnPenultimateGeneration() {
+		return this.valueOnPG;
+	}
+
+	set ValueOnPenultimateGeneration(val) {
+		this.valueOnPG = val;
+	}
+
+	ChangeValue() {
+		if (this.value == 0) {
+			this.value = 1;
+		}
+		else {
+			this.value = 0;
+		}
+	}
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = ModelSquare;
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
-$("#slider1").slider({ // вид первого слайдера и настройки
-    value: '',
-    min: 0,
+var $slider1 = $('.js-slider-1');
+$slider1.slider({
+    min: 1,
     max: 10,
-	value: 8,
+    value: 8,
     create: function (event, ui) {
-        $('.ui-slider-handle').append('<input class="sliderValue" value="8"/>');
-        $('.ui-slider-handle').append('<div class="sliderValue_2"></div>');
+        var $sliderhandle = $('.ui-slider-handle');
+        $sliderhandle.append('<input class="slider-value js-slider-value" value="8"/><div class="slider-value__tail"></div>');
     },
     slide: function (event, ui) {
-        $(".sliderValue").val(ui.value);
+        var $slidervalue = $(".js-slider-value");
+        $slidervalue.val(ui.value);
     }
 });
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelSquare__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ModelSquare__ = __webpack_require__(0);
 
 
 
@@ -284,58 +330,7 @@ class ModelField {
 
 
 /***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-
-class ModelSquare {
-
-	constructor() {
-		this.value = 0;
-		this.valueOnLG = 0;
-		this.valueOnPG = 0;
-	}
-
-	get Value() {
-		return this.value;
-	}
-
-	set Value(val) {
-		this.value = val;
-	}
-
-	get ValueOnLastGeneration() {
-		return this.valueOnLG;
-	}
-
-	set ValueOnLastGeneration(val) {
-		this.valueOnLG = val;
-	}
-
-	get ValueOnPenultimateGeneration() {
-		return this.valueOnPG;
-	}
-
-	set ValueOnPenultimateGeneration(val) {
-		this.valueOnPG = val;
-	}
-
-	ChangeValue() {
-		if (this.value == 0) {
-			this.value = 1;
-		}
-		else {
-			this.value = 0;
-		}
-	}
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = ModelSquare;
-
-
-/***/ }),
-/* 9 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -453,7 +448,7 @@ class ModelChangeField {
 
 
 /***/ }),
-/* 10 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -466,28 +461,29 @@ class View {
 
         var Table, Tr, Td;
         var Content = document.getElementsByClassName("page__content")[0];
-        var Generation = document.getElementById("generation");
+        var Generation = document.getElementsByClassName("generation")[0];
 
         // проверка наличия уже созданной ранее таблицы вселенной, если есть то удаляем ее
 
-        Table = document.getElementById("universe");
+        Table = document.getElementsByClassName("universe")[0];
         if (Table != null) {
             Content.removeChild(Table);
         }
 
         // создаем новую таблицу вселенной с id=universe
 
-        Table = Content.appendChild(document.createElement("table"));
-        Table.setAttribute("id", "universe");
+        Table = Content.appendChild(document.createElement("div"));
+        Table.setAttribute("class", "universe");
 
         // заполняем ячейку строками и ячейками в них
         // id ячеек - координаты х,у будут нужны для обработчика клика по ячейке для изменения ее состояния
         // цвет ячейки в соответствии с модификатором класса, назанчаемым на CSS
 
         for (var i = 0; i < Field.X; i++) {
-            Tr = Table.appendChild(document.createElement("tr"));
+            Tr = Table.appendChild(document.createElement("div"));
+            Tr.setAttribute("class", "universe__line");
             for (var j = 0; j < Field.Y; j++) {
-                Td = Tr.appendChild(document.createElement("td"));
+                Td = Tr.appendChild(document.createElement("div"));
                 Td.setAttribute("id", i.toString() + " " + j.toString());
                 if (Field.ReadSquareValueByCoordinate(i, j) == 0) {
                     Td.setAttribute("class", "universe__square universe__square_isDead");
@@ -514,7 +510,7 @@ class View {
 
 
 /***/ }),
-/* 11 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -526,7 +522,7 @@ class Controller {
 
         // обработчик кнопки создать, присвоение размеров полю, вызов метода по созданию поля
 
-        var ButtonCreateU = document.getElementById("create-universe");
+        var ButtonCreateU = document.getElementsByClassName("create-universe")[0];
         ButtonCreateU.addEventListener("click", function () {
             SetSizeOfField();
             EField.CreateRandomField();
@@ -536,7 +532,7 @@ class Controller {
 
         // обработчик кнопки стереть, присвоение размеров полю, вызов метода по стиранию поля (по факту - заполнения ячейками в состоянии 0)
 
-        var ButtonClearU = document.getElementById("clear-universe");
+        var ButtonClearU = document.getElementsByClassName("clear-universe")[0];
         ButtonClearU.addEventListener("click", function () {
             SetSizeOfField();
             EField.ClearField();
@@ -546,7 +542,7 @@ class Controller {
 
         // обработчик кнопки старт, запускает таймер
 
-        var ButtonStartGame = document.getElementById("start-game");
+        var ButtonStartGame = document.getElementsByClassName("start-game")[0];
         ButtonStartGame.addEventListener("click", function () {
             Timer();
             StartFlag = true;
@@ -554,7 +550,7 @@ class Controller {
 
         // обработчик кнопки стоп, обнуляет таймер
 
-        var ButtonStopGame = document.getElementById("stop-game");
+        var ButtonStopGame = document.getElementsByClassName("stop-game")[0];
         ButtonStopGame.addEventListener("click", function () {
             clearInterval(TimerId);
             StartFlag = false;
@@ -562,7 +558,7 @@ class Controller {
 
         // обработчик кнопки для продвижения на 1 шаг
 
-        var ButtonStep = document.getElementById("step");
+        var ButtonStep = document.getElementsByClassName("step")[0];
         ButtonStep.addEventListener("click", function () {
             EModelChangeField.FieldManipulatorByAlgorithm(EField);
             EView.UpdateView(EField);
@@ -571,18 +567,20 @@ class Controller {
         // обработчик клика по ячейке
 
         document.body.addEventListener("click", function (event) {
-            if (event.target.nodeName == "TD") {
-                var Coordinate = event.target.getAttribute("id").split(" ");
-                EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
-                EView.UpdateView(EField);
+            if (event.target.nodeName == "DIV") {
+                if(event.target.getAttribute("id") != null) {
+                    var Coordinate = event.target.getAttribute("id").split(" ");
+                    EField.ChangeSquareValueByCoordinate(Coordinate[0], Coordinate[1]);
+                    EView.UpdateView(EField);
+                }
             }
         });
 
         // обработчик анфокуса поля ввода высоты
 
-        var HeightInput = document.getElementById("field-height");
+        var HeightInput = document.getElementsByClassName("field-height")[0];
         HeightInput.onblur = function () {
-            var X = +document.getElementById("field-height").value;
+            var X = +document.getElementsByClassName("field-height")[0].value;
 
             if (CreateFieldFlag) {
                 if (X < EField.X) {
@@ -598,9 +596,9 @@ class Controller {
 
         // обработчик анфокуса поля ввода ширины
 
-        var WidthInput = document.getElementById("field-width");
+        var WidthInput = document.getElementsByClassName("field-width")[0];
         WidthInput.onblur = function () {
-            var Y = +document.getElementById("field-width").value;
+            var Y = +document.getElementsByClassName("field-width")[0].value;
 
             if (CreateFieldFlag) {
                 if (Y < EField.Y) {
@@ -632,7 +630,7 @@ class Controller {
         // функции +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         function Timer() {
-            var Speed = +document.getElementsByClassName("sliderValue")[0].value;
+            var Speed = +document.getElementsByClassName("js-slider-value")[0].value;
             clearInterval(TimerId);
             TimerId = setInterval(function () {
                 EModelChangeField.StopGame(EField);
@@ -647,25 +645,25 @@ class Controller {
         }
 
         function SetSizeOfField() {
-            if (document.getElementById("field-height").value / 2 == 0) {
-                document.getElementById("field-height").value = 38;
+            if (document.getElementsByClassName("field-height")[0].value / 2 == 0) {
+                document.getElementsByClassName("field-height")[0].value = 47;
             }
-            if (+document.getElementById("field-height").value > 100) {
+            if (+document.getElementsByClassName("field-height")[0].value > 100) {
                 EField.X = 100;
-                document.getElementById("field-height").value = 100;
+                document.getElementsByClassName("field-height")[0].value = 100;
             }
             else {
-                EField.X = +document.getElementById("field-height").value;
+                EField.X = +document.getElementsByClassName("field-height")[0].value;
             }
-            if (document.getElementById("field-width").value / 2 == 0) {
-                document.getElementById("field-width").value = 100;
+            if (document.getElementsByClassName("field-width")[0].value / 2 == 0) {
+                document.getElementsByClassName("field-width")[0].value = 100;
             }
-            if (+document.getElementById("field-width").value > 100) {
+            if (+document.getElementsByClassName("field-width")[0].value > 100) {
                 EField.Y = 100;
-                document.getElementById("field-width").value = 100;
+                document.getElementsByClassName("field-width")[0].value = 100;
             }
             else {
-                EField.Y = +document.getElementById("field-width").value;
+                EField.Y = +document.getElementsByClassName("field-width")[0].value;
             }
         }
     }
@@ -674,39 +672,42 @@ class Controller {
 
 
 /***/ }),
-/* 12 */
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(13);
+__webpack_require__(10);
 $("body").append("<div id='mocha'></div>");
 $("body").append("<script> mocha.run();</script>");
-$("body").append("<div id='control-container' style='display: none;'></div>");
-$("#control-container").append("<input type='number' value='38' id='field-height')></div>");
-$("#control-container").append("<input type='number' value='100' id='field-width')></div>");
-$("#control-container").append("<div id='slider1'></div>");
-$("#control-container").append("<input type='text' value='1' id='generation' disabled)></div>");
-$("#control-container").append("<button id='create-universe'>СОЗДАТЬ</button>");
-$("#control-container").append("<button id='clear-universe'>СТЕРЕТЬ</button>");
-$("#control-container").append("<button id='start-game'>СТАРТ</button>");
-$("#control-container").append("<button id='stop-game'>СТОП</button>");
-$("#control-container").append("<button id='step'>1 ШАГ</button>");
+$("body").append("<div class='control-container' style='display: none;'></div>");
+$(".control-container").append("<input type='number' value='47' class='field-height')></div>");
+$(".control-container").append("<input type='number' value='100' class='field-width')></div>");
+$(".control-container").append("<div class='js-slider-1'></div>");
+$(".control-container").append("<input type='text' value='1' class='generation' disabled)></div>");
+$(".control-container").append("<button class='create-universe'>СОЗДАТЬ</button>");
+$(".control-container").append("<button class='clear-universe'>СТЕРЕТЬ</button>");
+$(".control-container").append("<button class='start-game'>СТАРТ</button>");
+$(".control-container").append("<button class='stop-game'>СТОП</button>");
+$(".control-container").append("<button class='step'>1 ШАГ</button>");
 $("body").append("<div class='page__content'></div>");
-__webpack_require__(0);
+__webpack_require__(1);
 
 /***/ }),
-/* 13 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__application_ModelSquare__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__application_ModelField__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__application_ModelChangeField__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__application_View__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__application_Controller__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__application_ModelSquare__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__application_ModelField__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__application_ModelChangeField__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__application_View__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__application_Controller__ = __webpack_require__(5);
 
 
 
@@ -1055,7 +1056,7 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
         });
     });
 
-    // проверка класса с отображения
+    // проверка класса с отображением
     describe("Проверка класса View", function () {
         describe("проверка метода UpdateView отвечающего за отрисовку таблицы поля", function () {
             it("передача методу поля 5*5 с отсутствующей жизнью и проверка того, что создана таблица 5*5", function () {
@@ -1064,9 +1065,9 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
                 Field.ClearField();
                 EView.UpdateView(Field);
 
-                assert.isNotNull(document.getElementById("universe"));
-                assert.equal(document.getElementsByTagName("tr").length, 7);
-                assert.equal(document.getElementsByTagName("td").length, 49);
+                assert.isNotNull(document.getElementsByClassName("universe"));
+                assert.equal(document.getElementsByClassName("universe__line").length, 7);
+                assert.equal(document.getElementsByClassName("universe__square").length, 49);
             });
             it("проверка того, что ячейкам присвоены соотвествующие классы и id = координаты", function () {
                 var Cell, Coordinate;
@@ -1109,6 +1110,7 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
         });
     });
 
+    // проверка класса контроллера
     describe("Проверка класса Controller", function () {
         describe("проверка метода Main, отвечающего за обработку событий, возникающих при взаимодействии с контролами", function () {
             var spy_updateview = sinon.spy(EView, 'UpdateView');
@@ -1121,74 +1123,74 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
 
             it('нажатие на кнопку СОЗДАТЬ вызывает функцию установки размеров поля с предварительной валидацией', function () {
                 EController.Main(Field, ChangeField, EView);
-                document.getElementById("field-height").value = 38;
-                document.getElementById("field-width").value = 100;
-                $('#create-universe').trigger('click');
-                assert.equal(Field.X, 40);
+                document.getElementsByClassName("field-height")[0].value = 47;
+                document.getElementsByClassName("field-width")[0].value = 100;
+                $('create-universe').trigger('click');
+                assert.equal(Field.X, 49);
                 assert.equal(Field.Y, 102);
             });
             it('нажатие на кнопку СОЗДАТЬ вызывает метод создания поля', function () {
                 var spy_create = sinon.spy(Field, 'CreateRandomField');
-                $('#create-universe').trigger('click');
+                $('create-universe').trigger('click');
                 sinon.assert.called(spy_create);
             });
             it('нажатие на кнопку СОЗДАТЬ вызывает метод отрисовки поля', function () {
-                $('#create-universe').trigger('click');
+                $('create-universe').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('нажатие на кнопку СТЕРЕТЬ вызывает функцию установки размеров поля с предварительной валидацией', function () {
-                document.getElementById("field-height").value = 38;
-                document.getElementById("field-width").value = 100;
-                $('#clear-universe').trigger('click');
+                document.getElementsByClassName("field-height")[0].value = 38;
+                document.getElementsByClassName("field-width")[0].value = 100;
+                $('clear-universe').trigger('click');
                 assert.equal(Field.X, 40);
                 assert.equal(Field.Y, 102);
             });
             it('нажатие на кнопку СТЕРЕТЬ вызывает метод стирания поля', function () {
                 var spy_create = sinon.spy(Field, 'ClearField');
-                $('#clear-universe').trigger('click');
+                $('clear-universe').trigger('click');
                 sinon.assert.called(spy_create);
             });
             it('нажатие на кнопку СТЕРЕТЬ вызывает метод отрисовки поля', function () {
-                $('#clear-universe').trigger('click');
+                $('clear-universe').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('нажатие на кнопку СТАРТ вызывает функцию остановки таймера clearInterval (отчистка, если был запущен ранее)', function () {
-                $('#start-game').trigger('click');
+                $('start-game').trigger('click');
                 sinon.assert.called(spy_clearInt);
             });
             it('нажатие на кнопку СТАРТ вызывает функцию запуска таймера setInterval', function () {
                 var spy_setInt = sinon.spy(window, 'setInterval');
-                $('#start-game').trigger('click');
+                $('start-game').trigger('click');
                 sinon.assert.called(spy_setInt);
             });
             it('нажатие на кнопку СТОП вызывает функцию остановки таймера clearInterval', function () {
-                $('#stop-game').trigger('click');
+                $('stop-game').trigger('click');
                 sinon.assert.called(spy_clearInt);
             });
             it('нажатие на кнопку 1 ШАГ вызывает метод пересчета поля', function () {
-                $('#step').trigger('click');
+                $('step').trigger('click');
                 sinon.assert.called(spy_changefield);
             });
             it('нажатие на кнопку 1 ШАГ вызывает метод отрисовки поля', function () {
-                $('#step').trigger('click');
+                $('step').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('нажатие на ячейку поля вызывает метод изменения ее состояния', function () {
                 var spy_changesquare = sinon.spy(Field, 'ChangeSquareValueByCoordinate');
-                $('td').trigger('click');
+                $('div').trigger('click');
                 sinon.assert.called(spy_changesquare);
             });
             it('нажатие на ячейку поля вызывает метод отрисовки поля', function () {
-                $('td').trigger('click');
+                $('div').trigger('click');
                 sinon.assert.called(spy_updateview);
             });
             it('анфокус поля высоты в случае уменьшения высоты вызывает метод CropFieldOnX', function () {
-                document.getElementById("field-height").value = 30;
+                document.getElementsByClassName("field-height")[0].value = 30;
                 $('field-height').trigger('blur');
                 sinon.assert.called(spy_onblurheightcrop);
             });
             it('анфокус поля высоты в случае увеличения высоты вызывает метод EnlargeFieldOnX', function () {
-                document.getElementById("field-height").value = 38;
+                document.getElementsByClassName("field-height")[0].value = 47;
                 $('field-height').trigger('blur');
                 sinon.assert.called(spy_onblurheightenlarge);
             });
@@ -1197,12 +1199,12 @@ describe("Тест JS кода игры Жизнь Конвея", function () {
                 sinon.assert.called(spy_updateview);
             });
             it('анфокус поля ширины в случае уменьшения высоты вызывает метод CropFieldOnY', function () {
-                document.getElementById("field-width").value = 50;
+                document.getElementsByClassName("field-width")[0].value = 50;
                 $('field-width').trigger('blur');
                 sinon.assert.called(spy_onblurwidthcrop);
             });
             it('анфокус поля ширины в случае увеличения высоты вызывает метод EnlargeFieldOnY', function () {
-                document.getElementById("field-width").value = 100;
+                document.getElementsByClassName("field-width")[0].value = 100;
                 $('field-width').trigger('blur');
                 sinon.assert.called(spy_onblurwidthtenlarge);
             });
