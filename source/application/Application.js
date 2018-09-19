@@ -1,13 +1,11 @@
-'use strict';
+import { ModelField } from './ModelField';
+import { ModelChangeField } from './ModelChangeField';
+import { View } from './View';
+import { Controller } from './Controller';
 
-import ModelField from './ModelField';
-import ModelChangeField from './ModelChangeField';
-import View from './View';
-import Controller from './Controller';
+const eField = new ModelField();
+const eModelChangeField = new ModelChangeField();
+const eView = new View();
+const eController = new Controller();
 
-var EField = new ModelField();
-var EModelChangeField = new ModelChangeField();
-var EView = new View();
-var EController = new Controller();
-
-EController.Main(EField, EModelChangeField, EView);
+eController.main(eField, eModelChangeField, eView);

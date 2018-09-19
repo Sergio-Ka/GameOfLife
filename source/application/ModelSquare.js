@@ -1,43 +1,43 @@
-'use strict';
+class ModelSquare {
+  constructor() {
+    this.value = 0;
+    this.valueOnLG = 0;
+    this.valueOnPG = 0;
+  }
 
-export default class ModelSquare {
+  getValue() {
+    return this.value;
+  }
 
-	constructor() {
-		this.value = 0;
-		this.valueOnLG = 0;
-		this.valueOnPG = 0;
-	}
+  setValue(val) {
+    this.value = val;
+  }
 
-	get Value() {
-		return this.value;
-	}
+  getValueOnLastGeneration() {
+    return this.valueOnLG;
+  }
 
-	set Value(val) {
-		this.value = val;
-	}
+  setValueOnLastGeneration(val) {
+    this.valueOnLG = val;
+  }
 
-	get ValueOnLastGeneration() {
-		return this.valueOnLG;
-	}
+  getValueOnPenultimateGeneration() {
+    return this.valueOnPG;
+  }
 
-	set ValueOnLastGeneration(val) {
-		this.valueOnLG = val;
-	}
+  setValueOnPenultimateGeneration(val) {
+    this.valueOnPG = val;
+  }
 
-	get ValueOnPenultimateGeneration() {
-		return this.valueOnPG;
-	}
-
-	set ValueOnPenultimateGeneration(val) {
-		this.valueOnPG = val;
-	}
-
-	ChangeValue() {
-		if (this.value == 0) {
-			this.value = 1;
-		}
-		else {
-			this.value = 0;
-		}
-	}
+  changeValue() {
+    if (this.value === 0) {
+      this.value = 1;
+    } else {
+      this.value = 0;
+    }
+  }
 }
+
+export {
+  ModelSquare,
+};
