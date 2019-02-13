@@ -19,7 +19,7 @@ class Controller {
     let createFieldFlag = false;
 
     // функции
-    const actionOnTimer = function actOnTimer() {
+    const actionOnTimer = () => {
       eModelChangeField.stopGame(eField);
       eModelChangeField.manipulateFieldByAlgorithm(eField);
       eView.updateView(eField);
@@ -30,13 +30,13 @@ class Controller {
       }
     };
 
-    const timer = function someTimer() {
+    const timer = () => {
       const speed = Number(document.getElementsByClassName('js-slider-value')[0].value);
       clearInterval(timerId);
       timerId = setInterval(actionOnTimer, (10 - speed) * 100);
     };
 
-    const setSizeOfField = function someSetSizeOfField() {
+    const setSizeOfField = () => {
       if (document.getElementsByClassName('field-height')[0].value / 2 === 0) {
         document.getElementsByClassName('field-height')[0].value = 47;
       }
@@ -57,36 +57,36 @@ class Controller {
       }
     };
 
-    const create = function createUniverse() {
+    const create = () => {
       setSizeOfField();
       eField.createRandomField();
       eView.updateView(eField);
       createFieldFlag = true;
     };
 
-    const clear = function clearUniverse() {
+    const clear = () => {
       setSizeOfField();
       eField.clearField();
       eView.updateView(eField);
       createFieldFlag = true;
     };
 
-    const start = function startGame() {
+    const start = () => {
       timer();
       startFlag = true;
     };
 
-    const stop = function stopGame() {
+    const stop = () => {
       clearInterval(timerId);
       startFlag = false;
     };
 
-    const step = function oneStep() {
+    const step = () => {
       eModelChangeField.manipulateFieldByAlgorithm(eField);
       eView.updateView(eField);
     };
 
-    const cellClick = function clickOnCell(event) {
+    const cellClick = (event) => {
       if (event.target.nodeName === 'DIV') {
         if (event.target.getAttribute('data-id') !== null) {
           const coordinate = event.target.getAttribute('data-id').split(' ');
@@ -96,7 +96,7 @@ class Controller {
       }
     };
 
-    const changeHI = function changeHeightInput() {
+    const changeHI = () => {
       const x = Number(document.getElementsByClassName('field-height')[0].value);
       if (createFieldFlag) {
         if (x < eField.getX()) {
@@ -108,7 +108,7 @@ class Controller {
       }
     };
 
-    const changeWI = function changeWidthInput() {
+    const changeWI = () => {
       const y = Number(document.getElementsByClassName('field-width')[0].value);
       if (createFieldFlag) {
         if (y < eField.getY()) {
@@ -120,7 +120,7 @@ class Controller {
       }
     };
 
-    const changeSpeed = function changeSpeed() {
+    const changeSpeed = () => {
       if (startFlag) {
         timer();
       }

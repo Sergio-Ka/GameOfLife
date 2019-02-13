@@ -1,11 +1,22 @@
 # GameOfLife
-javaScript game of Life by John Conway
+JavaScript Game of Life by John Conway
 
 Игра Жизнь Джона Конвея, реализованнная на языке Java Script
 
 GitHubPages: https://sergio-ka.github.io/GameOfLife/
 
-Диаграмма классов UML: https://sergio-ka.github.io/GameOfLife/UMLdiaofclass.png
+Диаграмма классов UML: https://sergio-ka.github.io/GameOfLife/UML-diagram-of-class.png
+
+Клонирование репозитория:
+git clone https://github.com/Sergio-Ka/GameOfLife.git
+
+Установка модулей для сборки:
+npm i (или npm install)
+
+Команды:
+- разовая сборка для production: npm run build,
+- сборка для разработки (с опцией -watch и без минификации js-файла сборки): npm run dev,
+- сервер с live reload: npm run server, http://localhost:8080/.
 
 Для открытия игры запустить index.html в папке /public. Для тестов открыть test.html в папке /public либо перейти по кнопке ТЕСТ с экрана игры.
 
@@ -42,15 +53,3 @@ GitHubPages: https://sergio-ka.github.io/GameOfLife/
 Класс относится к Controller паттерна MVC.
 
 В Application.js данные классы импортируются, создается экземпляр каждого класса. Экземпляры классов ModelField (в его модуль уже импортирован класс ModelSquare), ModelChangeField, View передаются экземпляру класса Controller. Application.js подключен к html-странице, на которой созданы контролы с соответствующими классами, и создан блок для отрисовки в нем таблицы для отображения поля. Таким образом обеспечивается разделение приложения на четкие слои. Сама информация и логика ее преобразования содержится в классах Model, вызывает эти преобразования класс Controller, он же передает вызовом соответствующего метода классу View команду на отображение. View берет необходимую информацию из класса модели (таким образом View так же "знает" о модели). Controller "знает" и о Model и о View, вызывая их методы.
-
-Использованы следующие скрипты поставленные из NPM:
-- css-loader
-- extract-text-webpack-plugin
-- file-loader
-- html-webpack-plugin
-- pug
-- pug-loader
-- stylus
-- stylus-loader
-- webpack
-- eslint

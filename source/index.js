@@ -1,4 +1,10 @@
-import './index.styl';
+require('webpack-jquery-ui/slider');
 
-require('./blocks/slider1/slider1.js');
+const requireAllFiles = (requireContext) => {
+  return requireContext.keys().map(requireContext);
+};
+
+requireAllFiles(require.context('./', true, /^\.\/.*\.(styl|css|png|jpg)$/));
+
+require('./blocks/slider-with-pop-up/slider-with-pop-up.js');
 require('./application/Application.js');

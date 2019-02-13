@@ -1,4 +1,4 @@
-import { ModelField } from './ModelField';
+import ModelField from './model-field';
 import { ModelChangeField } from './ModelChangeField';
 import { View } from './View';
 import { Controller } from './Controller';

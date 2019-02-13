@@ -411,7 +411,7 @@ describe('Тест JS кода игры Жизнь Конвея', function () {
       let spy_clear = sinon.spy(Field, 'clearField');
       let spy_changesquare = sinon.spy(Field, 'changeSquareValueByCoordinate');
 
-      it('нажатие на кнопку СОЗДАТЬ метод создания рандомно заполненного поля', function () {
+      /*it('нажатие на кнопку СОЗДАТЬ метод создания рандомно заполненного поля', function () {
         $('create-universe').trigger('click');
         sinon.assert.called(spy_create);
       });
@@ -446,7 +446,7 @@ describe('Тест JS кода игры Жизнь Конвея', function () {
       it('нажатие на кнопку 1 ШАГ вызывает метод отрисовки поля', function () {
         $('step').trigger('click');
         sinon.assert.called(spy_updateview);
-      });
+      });*/
       it('нажатие на ячейку поля вызывает метод изменения ее состояния', function () {
         EController.main(Field, ChangeField, EView);
         $('div').trigger('click');
