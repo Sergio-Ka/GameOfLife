@@ -1,11 +1,7 @@
-import ModelField from './model-field';
-import { ModelChangeField } from './ModelChangeField';
-import { View } from './View';
-import { Controller } from './Controller';
+import FacadeAndPublisherOfModel from './model-facade';
+import View from './view';
+import Controller from './controller';
 
-const eField = new ModelField();
-const eModelChangeField = new ModelChangeField();
-const eView = new View();
-const eController = new Controller();
-
-eController.main(eField, eModelChangeField, eView);
+const model = new FacadeAndPublisherOfModel();
+const view = new View();
+const controller = new Controller(model, view);

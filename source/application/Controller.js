@@ -1,167 +1,58 @@
 class Controller {
-  constructor() {
-    this.document = window.document;
+  constructor(model, view) {
+    this.model = model;
+    this.view = view;
+    this.timerId = 0;
+    this._sibscribe();
   }
 
-  main(eField, eModelChangeField, eView) {
-    const buttonCreateU = this.document.getElementsByClassName('create-universe')[0];
-    const buttonClearU = this.document.getElementsByClassName('clear-universe')[0];
-    const buttonStartGame = this.document.getElementsByClassName('start-game')[0];
-    const buttonStopGame = this.document.getElementsByClassName('stop-game')[0];
-    const buttonStep = this.document.getElementsByClassName('step')[0];
-    const heightInput = this.document.getElementsByClassName('field-height')[0];
-    const widthInput = this.document.getElementsByClassName('field-width')[0];
-    const slider = this.document.getElementsByClassName('ui-slider-handle')[0];
-    const documentBody = this.document.body;
+  updateFromView(event, ...args) {
+    switch (event) {
+      case 'createUniverse': this.model.createField(args[0], args[1]);
+        break;
+      case 'clearUniverse': this.model.clearField();
+        break;
+      case 'startGame': this._timer(args[0]);
+        break;
+      case 'stopGame': clearInterval(this.timerId);
+        break;
+      case 'makeStep': this.model.calculateGeneration();
+        break;
+      case 'cellClick': this.model.toggleCellStatus(args[0], args[1]);
+        break;
+      case 'changeHightInput': this.model.resizeField('Y', args[0]);
+        break;
+      case 'changeWidthInput': this.model.resizeField('X', args[0]);
+        break;
+      default:
+        break;
+    }
+  }
 
-    let timerId;
-    let startFlag = false;
-    let createFieldFlag = false;
+  updateFromModel(rows, colums, field, gameOverStatus, endGameStatus, numberOfGeneration) {
+    this.gameOverStatus = gameOverStatus;
+    this.view.createView(field, endGameStatus, numberOfGeneration);
+  }
 
-    // функции
-    const actionOnTimer = () => {
-      eModelChangeField.stopGame(eField);
-      eModelChangeField.manipulateFieldByAlgorithm(eField);
-      eView.updateView(eField);
-      if (eField.getGameOver() !== 0) {
-        clearInterval(timerId);
-        startFlag = false;
-        eField.setGameOver(0);
-      }
-    };
+  _sibscribe() {
+    this.model.subscribe(this);
+    this.view.subscribe(this);
+  }
 
-    const timer = () => {
-      const speed = Number(document.getElementsByClassName('js-slider-value')[0].value);
-      clearInterval(timerId);
-      timerId = setInterval(actionOnTimer, (10 - speed) * 100);
-    };
+  _actionOnTimer() {
+    this.model.calculateGeneration();
+    if (this.gameOverStatus) {
+      clearInterval(this.timerId);
+      // startFlag = false;
+      // field.setGameOver(false);
+      // field.setEndGameStatus(0);
+    }
+  }
 
-    const setSizeOfField = () => {
-      if (document.getElementsByClassName('field-height')[0].value / 2 === 0) {
-        document.getElementsByClassName('field-height')[0].value = 47;
-      }
-      if (Number(document.getElementsByClassName('field-height')[0].value) > 100) {
-        eField.setX(100);
-        document.getElementsByClassName('field-height')[0].value = 100;
-      } else {
-        eField.setX(Number(document.getElementsByClassName('field-height')[0].value));
-      }
-      if (document.getElementsByClassName('field-width')[0].value / 2 === 0) {
-        document.getElementsByClassName('field-width')[0].value = 100;
-      }
-      if (Number(document.getElementsByClassName('field-width')[0].value) > 100) {
-        eField.setY(100);
-        document.getElementsByClassName('field-width')[0].value = 100;
-      } else {
-        eField.setY(Number(document.getElementsByClassName('field-width')[0].value));
-      }
-    };
-
-    const create = () => {
-      setSizeOfField();
-      eField.createRandomField();
-      eView.updateView(eField);
-      createFieldFlag = true;
-    };
-
-    const clear = () => {
-      setSizeOfField();
-      eField.clearField();
-      eView.updateView(eField);
-      createFieldFlag = true;
-    };
-
-    const start = () => {
-      timer();
-      startFlag = true;
-    };
-
-    const stop = () => {
-      clearInterval(timerId);
-      startFlag = false;
-    };
-
-    const step = () => {
-      eModelChangeField.manipulateFieldByAlgorithm(eField);
-      eView.updateView(eField);
-    };
-
-    const cellClick = (event) => {
-      if (event.target.nodeName === 'DIV') {
-        if (event.target.getAttribute('data-id') !== null) {
-          const coordinate = event.target.getAttribute('data-id').split(' ');
-          eField.changeSquareValueByCoordinate(coordinate[0], coordinate[1]);
-          eView.updateView(eField);
-        }
-      }
-    };
-
-    const changeHI = () => {
-      const x = Number(document.getElementsByClassName('field-height')[0].value);
-      if (createFieldFlag) {
-        if (x < eField.getX()) {
-          eField.cropFieldOnX(x);
-        } else if (x > eField.getX()) {
-          eField.enlargeFieldOnX(x);
-        }
-        eView.updateView(eField);
-      }
-    };
-
-    const changeWI = () => {
-      const y = Number(document.getElementsByClassName('field-width')[0].value);
-      if (createFieldFlag) {
-        if (y < eField.getY()) {
-          eField.cropFieldOnY(y);
-        } else if (y > eField.getY()) {
-          eField.enlargeFieldOnY(y);
-        }
-        eView.updateView(eField);
-      }
-    };
-
-    const changeSpeed = () => {
-      if (startFlag) {
-        timer();
-      }
-    };
-
-    // Обработчики
-
-    // создание поля при загрузке
-    window.onload = create;
-
-    // обработчик кнопки создать, присвоение размеров полю, вызов метода по созданию поля
-    buttonCreateU.addEventListener('click', create);
-
-    /* обработчик кнопки стереть, присвоение размеров полю, вызов метода
-    по стиранию поля (по факту - заполнения ячейками в состоянии 0) */
-    buttonClearU.addEventListener('click', clear);
-
-    // обработчик кнопки старт, запускает таймер
-    buttonStartGame.addEventListener('click', start);
-
-    // обработчик кнопки стоп, обнуляет таймер
-    buttonStopGame.addEventListener('click', stop);
-
-    // обработчик кнопки для продвижения на 1 шаг
-    buttonStep.addEventListener('click', step);
-
-    // обработчик клика по ячейке
-    documentBody.addEventListener('click', cellClick);
-
-    // обработчик анфокуса поля ввода высоты
-    heightInput.addEventListener('change', changeHI);
-
-    // обработчик анфокуса поля ввода ширины
-    widthInput.addEventListener('change', changeWI);
-
-    // обработчики контрола скорости для динамического ее изменения
-    slider.addEventListener('click', changeSpeed);
-    slider.addEventListener('mousemove', changeSpeed);
+  _timer(speed) {
+    clearInterval(this.timerId);
+    this.timerId = setInterval(this._actionOnTimer(), (10 - speed) * 100);
   }
 }
 
-export {
-  Controller,
-};
+export default Controller;

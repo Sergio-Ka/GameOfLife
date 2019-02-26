@@ -1,10 +1,10 @@
-import { ModelSquare } from '../application/ModelSquare';
-import { ModelField } from '../application/ModelField';
-import { ModelChangeField } from '../application/ModelChangeField';
-import { View } from '../application/View';
-import { Controller } from '../application/Controller';
+import ModelCell from '../application/model-cell';
+import ModelField from '../application/model-field';
+import ModelChangeField from '../application/model-change-field';
+import View from '../application/view';
+import Controller from '../application/controller';
 
-const Cell = new ModelSquare();
+const Cell = new ModelCell();
 const Field = new ModelField();
 const ChangeField = new ModelChangeField();
 const EView = new View();

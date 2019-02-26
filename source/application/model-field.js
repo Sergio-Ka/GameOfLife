@@ -1,32 +1,35 @@
-import ModelCell from './model-cell';
+import Cell from './model-cell';
 
-class ModelField {
+class Field {
   constructor() {
-    this.x = 3;
-    this.y = 3;
+    this.xSizeOfField = 3;
+    this.ySizeOfField = 3;
     this.numberOfGeneraton = 1;
-    this.gameOver = 0;
+    this.gameOver = false;
+    this.endGameStatus = 0;
+    this.sumOfAllCells = 0;
+    this.field = null;
   }
 
-  getX() {
-    return this.x;
+  getXSizeOfField() {
+    return this.xSizeOfField;
   }
 
-  setX(value) {
-    if (value >= 1) {
-      this.x = value + 2;
+  setXSizeOfField(value) {
+    if (Number(value) >= 1) {
+      this.xSizeOfField = Number(value) + 2;
     } else {
-      this.x = 3;
+      this.xSizeOfField = 3;
     }
   }
 
-  getY() {
-    return this.y;
+  getYSizeOfField() {
+    return this.ySizeOfField;
   }
 
-  setY(value) {
-    if (value >= 1) {
-      this.y = value + 2;
+  setYSizeOfField(value) {
+    if (Number(value) >= 1) {
+      this.ySizeOfField = Number(value) + 2;
     } else {
       this.y = 3;
     }
@@ -49,131 +52,176 @@ class ModelField {
   }
 
   setGameOver(value) {
-    if (value === 1 || value === 2 || value === 3) {
+    if (value === true || value === false) {
       this.gameOver = value;
     } else {
-      this.gameOver = 0;
+      this.gameOver = false;
+    }
+  }
+
+  getEndGameStatus() {
+    return this.endGameStatus;
+  }
+
+  setEndGameStatus(value) {
+    if (value === 0 || value === 1 || value === 2 || value === 3) {
+      this.endGameStatus = value;
+    } else {
+      this.endGameStatus = 0;
+    }
+  }
+
+  getSumOfAllCells() {
+    return this.sumOfAllCells;
+  }
+
+  setSumOfAllCells(value) {
+    if (value >= 0) {
+      this.sumOfAllCells = value;
+    } else {
+      this.sumOfAllCells = 0;
     }
   }
 
   createRandomField() {
-    this.field = [this.x];
+    this.field = Array(this.ySizeOfField).fill(null);
     this.numberOfGeneraton = 1;
-    this.gameOver = 0;
+    this.gameOver = false;
+    this.endGameStatus = 0;
 
-    for (let i = 0; i < this.x; i += 1) {
-      this.field[i] = [this.y];
-      for (let j = 0; j < this.y; j += 1) {
-        this.field[i][j] = new ModelCell();
-        if (i === 0 || i === this.x - 1 || j === 0 || j === this.y - 1) {
-          this.field[i][j].setStatus(0);
+    for (let i = 0; i < this.ySizeOfField; i += 1) {
+      this.field[i] = Array(this.xSizeOfField).fill(null);
+      for (let j = 0; j < this.xSizeOfField; j += 1) {
+        this.field[i][j] = new Cell();
+        if (i === 0 || i === this.ySizeOfField - 1 || j === 0 || j === this.xSizeOfField - 1) {
+          this.field[i][j].setLifeStatus(0);
         } else {
-          this.field[i][j].setStatus(Math.round(Math.random()));
+          this.field[i][j].setLifeStatus(Math.round(Math.random()));
         }
       }
     }
+
+    this._sumAllCells();
   }
 
   clearField() {
-    this.field = [this.x];
+    this.field = Array(this.ySizeOfField).fill(null);
     this.numberOfGeneraton = 1;
-    this.gameOver = 0;
+    this.gameOver = false;
+    this.endGameStatus = 0;
 
-    for (let i = 0; i < this.x; i += 1) {
-      this.field[i] = [this.y];
-      for (let j = 0; j < this.y; j += 1) {
-        this.field[i][j] = new ModelCell();
-        this.field[i][j].setStatus(0);
-        this.field[i][j].setStatusOnLastGeneration(0);
-        this.field[i][j].setStatusOnPenultimateGeneration(0);
+    for (let i = 0; i < this.ySizeOfField; i += 1) {
+      this.field[i] = Array(this.xSizeOfField).fill(null);
+      for (let j = 0; j < this.xSizeOfField; j += 1) {
+        this.field[i][j] = new Cell();
       }
+    }
+
+    this.sumOfAllCells = 0;
+  }
+
+  cropFieldOnXaxis(xSize) {
+    if (this.field) {
+      this.xSizeOfField = xSize + 2;
+
+      for (let i = 0; i < this.field.length; i += 1) {
+        for (let j = this.field[i].length; this.field[i].length > xSize + 2; j -= 1) {
+          this.field[i].pop();
+        }
+        this.field[i][xSize + 1].setLifeStatus(0);
+      }
+
+      this._sumAllCells();
     }
   }
 
-  cropFieldOnX(x) {
-    if (this.field !== undefined) {
-      this.x = x + 2;
+  cropFieldOnYaxis(ySize) {
+    if (this.field) {
+      this.ySizeOfField = ySize + 2;
 
-      for (let i = this.field.length; this.field.length > x + 2; i -= 1) {
+      for (let i = this.field.length; this.field.length > ySize + 2; i -= 1) {
         this.field.pop();
       }
 
-      for (let j = 0; j < this.field[x + 1].length; j += 1) {
-        this.field[x + 1][j].setStatus(0);
+      for (let j = 0; j < this.field[ySize + 1].length; j += 1) {
+        this.field[ySize + 1][j].setLifeStatus(0);
       }
+
+      this._sumAllCells();
     }
   }
 
-  cropFieldOnY(y) {
-    if (this.field !== undefined) {
-      this.y = y + 2;
+  enlargeFieldOnXaxis(xSize) {
+    if (this.field) {
+      const oldY = this.xSizeOfField;
+      this.xSizeOfField = xSize + 2;
 
-      for (let i = 0; i < this.field.length; i += 1) {
-        for (let j = this.field[i].length; this.field[i].length > y + 2; j -= 1) {
-          this.field[i].pop();
-        }
-        this.field[i][y + 1].setStatus(0);
-      }
-    }
-  }
-
-  enlargeFieldOnX(x) {
-    if (this.field !== undefined) {
-      this.x = x + 2;
-
-      for (let i = this.field.length; i < x + 2; i += 1) {
-        this.field[i] = [this.y];
-        for (let j = 0; j < this.y; j += 1) {
-          this.field[i][j] = new ModelCell();
+      for (let i = 0; i < this.ySizeOfField; i += 1) {
+        for (let j = oldY; j < this.xSizeOfField; j += 1) {
+          this.field[i][j] = new Cell();
         }
       }
     }
   }
 
-  enlargeFieldOnY(y) {
-    if (this.field !== undefined) {
-      const oldY = this.y;
-      this.y = y + 2;
+  enlargeFieldOnYaxis(ySize) {
+    if (this.field) {
+      this.ySizeOfField = ySize + 2;
 
-      for (let i = 0; i < this.x; i += 1) {
-        for (let j = oldY; j < this.y; j += 1) {
-          this.field[i][j] = new ModelCell();
+      for (let i = this.field.length; i < ySize + 2; i += 1) {
+        this.field[i] = Array(this.xSizeOfField).fill(null);
+        for (let j = 0; j < this.xSizeOfField; j += 1) {
+          this.field[i][j] = new Cell();
         }
       }
     }
   }
 
-  readSquareValueByCoordinate(x, y) {
-    return this.field[x][y].getStatus();
+  readCellLifeStatus(i, j) {
+    return this.field[i][j].getLifeStatus();
   }
 
-  readSquareValueByCoordinateOnLastGen(x, y) {
-    return this.field[x][y].getStatusOnLastGeneration();
+  readCellLifeStatusOnLastGeneration(i, j) {
+    return this.field[i][j].getLifeStatusOnLastGeneration();
   }
 
-  readSquareValueByCoordinateOnPenultGen(x, y) {
-    return this.field[x][y].getStatusOnPenultimateGeneration();
+  readCellLifeStatusOnPenultimateGeneration(i, j) {
+    return this.field[i][j].getLifeStatusOnPenultimateGeneration();
   }
 
-  changeSquareValueByCoordinate(x, y) {
-    if (x === 0 || x === this.x - 1 || y === 0 || y === this.y - 1) {
-      this.field[x][y].setStatus(0);
+  toggleCellLifeStatus(i, j) {
+    if (i === 0 || i === this.ySizeOfField - 1 || j === 0 || j === this.xSizeOfField - 1) {
+      this.field[i][j].setLifeStatus(0);
     } else {
-      this.field[x][y].changeValue();
+      this.field[i][j].toggleLifeStatus();
+      if (this.field[i][j].getLifeStatus() === 1) {
+        this.sumOfAllCells += 1;
+      } else {
+        this.sumOfAllCells -= 1;
+      }
     }
   }
 
-  setSquareValueByCoordinate(x, y, value) {
-    this.field[x][y].setStatus(value);
+  setCellLifeStatus(i, j, value) {
+    this.field[i][j].setLifeStatus(value);
   }
 
-  setSquareValueOnLGByCoordinate(x, y, value) {
-    this.field[x][y].setStatusOnLastGeneration(value);
+  setCellLifeStatusOnLastGeneration(i, j, value) {
+    this.field[i][j].setLifeStatusOnLastGeneration(value);
   }
 
-  setSquareValueOnPGByCoordinate(x, y, value) {
-    this.field[x][y].setStatusOnPenultimateGeneration(value);
+  setCellLifeStatusOnPenultimateGeneration(i, j, value) {
+    this.field[i][j].setLifeStatusOnPenultimateGeneration(value);
+  }
+
+  _sumAllCells() {
+    this.sumOfAllCells = 0;
+    for (let i = 1; i < this.ySizeOfField - 1; i += 1) {
+      for (let j = 1; j < this.xSizeOfField - 1; j += 1) {
+        this.sumOfAllCells += Number(this.field[i][j].getLifeStatus());
+      }
+    }
   }
 }
 
-export default ModelField;
+export default Field;

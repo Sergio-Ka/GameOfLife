@@ -1,37 +1,37 @@
-class ModelCell {
+class Cell {
   constructor() {
-    this.alive = 0;
-    this.aliveOnLastGeneration = 0;
-    this.aliveOnPenultimateGeneration = 0;
+    this.lifeStatus = 0;
+    this.lifeStatusOnLastGeneration = 0;
+    this.lifeStatusOnPenultimateGeneration = 0;
   }
 
-  getStatus() {
-    return this.alive;
+  getLifeStatus() {
+    return this.lifeStatus;
   }
 
-  setStatus(value) {
-    this.alive = value;
+  setLifeStatus(value) {
+    this.lifeStatus = value;
   }
 
-  getStatusOnLastGeneration() {
-    return this.aliveOnLastGeneration;
+  getLifeStatusOnLastGeneration() {
+    return this.lifeStatusOnLastGeneration;
   }
 
-  setStatusOnLastGeneration(value) {
-    this.aliveOnLastGeneration = value;
+  setLifeStatusOnLastGeneration(value) {
+    this.lifeStatusOnLastGeneration = value;
   }
 
-  getStatusOnPenultimateGeneration() {
-    return this.aliveOnPenultimateGeneration;
+  getLifeStatusOnPenultimateGeneration() {
+    return this.lifeStatusOnPenultimateGeneration;
   }
 
-  setStatusOnPenultimateGeneration(value) {
-    this.aliveOnPenultimateGeneration = value;
+  setLifeStatusOnPenultimateGeneration(value) {
+    this.lifeStatusOnPenultimateGeneration = value;
   }
 
-  toggleStatus() {
-    this.alive = (this.alive === 0) ? 1 : 0;
+  toggleLifeStatus() {
+    this.lifeStatus = (this.lifeStatus === 0) ? 1 : 0;
   }
 }
 
-export default ModelCell;
+export default Cell;

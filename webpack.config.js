@@ -7,7 +7,7 @@ const MinifyPlugin = require('babel-minify-webpack-plugin');
 module.exports = {
   entry: {
     index: './source/index.js',
-    test: './source/test/test.js',
+    // test: './source/test/test.js',
   },
 
   output: {
@@ -18,7 +18,7 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('style.css'),
     new HtmlWebpackPlugin({ template: 'source/index.pug', filename: 'index.html', chunks: ['index'] }),
-    new HtmlWebpackPlugin({ template: 'source/test/test.pug', filename: 'test.html', chunks: ['test'] }),
+    // new HtmlWebpackPlugin({ template: 'source/test/test.pug', filename: 'test.html', chunks: ['test'] }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
