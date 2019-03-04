@@ -1,57 +1,58 @@
-class Controller {
+import Observer from './observer';
+
+class Controller extends Observer {
   constructor(model, view) {
+    super();
     this.model = model;
     this.view = view;
     this.timerId = 0;
-    this._sibscribe();
+    this._subscribe();
   }
 
-  updateFromView(event, ...args) {
+  processEventFromView(event, ...args) {
     switch (event) {
-      case 'createUniverse': this.model.createField(args[0], args[1]);
+      case 'createUniverse': this.publish(event, ...args);
         break;
-      case 'clearUniverse': this.model.clearField();
+      case 'clearUniverse': this.publish(event, ...args);
         break;
       case 'startGame': this._timer(args[0]);
         break;
       case 'stopGame': clearInterval(this.timerId);
         break;
-      case 'makeStep': this.model.calculateGeneration();
+      case 'makeStep': this.publish(event, ...args);
         break;
-      case 'cellClick': this.model.toggleCellStatus(args[0], args[1]);
+      case 'cellClick': this.publish(event, ...args);
         break;
-      case 'changeHightInput': this.model.resizeField('Y', args[0]);
+      case 'changeHightInput': this.publish('resizeField', 'Y', args[0]);
         break;
-      case 'changeWidthInput': this.model.resizeField('X', args[0]);
+      case 'changeWidthInput': this.publish('resizeField', 'X', args[0]);
         break;
       default:
         break;
     }
   }
 
-  updateFromModel(rows, colums, field, gameOverStatus, endGameStatus, numberOfGeneration) {
+  processEventFromModel(rows, colums, field, gameOverStatus, endGameStatus, numberOfGeneration) {
     this.gameOverStatus = gameOverStatus;
-    this.view.createView(field, endGameStatus, numberOfGeneration);
+    this.publish('updateView', field, endGameStatus, numberOfGeneration);
   }
 
-  _sibscribe() {
-    this.model.subscribe(this);
-    this.view.subscribe(this);
+  _subscribe() {
+    this.model.subscribe(this.processEventFromModel.bind(this));
+    this.view.subscribe(this.processEventFromView.bind(this));
   }
 
   _actionOnTimer() {
     this.model.calculateGeneration();
     if (this.gameOverStatus) {
       clearInterval(this.timerId);
-      // startFlag = false;
-      // field.setGameOver(false);
-      // field.setEndGameStatus(0);
+      this.publish('resetGame');
     }
   }
 
   _timer(speed) {
     clearInterval(this.timerId);
-    this.timerId = setInterval(this._actionOnTimer(), (10 - speed) * 100);
+    this.timerId = setInterval(this._actionOnTimer.bind(this), (10 - speed) * 100);
   }
 }
 

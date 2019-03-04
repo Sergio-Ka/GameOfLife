@@ -1,53 +1,62 @@
-import Field from './model-field';
-import BasicLogicOfGame from './model-basic-logic';
+import Field from './model/model-field';
+import FieldChanger from './model/model-field-changer';
+import Observer from './observer';
 
-class FacadeAndPublisherOfModel {
+class FacadeOfModel extends Observer {
   constructor() {
-    this._subscribers = [];
+    super();
     this._field = new Field();
-    this._fieldChanger = new BasicLogicOfGame();
+    this._fieldChanger = new FieldChanger();
   }
 
   calculateGeneration() {
-    this._fieldChanger.fieldCalculator(this._field);
-    this._notifySubscribers(this._field.getYSizeOfField(),
+    this._fieldChanger.calculateField(this._field);
+    this.publish(
+      this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
       this._field.getEndGameStatus(),
-      this._field.getNumberOfGeneration());
+      this._field.getNumberOfGeneration(),
+    );
   }
 
   createField(numberOfRows, numberOfColumns) {
     this._field.setXSizeOfField(numberOfColumns);
     this._field.setYSizeOfField(numberOfRows);
     this._field.createRandomField();
-    this._notifySubscribers(this._field.getYSizeOfField(),
+    this.publish(
+      this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
       this._field.getEndGameStatus(),
-      this._field.getNumberOfGeneration());
+      this._field.getNumberOfGeneration(),
+    );
   }
 
   clearField() {
     this._field.clearField();
-    this._notifySubscribers(this._field.getYSizeOfField(),
+    this.publish(
+      this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
       this._field.getEndGameStatus(),
-      this._field.getNumberOfGeneration());
+      this._field.getNumberOfGeneration(),
+    );
   }
 
   toggleCellStatus(row, column) {
     this._field.toggleCellLifeStatus(row, column);
-    this._notifySubscribers(this._field.getYSizeOfField(),
+    this.publish(
+      this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
       this._field.getEndGameStatus(),
-      this._field.getNumberOfGeneration());
+      this._field.getNumberOfGeneration(),
+    );
   }
 
   resizeField(axis, size) {
@@ -65,27 +74,48 @@ class FacadeAndPublisherOfModel {
         this._field.cropFieldOnYaxis(size);
       }
     }
-    this._notifySubscribers(this._field.getYSizeOfField(),
+    this.publish(
+      this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
       this._field.getEndGameStatus(),
-      this._field.getNumberOfGeneration());
+      this._field.getNumberOfGeneration(),
+    );
   }
 
-  subscribe(subscriber) {
-    this._subscribers.push(subscriber);
+  resetGameStatus() {
+    this._field.setGameOver(false);
+    this._field.setEndGameStatus(0);
   }
 
-  unsubscribe(subscriber) {
-    this._subscribers.splice(this._subscribers.indexOf(subscriber), 1);
+  _subscribe() {
+    this.controller.subscribe(this.processEvent.bind(this));
   }
 
-  _notifySubscribers(...parametrs) {
-    this._subscribers.forEach((subscriber) => {
-      subscriber.updateFromModel(...parametrs);
-    });
+  referTo(controller) {
+    this.controller = controller;
+    this._subscribe();
+  }
+
+  processEvent(event, ...args) {
+    switch (event) {
+      case 'createUniverse': this.createField(args[0], args[1]);
+        break;
+      case 'clearUniverse': this.clearField();
+        break;
+      case 'makeStep': this.calculateGeneration();
+        break;
+      case 'cellClick': this.toggleCellStatus(args[0], args[1]);
+        break;
+      case 'resizeField': this.resizeField(args[0], args[1]);
+        break;
+      case 'resetGame': this.resetGameStatus();
+        break;
+      default:
+        break;
+    }
   }
 }
 
-export default FacadeAndPublisherOfModel;
+export default FacadeOfModel;
