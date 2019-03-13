@@ -6,12 +6,14 @@ class Application {
   constructor() {
     this._model = new FacadeOfModel();
     this._view = new View();
+    this._controller = new Controller();
   }
 
   initialize() {
-    this._controller = new Controller(this._model, this._view);
-    this._view.referTo(this._controller);
-    this._model.referTo(this._controller);
+    this._controller.subscribe(this._model.processEvent.bind(this._model));
+    this._controller.subscribe(this._view.processEvent.bind(this._view));
+    this._view.subscribe(this._controller.processEventFromView.bind(this._controller));
+    this._model.subscribe(this._controller.processEventFromModel.bind(this._controller));
   }
 }
 

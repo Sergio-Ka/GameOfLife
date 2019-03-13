@@ -1,7 +1,7 @@
 require('webpack-jquery-ui/slider');
 
 const requireAllFiles = (requireContext) => {
-  return requireContext.keys().map(requireContext);
+  requireContext.keys().map(requireContext);
 };
 
 requireAllFiles(require.context('./', true, /^\.\/.*\.(styl|css|png|jpg)$/));

@@ -1,5 +1,4 @@
 class SliderWithPopUp {
-
   constructor($element) {
     this.$element = $element;
     this.initSlider();
@@ -12,17 +11,17 @@ class SliderWithPopUp {
       min: this.$element.data('min'),
       max: this.$element.data('max'),
       step: this.$element.data('step'),
-      value: value,
+      value,
       range: this.$element.data('range'),
       create: (event) => {
         const $sliderHandle = $(event.target).find('.ui-slider-handle');
-        $sliderHandle.append(`<input class="slider-value js-slider-value" value="${value}"/><div class="slider-value__tail"></div>`);
+        $sliderHandle.append(`<input class="slider-with-pop-up__value js-slider-with-pop-up__value" value="${value}"/><div class="slider-with-pop-up__value-tail"></div>`);
       },
       slide: (event, ui) => {
-        const $sliderValue = $(event.target).find('.js-slider-value');
+        const $sliderValue = $(event.target).find('.js-slider-with-pop-up__value');
         $sliderValue.val(ui.value);
       },
-    }
+    };
   }
 
   initSlider() {

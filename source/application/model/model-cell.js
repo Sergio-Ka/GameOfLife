@@ -1,8 +1,10 @@
+import constants from '../constants';
+
 class Cell {
   constructor() {
-    this.lifeStatus = 0;
-    this.lifeStatusOnLastGeneration = 0;
-    this.lifeStatusOnPenultimateGeneration = 0;
+    this.lifeStatus = constants.DEAD_CELL;
+    this.lifeStatusOnLastGeneration = constants.DEAD_CELL;
+    this.lifeStatusOnPenultimateGeneration = constants.DEAD_CELL;
   }
 
   getLifeStatus() {
@@ -30,7 +32,8 @@ class Cell {
   }
 
   toggleLifeStatus() {
-    this.lifeStatus = (this.lifeStatus === 0) ? 1 : 0;
+    this.lifeStatus = (this.lifeStatus === constants.DEAD_CELL)
+      ? constants.ALIVE_CELL : constants.DEAD_CELL;
   }
 }
 

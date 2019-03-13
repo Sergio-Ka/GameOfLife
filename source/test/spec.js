@@ -1,488 +1,586 @@
-import ModelCell from '../application/model-cell';
-import ModelField from '../application/model-field';
-import ModelChangeField from '../application/model-change-field';
+/* eslint-disable no-undef */
+/* eslint-disable no-underscore-dangle */
+
+import Cell from '../application/model/model-cell';
+import Field from '../application/model/model-field';
+import FieldChanger from '../application/model/model-field-changer';
 import View from '../application/view';
 import Controller from '../application/controller';
 
-const Cell = new ModelCell();
-const Field = new ModelField();
-const ChangeField = new ModelChangeField();
-const EView = new View();
-const EController = new Controller();
+const cellFromClass = new Cell();
+const field = new Field();
+const fieldChanger = new FieldChanger();
+const view = new View();
+const controller = new Controller();
 
-describe('Тест JS кода игры Жизнь Конвея', function () {
-
+describe('Тест JS кода игры Жизнь Конвея', () => {
   // проверяем класс ячейки
-  describe('Проверка класса ModelSquare', function () {
-    describe('проверка инициализации полей состояния ячейки', function () {
-      it('состояние в текущем поколении = 0', function () {
-        assert.equal(Cell.getValue(), 0);
+  describe('Проверка класса Cell', () => {
+    describe('проверка инициализации полей состояния ячейки', () => {
+      it('состояние в текущем поколении = 0', () => {
+        assert.equal(cellFromClass.getLifeStatus(), 0);
       });
-      it('состояние в прошлом поколении = 0', function () {
-        assert.equal(Cell.getValueOnLastGeneration(), 0);
+      it('состояние в прошлом поколении = 0', () => {
+        assert.equal(cellFromClass.getLifeStatusOnLastGeneration(), 0);
       });
-      it('состояние в позапрошлом поколении = 0', function () {
-        assert.equal(Cell.getValueOnPenultimateGeneration(), 0);
+      it('состояние в позапрошлом поколении = 0', () => {
+        assert.equal(cellFromClass.getLifeStatusOnPenultimateGeneration(), 0);
       });
     });
 
-    describe('проверка метода изменения состояния ячейки в текущем поколении', function () {
-      it('при вызове метода меняет состояние ячейки в текущем поколении на противоположное (с 0 на 1)', function () {
-        Cell.changeValue();
-        assert.equal(Cell.getValue(), 1);
+    describe('проверка метода изменения состояния ячейки в текущем поколении', () => {
+      it('при вызове метода меняет состояние ячейки в текущем поколении на противоположное (с 0 на 1)', () => {
+        cellFromClass.toggleLifeStatus();
+        assert.equal(cellFromClass.getLifeStatus(), 1);
       });
-      it('при вызове метода меняет состояние ячейки в текущем поколении на противоположное (с 1 на 0)', function () {
-        Cell.changeValue();
-        assert.equal(Cell.getValue(), 0);
+      it('при вызове метода меняет состояние ячейки в текущем поколении на противоположное (с 1 на 0)', () => {
+        cellFromClass.toggleLifeStatus();
+        assert.equal(cellFromClass.getLifeStatus(), 0);
+      });
+    });
+
+    describe('проверка методов записи в ячейку и чтения из нее', () => {
+      it('запись в текущем поколении 1 и чтение', () => {
+        cellFromClass.setLifeStatus(1);
+        assert.equal(cellFromClass.getLifeStatus(), 1);
+      });
+      it('запись в предыдущем поколении 1 и чтение', () => {
+        cellFromClass.setLifeStatusOnLastGeneration(1);
+        assert.equal(cellFromClass.getLifeStatusOnLastGeneration(), 1);
+      });
+      it('запись в позапрошлом поколении 1 и чтение', () => {
+        cellFromClass.setLifeStatusOnPenultimateGeneration(1);
+        assert.equal(cellFromClass.getLifeStatusOnPenultimateGeneration(), 1);
       });
     });
   });
 
   // проверяем класс поля
-  describe('Проверка класса ModelField', function () {
-    describe('проверка инициализации полей размера поля при создании', function () {
-      it('начальный размер поля X = 3', function () {
-        assert.equal(Field.getX(), 3);
+  describe('Проверка класса Field', () => {
+    describe('проверка инициализации полей размера поля при создании', () => {
+      it('начальный размер поля X = 3', () => {
+        assert.equal(field.getXSizeOfField(), 3);
       });
-      it('начальный размер поля Y = 3', function () {
-        assert.equal(Field.getY(), 3);
+      it('начальный размер поля Y = 3', () => {
+        assert.equal(field.getYSizeOfField(), 3);
       });
-      it('при установке размера X = 3 полю размер равен x + 2 = 5', function () {
-        Field.setX(3);
-        assert.equal(Field.getX(), 5);
+      it('при установке размера X = 3 полю размер равен x + 2 = 5', () => {
+        field.setXSizeOfField(3);
+        assert.equal(field.getXSizeOfField(), 5);
       });
-      it('при установке размера Y = 3 полю размер равен y + 2 = 5', function () {
-        Field.setY(3);
-        assert.equal(Field.getY(), 5);
+      it('при установке размера Y = 3 полю размер равен y + 2 = 5', () => {
+        field.setYSizeOfField(3);
+        assert.equal(field.getYSizeOfField(), 5);
       });
     });
 
-    describe('проверка метода создания рандомно заполненного поля', function () {
-      it('при создании экземпляра класса поля (массив объектов класса ячейка) не существует', function () {
-        assert.isUndefined(Field.field);
+    describe('проверка методов чтения и записи значения текущего поколения поля', () => {
+      it('начальный значение поколения при инициализации = 1', () => {
+        assert.equal(field.getNumberOfGeneration(), 1);
       });
-      it('при вызове метода создается поле размером 5*5 ячеек', function () {
-        Field.createRandomField();
-        assert.lengthOf(Field.field, 5);
-        for (let i = 0; i < Field.field.length; i+=1) {
-          assert.lengthOf(Field.field[i], 5);
+      it('установка значения поколения методом записи = 10 и проверка значения методом чтения', () => {
+        field.setNumberOfGeneration(10);
+        assert.equal(field.getNumberOfGeneration(), 10);
+      });
+    });
+
+    describe('проверка методов чтения и записи значения поля класса содержащего данные окончания игры', () => {
+      it('начальное значение поля = false', () => {
+        assert.isNotTrue(field.getGameOver());
+      });
+      it('установка значения флага = true и проверка значения методом чтения', () => {
+        field.setGameOver(true);
+        assert.isTrue(field.getGameOver());
+        field.setGameOver(false);
+      });
+    });
+
+    describe('проверка методов чтения и записи значения поля класса содержащего данные о причине окончания игры', () => {
+      it('начальное значение поля = 0', () => {
+        assert.equal(field.getEndGameStatus(), 0);
+      });
+      it('установка значения флага = 3 и проверка значения методом чтения', () => {
+        field.setEndGameStatus(3);
+        assert.equal(field.getEndGameStatus(), 3);
+        field.setEndGameStatus(0);
+      });
+      it('попытка ввода значения флага отличного от допустимых (0, 1, 2, 3) приводит к значению флага 0', () => {
+        field.setEndGameStatus(10);
+        assert.equal(field.getEndGameStatus(), 0);
+      });
+    });
+
+    describe('проверка методов чтения и записи значения поля класса содержащего данные о сумме живых ячеек', () => {
+      it('начальное значение поля = 0', () => {
+        assert.equal(field.getSumOfAllCells(), 0);
+      });
+      it('установка значения поля = 1111 и проверка значения методом чтения', () => {
+        field.setSumOfAllCells(1111);
+        assert.equal(field.getSumOfAllCells(), 1111);
+        field.setSumOfAllCells(0);
+      });
+    });
+
+    describe('проверка метода создания рандомно заполненного поля', () => {
+      it('при создании экземпляра класса поля (массив объектов класса ячейка) не существует', () => {
+        assert.isUndefined(field.field);
+      });
+      it('при вызове метода создается поле размером 5*5 ячеек', () => {
+        field.createRandomField();
+        assert.lengthOf(field.field, 5);
+        for (let i = 0; i < field.field.length; i += 1) {
+          assert.lengthOf(field.field[i], 5);
         }
       });
-      it('каждая ячейка поля является объектом', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert.isObject(Field.field[i][j]);
+      it('каждая ячейка поля является объектом', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert.isObject(field.field[i][j]);
           }
         }
       });
-      it('значение каждой ячейки поля принадлежит множеству {0,1}', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert(Field.field[i][j].getValue() === 0 || Field.field[i][j].getValue() === 1);
+      it('значение каждой ячейки поля принадлежит множеству {0,1}', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert(field.field[i][j].getLifeStatus() === 0
+              || field.field[i][j].getLifeStatus() === 1);
           }
         }
       });
-      it('значение каждой ячейки по краям поля = 0', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            if (i == 0 || i == Field.field.length - 1 || j == 0 || j == Field.field[0].length - 1) {
-              assert.equal(Field.field[i][j].getValue(), 0);
+      it('значение каждой ячейки по краям поля = 0', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            if (i === 0 || i === field.field.length - 1
+              || j === 0 || j === field.field[0].length - 1) {
+              assert.equal(field.field[i][j].getLifeStatus(), 0);
             }
           }
         }
       });
     });
 
-    describe('проверка метода очистки поля', function () {
-      it('значение каждой ячейки поля после вызова метода = 0', function () {
-        Field.clearField();
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert.equal(Field.field[i][j].getValue(), 0);
+    describe('проверка метода очистки поля', () => {
+      it('значение каждой ячейки поля после вызова метода на всех поколениях = 0', () => {
+        field.clearField();
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert.equal(field.field[i][j].getLifeStatus(), 0);
+            assert.equal(field.field[i][j].getLifeStatusOnLastGeneration(), 0);
+            assert.equal(field.field[i][j].getLifeStatusOnPenultimateGeneration(), 0);
           }
         }
       });
     });
 
-    describe('проверка методов обрезки поля по высоте и ширине', function () {
-      it('при установке размера полю X = 2 размер поля становится x + 2 = 4', function () {
-        Field.cropFieldOnX(2);
-        assert.lengthOf(Field.field, 4);
+    describe('проверка методов обрезки поля по высоте и ширине', () => {
+      it('при установке размера полю Y = 2 размер поля становится y + 2 = 4', () => {
+        field.cropFieldOnYaxis(2);
+        assert.lengthOf(field.field, 4);
       });
-      it('при установке размера полю Y = 2 размер поля становится y + 2 = 4', function () {
-        Field.cropFieldOnY(2);
-        for (let i = 0; i < Field.field.length; i+=1) {
-          assert.lengthOf(Field.field[i], 4);
+      it('при установке размера полю X = 2 размер поля становится x + 2 = 4', () => {
+        field.cropFieldOnXaxis(2);
+        for (let i = 0; i < field.field.length; i += 1) {
+          assert.lengthOf(field.field[i], 4);
         }
       });
-      it('оставшиеся ячейки поля является по прежнему объектом', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert.isObject(Field.field[i][j]);
+      it('оставшиеся ячейки поля является по прежнему объектом', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert.isObject(field.field[i][j]);
           }
         }
       });
-      it('значение оставшихся ячеек поля по прежнему принадлежит множеству {0,1}', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert(Field.field[i][j].getValue() === 0 || Field.field[i][j].getValue() === 1);
-          }
-        }
-      });
-    });
-
-    describe('проверка методов увеличения поля по высоте и ширине', function () {
-      it('при установке размера полю X = 8 размер поля становится x + 2 = 10', function () {
-        Field.enlargeFieldOnX(8);
-        assert.lengthOf(Field.field, 10);
-      });
-      it('при установке размера полю Y = 8 размер поля становится y + 2 = 10', function () {
-        Field.enlargeFieldOnY(8);
-        for (let i = 0; i < Field.field.length; i+=1) {
-          assert.lengthOf(Field.field[i], 10);
-        }
-      });
-      it('ячейки поля является по прежнему объектом', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert.isObject(Field.field[i][j]);
-          }
-        }
-      });
-      it('значение ячеек поля по прежнему принадлежит множеству {0,1}', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert(Field.field[i][j].getValue() === 0 || Field.field[i][j].getValue() === 1);
-          }
-        }
-      });
-      it('значение вновь добавленных ячеек поля = 0', function () {
-        for (let i = 5; i < Field.field.length; i+=1) {
-          for (let j = 5; j < Field.field[0].length; j+=1) {
-            assert(Field.field[i][j].getValue() === 0);
+      it('значение оставшихся ячеек поля по прежнему принадлежит множеству {0,1}', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert(field.field[i][j].getLifeStatus() === 0
+              || field.field[i][j].getLifeStatus() === 1);
           }
         }
       });
     });
 
-    describe('проверка методов чтения и записи значений ячейки в текущем, прошлом и позапрошлом поколении', function () {
-      it('установка значения всех ячеек поля в состояние 1 на всех поколениях и проверка методов чтения по значениям', function () {
-        Field.clearField();
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[i].length; j+=1) {
-            Field.setSquareValueByCoordinate(i, j, 1);
-            Field.setSquareValueOnLGByCoordinate(i, j, 1);
-            Field.setSquareValueOnPGByCoordinate(i, j, 1);
-            assert(Field.readSquareValueByCoordinate(i, j) === 1);
-            assert(Field.readSquareValueByCoordinateOnLastGen(i, j) === 1);
-            assert(Field.readSquareValueByCoordinateOnPenultGen(i, j) === 1);
+    describe('проверка методов увеличения поля по высоте и ширине', () => {
+      it('при установке размера полю Y = 8 размер поля становится y + 2 = 10', () => {
+        field.enlargeFieldOnYaxis(8);
+        assert.lengthOf(field.field, 10);
+      });
+      it('при установке размера полю X = 8 размер поля становится x + 2 = 10', () => {
+        field.enlargeFieldOnXaxis(8);
+        for (let i = 0; i < field.field.length; i += 1) {
+          assert.lengthOf(field.field[i], 10);
+        }
+      });
+      it('ячейки поля являются по прежнему объектом', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert.isObject(field.field[i][j]);
           }
         }
       });
-      it('установка значения всех ячеек поля в состояние 0 c помощью методов записи на всех поколениях и проверка значений', function () {
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[i].length; j+=1) {
-            Field.setSquareValueByCoordinate(i, j, 0);
-            Field.setSquareValueOnLGByCoordinate(i, j, 0);
-            Field.setSquareValueOnPGByCoordinate(i, j, 0);
-            assert(Field.readSquareValueByCoordinate(i, j) === 0);
-            assert(Field.readSquareValueByCoordinateOnLastGen(i, j) === 0);
-            assert(Field.readSquareValueByCoordinateOnPenultGen(i, j) === 0);
+      it('значение ячеек поля по прежнему принадлежит множеству {0,1}', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert(field.field[i][j].getLifeStatus() === 0
+              || field.field[i][j].getLifeStatus() === 1);
           }
         }
       });
-      it('проверка метода смены значения ячейки на противоположное на текущем поколении по передаваемым координатам в рабочей области поля (за исключением крайних ячеек)', function () {
-        Field.clearField();
-        for (let i = 1; i < Field.field.length - 1; i+=1) {
-          for (let j = 1; j < Field.field[i].length - 1; j+=1) {
-            Field.changeSquareValueByCoordinate(i, j);
-            assert.equal(Field.readSquareValueByCoordinate(i, j), 1);
+      it('значение вновь добавленных ячеек поля = 0', () => {
+        for (let i = 5; i < field.field.length; i += 1) {
+          for (let j = 5; j < field.field[0].length; j += 1) {
+            assert(field.field[i][j].getLifeStatus() === 0);
           }
         }
+      });
+    });
+
+    describe('проверка методов чтения и записи значений ячейки в текущем, прошлом и позапрошлом поколении', () => {
+      it('установка значения всех ячеек поля в состояние 1 на всех поколениях и проверка методов чтения по значениям', () => {
+        field.clearField();
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[i].length; j += 1) {
+            field.setCellLifeStatus(i, j, 1);
+            field.setCellLifeStatusOnLastGeneration(i, j, 1);
+            field.setCellLifeStatusOnPenultimateGeneration(i, j, 1);
+            assert(field.readCellLifeStatus(i, j) === 1);
+            assert(field.readCellLifeStatusOnLastGeneration(i, j) === 1);
+            assert(field.readCellLifeStatusOnPenultimateGeneration(i, j) === 1);
+          }
+        }
+      });
+      it('установка значения всех ячеек поля в состояние 0 c помощью методов записи на всех поколениях и проверка значений', () => {
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[i].length; j += 1) {
+            field.setCellLifeStatus(i, j, 0);
+            field.setCellLifeStatusOnLastGeneration(i, j, 0);
+            field.setCellLifeStatusOnPenultimateGeneration(i, j, 0);
+            assert(field.readCellLifeStatus(i, j) === 0);
+            assert(field.readCellLifeStatusOnLastGeneration(i, j) === 0);
+            assert(field.readCellLifeStatusOnPenultimateGeneration(i, j) === 0);
+          }
+        }
+      });
+      it('проверка метода смены значения ячейки на противоположное на текущем поколении по передаваемым координатам в рабочей области поля (за исключением крайних ячеек)', () => {
+        field.clearField();
+        for (let i = 1; i < field.field.length - 1; i += 1) {
+          for (let j = 1; j < field.field[i].length - 1; j += 1) {
+            field.toggleCellLifeStatus(i, j);
+            assert.equal(field.readCellLifeStatus(i, j), 1);
+          }
+        }
+      });
+    });
+
+    describe('проверка метода подсчета живых ячеек поля', () => {
+      it('установка определенного рисунка поля с количеством живых ячеек = 5 и проверка значения поля', () => {
+        field.setXSizeOfField(4);
+        field.setYSizeOfField(4);
+        field.clearField();
+
+        field.field[1][2].setLifeStatus(1);
+        field.field[2][3].setLifeStatus(1);
+        field.field[3][1].setLifeStatus(1);
+        field.field[3][2].setLifeStatus(1);
+        field.field[3][3].setLifeStatus(1);
+
+        field._sumAllCells();
+        assert.equal(field.getSumOfAllCells(), 5);
       });
     });
   });
 
   // проверка класса с логикой игры
-  describe('Проверка класса ModelChangeField', function () {
-    describe('проверка метода manipulateFieldByAlgorithm отвечающего за изменение состояния поля в соответствии с алгоритмом', function () {
-      it('создание поля 4*4, передача определенного рисунка (планер) поля методу и проверка состояния ячеек на втором поколении', function () {
-        Field.setX(4);
-        Field.setY(4);
-        Field.clearField();
+  describe('Проверка класса fieldChanger', () => {
+    describe('проверка метода calculateField отвечающего за изменение состояния поля в соответствии с алгоритмом', () => {
+      it('создание поля 4*4, передача определенного рисунка (планер) поля методу и проверка состояния ячеек на втором поколении', () => {
+        field.setXSizeOfField(4);
+        field.setYSizeOfField(4);
+        field.clearField();
 
-        Field.field[1][2].setValue(1);
-        Field.field[2][3].setValue(1);
-        Field.field[3][1].setValue(1);
-        Field.field[3][2].setValue(1);
-        Field.field[3][3].setValue(1);
+        field.field[1][2].setLifeStatus(1);
+        field.field[2][3].setLifeStatus(1);
+        field.field[3][1].setLifeStatus(1);
+        field.field[3][2].setLifeStatus(1);
+        field.field[3][3].setLifeStatus(1);
 
-        ChangeField.manipulateFieldByAlgorithm(Field);
+        fieldChanger.calculateField(field);
 
-        assert.equal(Field.readSquareValueByCoordinate(2, 1), 1);
-        assert.equal(Field.readSquareValueByCoordinate(2, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 2), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 2), 1);
+        assert.equal(field.readCellLifeStatus(2, 1), 1);
+        assert.equal(field.readCellLifeStatus(2, 3), 1);
+        assert.equal(field.readCellLifeStatus(3, 2), 1);
+        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.readCellLifeStatus(4, 2), 1);
       });
-      it('второй вызов метода пересчета поля и проверка состояния ячеек на третьем поколении', function () {
-        ChangeField.manipulateFieldByAlgorithm(Field);
+      it('второй вызов метода пересчета поля и проверка состояния ячеек на третьем поколении', () => {
+        fieldChanger.calculateField(field);
 
-        assert.equal(Field.readSquareValueByCoordinate(2, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 1), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 2), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 3), 1);
+        assert.equal(field.readCellLifeStatus(2, 3), 1);
+        assert.equal(field.readCellLifeStatus(3, 1), 1);
+        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.readCellLifeStatus(4, 2), 1);
+        assert.equal(field.readCellLifeStatus(4, 3), 1);
       });
-      it('третий вызов метода пересчета поля и проверка состояния ячеек на четвертом поколении', function () {
-        ChangeField.manipulateFieldByAlgorithm(Field);
+      it('третий вызов метода пересчета поля и проверка состояния ячеек на четвертом поколении', () => {
+        fieldChanger.calculateField(field);
 
-        assert.equal(Field.readSquareValueByCoordinate(2, 2), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 4), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 2), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 3), 1);
+        assert.equal(field.readCellLifeStatus(2, 2), 1);
+        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.readCellLifeStatus(3, 4), 1);
+        assert.equal(field.readCellLifeStatus(4, 2), 1);
+        assert.equal(field.readCellLifeStatus(4, 3), 1);
       });
-      it('четвертый вызов метода пересчета поля и проверка состояния ячеек на пятом поколении', function () {
-        ChangeField.manipulateFieldByAlgorithm(Field);
+      it('четвертый вызов метода пересчета поля и проверка состояния ячеек на пятом поколении', () => {
+        fieldChanger.calculateField(field);
 
-        assert.equal(Field.readSquareValueByCoordinate(2, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 4), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 2), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 4), 1);
+        assert.equal(field.readCellLifeStatus(2, 3), 1);
+        assert.equal(field.readCellLifeStatus(3, 4), 1);
+        assert.equal(field.readCellLifeStatus(4, 2), 1);
+        assert.equal(field.readCellLifeStatus(4, 3), 1);
+        assert.equal(field.readCellLifeStatus(4, 4), 1);
       });
-      it('пятый вызов метода пересчета поля и проверка состояния ячеек на шестом поколении', function () {
-        ChangeField.manipulateFieldByAlgorithm(Field);
+      it('пятый вызов метода пересчета поля и проверка состояния ячеек на шестом поколении', () => {
+        fieldChanger.calculateField(field);
 
-        assert.equal(Field.readSquareValueByCoordinate(3, 2), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 4), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 4), 1);
+        assert.equal(field.readCellLifeStatus(3, 2), 1);
+        assert.equal(field.readCellLifeStatus(3, 4), 1);
+        assert.equal(field.readCellLifeStatus(4, 3), 1);
+        assert.equal(field.readCellLifeStatus(4, 4), 1);
       });
-      it('шестой вызов метода пересчета поля и проверка состояния ячеек на седьмом поколении', function () {
-        ChangeField.manipulateFieldByAlgorithm(Field);
+      it('шестой вызов метода пересчета поля и проверка состояния ячеек на седьмом поколении', () => {
+        fieldChanger.calculateField(field);
 
-        assert.equal(Field.readSquareValueByCoordinate(3, 4), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 4), 1);
+        assert.equal(field.readCellLifeStatus(3, 4), 1);
+        assert.equal(field.readCellLifeStatus(4, 3), 1);
+        assert.equal(field.readCellLifeStatus(4, 4), 1);
       });
-      it('седьмой вызов метода пересчета поля и проверка состояния ячеек на восьмом поколении', function () {
-        ChangeField.manipulateFieldByAlgorithm(Field);
+      it('седьмой вызов метода пересчета поля и проверка состояния ячеек на восьмом поколении', () => {
+        fieldChanger.calculateField(field);
 
-        assert.equal(Field.readSquareValueByCoordinate(3, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(3, 4), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 3), 1);
-        assert.equal(Field.readSquareValueByCoordinate(4, 4), 1);
+        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.readCellLifeStatus(3, 4), 1);
+        assert.equal(field.readCellLifeStatus(4, 3), 1);
+        assert.equal(field.readCellLifeStatus(4, 4), 1);
       });
-      it('проверка полей ячеек на прошлом поколении для 8 поколения (соответствие рисунку 7)', function () {
-        assert.equal(Field.field[3][4].getValueOnLastGeneration(), 1);
-        assert.equal(Field.field[4][3].getValueOnLastGeneration(), 1);
-        assert.equal(Field.field[4][4].getValueOnLastGeneration(), 1);
-
+      it('проверка полей ячеек на прошлом поколении для 8 поколения (соответствие рисунку 7)', () => {
+        assert.equal(field.field[3][4].getLifeStatusOnLastGeneration(), 1);
+        assert.equal(field.field[4][3].getLifeStatusOnLastGeneration(), 1);
+        assert.equal(field.field[4][4].getLifeStatusOnLastGeneration(), 1);
       });
-      it('проверка полей ячеек на позапрошлом поколении для 8 поколения (соответствие рисунку 6 поколения)', function () {
-        assert.equal(Field.field[3][2].getValueOnPenultimateGeneration(), 1);
-        assert.equal(Field.field[3][4].getValueOnPenultimateGeneration(), 1);
-        assert.equal(Field.field[4][3].getValueOnPenultimateGeneration(), 1);
-        assert.equal(Field.field[4][4].getValueOnPenultimateGeneration(), 1);
-
+      it('проверка полей ячеек на позапрошлом поколении для 8 поколения (соответствие рисунку 6 поколения)', () => {
+        assert.equal(field.field[3][2].getLifeStatusOnPenultimateGeneration(), 1);
+        assert.equal(field.field[3][4].getLifeStatusOnPenultimateGeneration(), 1);
+        assert.equal(field.field[4][3].getLifeStatusOnPenultimateGeneration(), 1);
+        assert.equal(field.field[4][4].getLifeStatusOnPenultimateGeneration(), 1);
       });
+      it('проверка того, что на 8 поколении остальные ячейки мертвы', () => {
+        fieldChanger.calculateField(field);
 
-      it('проверка того, что на 8 поколении остальные ячейки мертвы', function () {
-        ChangeField.manipulateFieldByAlgorithm(Field);
+        field.setCellLifeStatus(3, 3, 0);
+        field.setCellLifeStatus(3, 4, 0);
+        field.setCellLifeStatus(4, 3, 0);
+        field.setCellLifeStatus(4, 4, 0);
 
-        Field.setSquareValueByCoordinate(3, 3, 0);
-        Field.setSquareValueByCoordinate(3, 4, 0);
-        Field.setSquareValueByCoordinate(4, 3, 0);
-        Field.setSquareValueByCoordinate(4, 4, 0);
-
-        for (let i = 0; i < Field.field.length; i+=1) {
-          for (let j = 0; j < Field.field[0].length; j+=1) {
-            assert.equal(Field.field[i][j].getValue(), 0);
+        for (let i = 0; i < field.field.length; i += 1) {
+          for (let j = 0; j < field.field[0].length; j += 1) {
+            assert.equal(field.field[i][j].getLifeStatus(), 0);
           }
         }
       });
     });
-    describe('проверка метода stopGame отвечающего за остановку игры по определенным условиям', function () {
-      it('передача методу поля с отсутствющей жизнью вызывает остановку игры', function () {
-        Field.clearField();
-        ChangeField.stopGame(Field);
-        assert.equal(Field.getGameOver(), 1);
+
+    describe('проверка метода _stopGame отвечающего за остановку игры по определенным условиям', () => {
+      it('передача методу поля с отсутствющей жизнью вызывает остановку игры', () => {
+        field.clearField();
+        fieldChanger._stopGame(field);
+        assert.isTrue(field.getGameOver());
       });
-      it('передача методу поля с одинаковым рисунком на последних двух поколениях вызывает остановку игры', function () {
-        Field.field[1][1].setValue(1);
-        Field.field[1][2].setValue(1);
-        Field.field[2][1].setValue(1);
-        Field.field[2][2].setValue(1);
+      it('передача методу поля с одинаковым рисунком на последних двух поколениях вызывает остановку игры', () => {
+        field.clearField();
 
-        Field.field[1][1].setValueOnLastGeneration(1);
-        Field.field[1][2].setValueOnLastGeneration(1);
-        Field.field[2][1].setValueOnLastGeneration(1);
-        Field.field[2][2].setValueOnLastGeneration(1);
+        field.field[1][1].setLifeStatus(1);
+        field.field[1][2].setLifeStatus(1);
+        field.field[2][1].setLifeStatus(1);
+        field.field[2][2].setLifeStatus(1);
 
-        ChangeField.stopGame(Field);
-        assert.equal(Field.getGameOver(), 2);
+        field.field[1][1].setLifeStatusOnLastGeneration(1);
+        field.field[1][2].setLifeStatusOnLastGeneration(1);
+        field.field[2][1].setLifeStatusOnLastGeneration(1);
+        field.field[2][2].setLifeStatusOnLastGeneration(1);
+
+        fieldChanger._stopGame(field);
+        assert.isTrue(field.getGameOver());
       });
 
-      it('передача методу поля с одинаковым рисунком на текущем и предпоследнем поколениях вызывает остановку игры', function () {
-        Field.clearField();
+      it('передача методу поля с одинаковым рисунком на текущем и предпоследнем поколениях вызывает остановку игры', () => {
+        field.clearField();
 
-        Field.field[1][1].setValue(1);
-        Field.field[1][2].setValue(1);
-        Field.field[2][1].setValue(1);
-        Field.field[2][2].setValue(1);
+        field.field[1][1].setLifeStatus(1);
+        field.field[1][2].setLifeStatus(1);
+        field.field[2][1].setLifeStatus(1);
+        field.field[2][2].setLifeStatus(1);
 
-        Field.field[1][1].setValueOnPenultimateGeneration(1);
-        Field.field[1][2].setValueOnPenultimateGeneration(1);
-        Field.field[2][1].setValueOnPenultimateGeneration(1);
-        Field.field[2][2].setValueOnPenultimateGeneration(1);
+        field.field[1][1].setLifeStatusOnPenultimateGeneration(1);
+        field.field[1][2].setLifeStatusOnPenultimateGeneration(1);
+        field.field[2][1].setLifeStatusOnPenultimateGeneration(1);
+        field.field[2][2].setLifeStatusOnPenultimateGeneration(1);
 
-        ChangeField.stopGame(Field);
-        assert.equal(Field.getGameOver(), 3);
+        fieldChanger._stopGame(field);
+        assert.isTrue(field.getGameOver());
       });
     });
   });
 
   // проверка класса с отображением
-  describe('Проверка класса View', function () {
-    describe('проверка метода updateView отвечающего за отрисовку таблицы поля', function () {
-      it('передача методу поля 5*5 с отсутствующей жизнью и проверка того, что создана таблица 5*5', function () {
-        Field.setX(5);
-        Field.setY(5);
-        Field.clearField();
-        EView.updateView(Field);
+  describe('Проверка класса View', () => {
+    describe('проверка метода _createView отвечающего за отрисовку таблицы поля', () => {
+      it('передача методу поля с определенным рисунком (квадрат в верхнем левом углу) и проверка присвоения соответствующих классов соответствующим ячейкам', () => {
+        field.field[1][1].setLifeStatus(1);
+        field.field[1][2].setLifeStatus(1);
+        field.field[2][1].setLifeStatus(1);
+        field.field[2][2].setLifeStatus(1);
+        view._createView(field, 0, 1);
 
-        assert.isNotNull(document.getElementsByClassName('universe'));
-        assert.equal(document.getElementsByClassName('universe__line').length, 7);
-        assert.equal(document.getElementsByClassName('universe__square').length, 49);
-      });
-      it('проверка того, что ячейкам присвоены соотвествующие классы и data-id = координаты', function () {
-        let Cell, Coordinate;
-        assert.equal(document.getElementsByClassName('universe__square universe__square_isDead').length, 49);
-        for (let i = 0; i < 7; i+=1) {
-          for (let j = 0; j < 7; j+=1) {
-            Cell = document.getElementsByClassName('universe__square universe__square_isDead')[i * 7 + j];
-            Coordinate = Cell.getAttribute('data-id').split(' ');
-            assert.equal(i, Coordinate[0]);
-            assert.equal(j, Coordinate[1]);
+        let coordinate;
+        const cellSquare = document.getElementsByClassName('js-field__cell_alive');
+        for (let i = 0; i < cellSquare.length / 2; i += 1) {
+          for (let j = 0; j < cellSquare.length / 2; j += 1) {
+            coordinate = cellSquare[i * 2 + j].getAttribute('data-id').split(' ');
+            assert.equal(coordinate[0], i + 1);
+            assert.equal(coordinate[1], j + 1);
           }
         }
       });
-      it('передача методу поля с определенным рисунком (квадрат в верхнем левом углу) и проверка присвоения соответствующих классов соответствующим ячейкам', function () {
-        Field.field[1][1].setValue(1);
-        Field.field[1][2].setValue(1);
-        Field.field[2][1].setValue(1);
-        Field.field[2][2].setValue(1);
-        EView.updateView(Field);
+    });
+    describe('проверка части view, отвечающей за обработку событий, возникающих при взаимодействии с контролами', () => {
+      const spyCreateView = sinon.spy(view, '_createView');
+      const spyFieldChanger = sinon.spy(fieldChanger, 'calculateField');
+      const spyOnBlurHeightCrop = sinon.spy(field, 'cropFieldOnXaxis');
+      const spyOnBlurWidthCrop = sinon.spy(field, 'cropFieldOnYaxis');
+      const spyOnBlurWidthtEnlarge = sinon.spy(field, 'enlargeFieldOnYaxis');
+      const spyOnBlurHeightEnlarge = sinon.spy(field, 'enlargeFieldOnXaxis');
+      const spyCreate = sinon.spy(field, 'createRandomField');
+      const spyClear = sinon.spy(field, 'clearField');
+      const spytoggleCellLifeStatus = sinon.spy(field, 'toggleCellLifeStatus');
 
-        let Cell, Coordinate;
-        Cell = document.getElementsByClassName('universe__square universe__square_isAlive');
-        for (let i = 0; i < Cell.length / 2; i+=1) {
-          for (let j = 0; j < Cell.length / 2; j+=1) {
-            Coordinate = Cell[i * 2 + j].getAttribute('data-id').split(' ');
-            assert.equal(Coordinate[0], i+1);
-            assert.equal(Coordinate[1], j+1);
-          }
-        }
+      it('нажатие на кнопку СОЗДАТЬ метод создания рандомно заполненного поля', () => {
+        $('.js-create-universe').trigger('click');
+        sinon.assert.called(spyCreate);
       });
-      it('присвоение \'живым\' ячейкам класса \'мертвых\' и проверка всех ячеек на предмет наличия у них \'мертвого\' класса', function () {
-        Field.field[1][1].setValue(0);
-        Field.field[1][2].setValue(0);
-        Field.field[2][1].setValue(0);
-        Field.field[2][2].setValue(0);
-        EView.updateView(Field);
-
-        assert.equal(document.getElementsByClassName('universe__square universe__square_isDead').length, 49);
+      it('нажатие на кнопку СОЗДАТЬ вызывает метод отрисовки поля', () => {
+        $('.js-create-universe').trigger('click');
+        sinon.assert.called(spyCreateView);
+      });
+      it('нажатие на кнопку СТЕРЕТЬ вызывает метод стирания поля', () => {
+        $('.js-clear-universe').trigger('click');
+        sinon.assert.called(spyClear);
+      });
+      it('нажатие на кнопку СТЕРЕТЬ вызывает метод отрисовки поля', () => {
+        $('.js-clear-universe').trigger('click');
+        sinon.assert.called(spyCreateView);
+      });
+      it('нажатие на кнопку СТАРТ вызывает метод пересчета поля', () => {
+        $('.js-start-game').trigger('click');
+        sinon.assert.called(spyFieldChanger);
+      });
+      it('нажатие на кнопку СТАРТ вызывает метод отрисовки поля', () => {
+        $('.js-start-game').trigger('click');
+        sinon.assert.called(spyCreateView);
+      });
+      it('нажатие на кнопку СТОП прекращает вызов метода пересчета поля', () => {
+        $('.js-stop-game').trigger('click');
+        sinon.assert.called(spyFieldChanger);
+      });
+      it('нажатие на кнопку 1 ШАГ вызывает метод пересчета поля', () => {
+        $('.js-step').trigger('click');
+        sinon.assert.called(spyFieldChanger);
+      });
+      it('нажатие на кнопку 1 ШАГ вызывает метод отрисовки поля', () => {
+        $('.js-step').trigger('click');
+        sinon.assert.called(spyCreateView);
+      });
+      it('нажатие на ячейку поля вызывает метод изменения ее состояния', () => {
+        $('.js-field__cell').trigger('click');
+        sinon.assert.called(spytoggleCellLifeStatus);
+      });
+      it('нажатие на ячейку поля вызывает метод отрисовки поля', () => {
+        $('.js-field__cell').trigger('click');
+        sinon.assert.called(spyCreateView);
+      });
+      it('анфокус поля высоты в случае уменьшения высоты вызывает метод cropFieldOnX', () => {
+        document.getElementsByClassName('js-field-height')[0].value = 30;
+        $('.js-field-height').trigger('change');
+        sinon.assert.called(spyOnBlurHeightCrop);
+      });
+      it('анфокус поля высоты в случае увеличения высоты вызывает метод enlargeFieldOnX', () => {
+        document.getElementsByClassName('js-field-height')[0].value = 47;
+        $('.js-field-height').trigger('change');
+        sinon.assert.called(spyOnBlurHeightEnlarge);
+      });
+      it('анфокус поля высоты вызывает метод отрисовки поля', () => {
+        $('.js-field-height').trigger('change');
+        sinon.assert.called(spyCreateView);
+      });
+      it('анфокус поля ширины в случае уменьшения высоты вызывает метод cropFieldOnY', () => {
+        document.getElementsByClassName('js-field-width')[0].value = 50;
+        $('.js-field-width').trigger('change');
+        sinon.assert.called(spyOnBlurWidthCrop);
+      });
+      it('анфокус поля ширины в случае увеличения высоты вызывает метод enlargeFieldOnY', () => {
+        document.getElementsByClassName('js-field-width')[0].value = 100;
+        $('.js-field-width').trigger('change');
+        sinon.assert.called(spyOnBlurWidthtEnlarge);
+      });
+      it('анфокус поля ширины вызывает метод отрисовки поля', () => {
+        $('.js-field-width').trigger('change');
+        sinon.assert.called(spyCreateView);
       });
     });
   });
 
   // проверка класса контроллера
-  describe('Проверка класса Controller', function () {
-    describe('проверка метода main, отвечающего за обработку событий, возникающих при взаимодействии с контролами', function () {
-      let spy_updateview = sinon.spy(EView, 'updateView');
-      let spy_changefield = sinon.spy(ChangeField, 'manipulateFieldByAlgorithm');
-      let spy_onblurheightcrop = sinon.spy(Field, 'cropFieldOnX');
-      let spy_onblurwidthcrop = sinon.spy(Field, 'cropFieldOnY');
-      let spy_onblurwidthtenlarge = sinon.spy(Field, 'enlargeFieldOnY');
-      let spy_onblurheightenlarge = sinon.spy(Field, 'enlargeFieldOnX');
-      let spy_create = sinon.spy(Field, 'createRandomField');
-      let spy_clear = sinon.spy(Field, 'clearField');
-      let spy_changesquare = sinon.spy(Field, 'changeSquareValueByCoordinate');
+  describe('Проверка класса Controller', () => {
+    describe('проверка метода processEventFromView отвечающего за обработку событий из View', () => {
+      const spyPublish = sinon.spy(controller, 'publish');
+      const spyStartTimer = sinon.spy(controller, '_startTimer');
+      const spyRestartTimer = sinon.spy(controller, '_restartTimer');
+      const spyResetTimer = sinon.spy(controller, '_resetTimer');
 
-      /*it('нажатие на кнопку СОЗДАТЬ метод создания рандомно заполненного поля', function () {
-        $('create-universe').trigger('click');
-        sinon.assert.called(spy_create);
+      it('передача методу сообщения createUniverse вызывает метод publish наследуемый от класса Observer', () => {
+        controller.processEventFromView('createUniverse', 5, 5);
+        sinon.assert.called(spyPublish);
       });
-      it('нажатие на кнопку СОЗДАТЬ вызывает метод отрисовки поля', function () {
-        $('create-universe').trigger('click');
-        sinon.assert.called(spy_updateview);
+      it('передача методу сообщения clearUniverse вызывает метод publish наследуемый от класса Observer', () => {
+        controller.processEventFromView('clearUniverse');
+        sinon.assert.called(spyPublish);
       });
-      it('нажатие на кнопку СТЕРЕТЬ вызывает метод стирания поля', function () {
-        $('clear-universe').trigger('click');
-        sinon.assert.called(spy_clear);
+      it('передача методу сообщения makeStep вызывает метод publish наследуемый от класса Observer', () => {
+        controller.processEventFromView('makeStep');
+        sinon.assert.called(spyPublish);
       });
-      it('нажатие на кнопку СТЕРЕТЬ вызывает метод отрисовки поля', function () {
-        $('clear-universe').trigger('click');
-        sinon.assert.called(spy_updateview);
+      it('передача методу сообщения cellClick вызывает метод publish наследуемый от класса Observer', () => {
+        controller.processEventFromView('cellClick');
+        sinon.assert.called(spyPublish);
       });
-      it('нажатие на кнопку СТАРТ вызывает метод пересчета поля', function () {
-        $('start-game').trigger('click');
-        sinon.assert.called(spy_changefield);
+      it('передача методу сообщения changeHightInput вызывает метод publish наследуемый от класса Observer', () => {
+        controller.processEventFromView('resizeField');
+        sinon.assert.called(spyPublish);
       });
-      it('нажатие на кнопку СТАРТ вызывает метод отрисовки поля', function () {
-        $('start-game').trigger('click');
-        sinon.assert.called(spy_updateview);
+      it('передача методу сообщения changeWidthInput вызывает метод publish наследуемый от класса Observer', () => {
+        controller.processEventFromView('resizeField');
+        sinon.assert.called(spyPublish);
       });
-      it('нажатие на кнопку СТОП прекращает вызов метода пересчета поля', function () {
-        $('stop-game').trigger('click');
-        sinon.assert.called(spy_changefield);
+      it('передача методу сообщения startGame вызывает метод _startTimer', () => {
+        controller.processEventFromView('startGame');
+        sinon.assert.called(spyStartTimer);
       });
-      it('нажатие на кнопку 1 ШАГ вызывает метод пересчета поля', function () {
-        $('step').trigger('click');
-        sinon.assert.called(spy_changefield);
+      it('передача методу сообщения restartGame вызывает метод _restartTimer', () => {
+        controller.processEventFromView('restartGame');
+        sinon.assert.called(spyRestartTimer);
       });
-      it('нажатие на кнопку 1 ШАГ вызывает метод отрисовки поля', function () {
-        $('step').trigger('click');
-        sinon.assert.called(spy_updateview);
-      });*/
-      it('нажатие на ячейку поля вызывает метод изменения ее состояния', function () {
-        EController.main(Field, ChangeField, EView);
-        $('div').trigger('click');
-        sinon.assert.called(spy_changesquare);
-      });
-      it('нажатие на ячейку поля вызывает метод отрисовки поля', function () {
-        $('div').trigger('click');
-        sinon.assert.called(spy_updateview);
-      });
-      it('анфокус поля высоты в случае уменьшения высоты вызывает метод cropFieldOnX', function () {
-        document.getElementsByClassName('field-height')[0].value = 30;
-        $('field-height').trigger('change');
-        sinon.assert.called(spy_onblurheightcrop);
-      });
-      it('анфокус поля высоты в случае увеличения высоты вызывает метод enlargeFieldOnX', function () {
-        document.getElementsByClassName('field-height')[0].value = 47;
-        $('field-height').trigger('change');
-        sinon.assert.called(spy_onblurheightenlarge);
-      });
-      it('анфокус поля высоты вызывает метод отрисовки поля', function () {
-        $('field-height').trigger('change');
-        sinon.assert.called(spy_updateview);
-      });
-      it('анфокус поля ширины в случае уменьшения высоты вызывает метод cropFieldOnY', function () {
-        document.getElementsByClassName('field-width')[0].value = 50;
-        $('field-width').trigger('change');
-        sinon.assert.called(spy_onblurwidthcrop);
-      });
-      it('анфокус поля ширины в случае увеличения высоты вызывает метод enlargeFieldOnY', function () {
-        document.getElementsByClassName('field-width')[0].value = 100;
-        $('field-width').trigger('change');
-        sinon.assert.called(spy_onblurwidthtenlarge);
-      });
-      it('анфокус поля ширины вызывает метод отрисовки поля', function () {
-        $('field-width').trigger('change');
-        sinon.assert.called(spy_updateview);
+      it('передача методу сообщения stopGame вызывает метод _resetTimer', () => {
+        controller.processEventFromView('stopGame');
+        sinon.assert.called(spyResetTimer);
       });
     });
   });

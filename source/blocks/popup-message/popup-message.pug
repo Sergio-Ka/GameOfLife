@@ -1,0 +1,8 @@
+include ../standard-button/standard-button.pug
+
+mixin popup-message()
+    .popup-message.js-popup-message
+        .popup-message__content
+            .popup-message__text
+            .popup-message__button
+                +standard-button({text:"закрыть", color:"red", jsClass:" js-popup-message-close"})

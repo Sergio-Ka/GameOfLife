@@ -1,5 +1,4 @@
 class StandardButton {
-
   constructor($element) {
     this.$element = $element;
     this.initButton();
@@ -7,7 +6,6 @@ class StandardButton {
 
   initButton() {
     this.$element.on('mousedown', (event) => {
-      // event.preventDefault();
       const targetCoordinates = event.target.getBoundingClientRect();
       const xCoordinate = event.clientX - targetCoordinates.left;
       const yCoordinate = event.clientY - targetCoordinates.top;

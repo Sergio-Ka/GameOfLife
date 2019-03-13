@@ -1,6 +1,7 @@
 import Field from './model/model-field';
 import FieldChanger from './model/model-field-changer';
 import Observer from './observer';
+import constants from './constants';
 
 class FacadeOfModel extends Observer {
   constructor() {
@@ -9,7 +10,26 @@ class FacadeOfModel extends Observer {
     this._fieldChanger = new FieldChanger();
   }
 
-  calculateGeneration() {
+  processEvent(event, ...args) {
+    switch (event) {
+      case 'createUniverse': this._createField(args[0], args[1]);
+        break;
+      case 'clearUniverse': this._clearField();
+        break;
+      case 'makeStep': this._calculateGeneration();
+        break;
+      case 'cellClick': this._toggleCellStatus(args[0], args[1]);
+        break;
+      case 'resizeField': this._resizeField(args[0], args[1]);
+        break;
+      case 'resetGame': this._resetGameStatus();
+        break;
+      default:
+        break;
+    }
+  }
+
+  _calculateGeneration() {
     this._fieldChanger.calculateField(this._field);
     this.publish(
       this._field.getYSizeOfField(),
@@ -21,7 +41,7 @@ class FacadeOfModel extends Observer {
     );
   }
 
-  createField(numberOfRows, numberOfColumns) {
+  _createField(numberOfRows, numberOfColumns) {
     this._field.setXSizeOfField(numberOfColumns);
     this._field.setYSizeOfField(numberOfRows);
     this._field.createRandomField();
@@ -35,7 +55,7 @@ class FacadeOfModel extends Observer {
     );
   }
 
-  clearField() {
+  _clearField() {
     this._field.clearField();
     this.publish(
       this._field.getYSizeOfField(),
@@ -47,7 +67,9 @@ class FacadeOfModel extends Observer {
     );
   }
 
-  toggleCellStatus(row, column) {
+  _toggleCellStatus(row, column) {
+    this._field.setGameOver(false);
+    this._field.setEndGameStatus(constants.GAME_IS_RUNNING); // 0
     this._field.toggleCellLifeStatus(row, column);
     this.publish(
       this._field.getYSizeOfField(),
@@ -59,18 +81,18 @@ class FacadeOfModel extends Observer {
     );
   }
 
-  resizeField(axis, size) {
+  _resizeField(axis, size) {
     if (axis === 'X') {
-      if (size > this._field.getXSizeOfField()) {
+      if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER > this._field.getXSizeOfField()) {
         this._field.enlargeFieldOnXaxis(size);
-      } else if (size < this._field.getXSizeOfField()) {
+      } else if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER < this._field.getXSizeOfField()) {
         this._field.cropFieldOnXaxis(size);
       }
     }
     if (axis === 'Y') {
-      if (size > this._field.getYSizeOfField()) {
+      if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER > this._field.getYSizeOfField()) {
         this._field.enlargeFieldOnYaxis(size);
-      } else if (size < this._field.getYSizeOfField()) {
+      } else if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER < this._field.getYSizeOfField()) {
         this._field.cropFieldOnYaxis(size);
       }
     }
@@ -84,37 +106,9 @@ class FacadeOfModel extends Observer {
     );
   }
 
-  resetGameStatus() {
+  _resetGameStatus() {
     this._field.setGameOver(false);
-    this._field.setEndGameStatus(0);
-  }
-
-  _subscribe() {
-    this.controller.subscribe(this.processEvent.bind(this));
-  }
-
-  referTo(controller) {
-    this.controller = controller;
-    this._subscribe();
-  }
-
-  processEvent(event, ...args) {
-    switch (event) {
-      case 'createUniverse': this.createField(args[0], args[1]);
-        break;
-      case 'clearUniverse': this.clearField();
-        break;
-      case 'makeStep': this.calculateGeneration();
-        break;
-      case 'cellClick': this.toggleCellStatus(args[0], args[1]);
-        break;
-      case 'resizeField': this.resizeField(args[0], args[1]);
-        break;
-      case 'resetGame': this.resetGameStatus();
-        break;
-      default:
-        break;
-    }
+    this._field.setEndGameStatus(constants.GAME_IS_RUNNING); // 0
   }
 }
 

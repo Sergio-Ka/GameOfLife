@@ -1,12 +1,10 @@
 import Observer from './observer';
+import constants from './constants';
 
 class Controller extends Observer {
-  constructor(model, view) {
+  constructor() {
     super();
-    this.model = model;
-    this.view = view;
-    this.timerId = 0;
-    this._subscribe();
+    this.firstStartFlag = true;
   }
 
   processEventFromView(event, ...args) {
@@ -15,11 +13,13 @@ class Controller extends Observer {
         break;
       case 'clearUniverse': this.publish(event, ...args);
         break;
-      case 'startGame': this._timer(args[0]);
+      case 'startGame': this._startTimer(args[0]);
         break;
-      case 'stopGame': clearInterval(this.timerId);
+      case 'restartGame': this._restartTimer(args[0]);
         break;
-      case 'makeStep': this.publish(event, ...args);
+      case 'stopGame': this._resetTimer();
+        break;
+      case 'makeStep': this.publish(event);
         break;
       case 'cellClick': this.publish(event, ...args);
         break;
@@ -37,22 +37,32 @@ class Controller extends Observer {
     this.publish('updateView', field, endGameStatus, numberOfGeneration);
   }
 
-  _subscribe() {
-    this.model.subscribe(this.processEventFromModel.bind(this));
-    this.view.subscribe(this.processEventFromView.bind(this));
-  }
-
   _actionOnTimer() {
-    this.model.calculateGeneration();
+    this.publish('makeStep');
     if (this.gameOverStatus) {
-      clearInterval(this.timerId);
+      this._resetTimer();
       this.publish('resetGame');
     }
   }
 
-  _timer(speed) {
+  _startTimer(speed) {
     clearInterval(this.timerId);
-    this.timerId = setInterval(this._actionOnTimer.bind(this), (10 - speed) * 100);
+    this.timerId = setInterval(this._actionOnTimer.bind(this),
+      (constants.MAX_SPEED - speed) * constants.STEP_OF_DELAY);
+    this.firstStartFlag = false;
+  }
+
+  _restartTimer(speed) {
+    if (!this.firstStartFlag) {
+      clearInterval(this.timerId);
+      this.timerId = setInterval(this._actionOnTimer.bind(this),
+        (constants.MAX_SPEED - speed) * constants.STEP_OF_DELAY);
+    }
+  }
+
+  _resetTimer() {
+    clearInterval(this.timerId);
+    this.firstStartFlag = true;
   }
 }
 

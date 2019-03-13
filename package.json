@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "игра жизнь конвея, учебный проект",
   "main": "./source/index.js",
+  "test": "./source/test/test.js",
   "dependencies": {
     "babel-minify-webpack-plugin": "0.3.1",
     "cross-env": "5.2.0",

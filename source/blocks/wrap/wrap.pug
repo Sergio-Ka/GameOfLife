@@ -1,6 +1,7 @@
 include ../standard-button/standard-button.pug
 include ../slider-with-pop-up/slider-with-pop-up.pug
 include ../field/field.pug
+include ../popup-message/popup-message.pug
 
 mixin wrap()
     main.wrap
@@ -10,11 +11,11 @@ mixin wrap()
             .wrap__control-item
                 | Высота (5 - 100):
             .wrap__control-item
-                input.field-height(type="number", value="47", min="5", max="100")
+                input.field-height.js-field-height(type="number", value="47", min="5", max="100")
             .wrap__control-item
                 | Ширина (5 - 100):
             .wrap__control-item
-                input.field-width(type="number", value="100", min="5", max="100")
+                input.field-width.js-field-width(type="number", value="100", min="5", max="100")
         .wrap__controls
             .wrap__control-item
                 | Скорость:
@@ -23,21 +24,22 @@ mixin wrap()
             .wrap__control-item
                 | Поколение:
             .wrap__control-item
-                input.generation(type="number", value="1", disabled)
+                input.generation.js-generation(type="number", value="1", disabled)
         .wrap__controls
             .wrap__control-item
-                +standard-button({text:"создать", color:"green", size:"", effect:"", activeStatus:"", jsClass:" create-universe"})
+                +standard-button({text:"создать", color:"green", size:"", effect:"", activeStatus:"", jsClass:" js-create-universe"})
             .wrap__control-item
-                +standard-button({text:"стереть", color:"red", size:"", effect:"", activeStatus:"", jsClass:" clear-universe"})
+                +standard-button({text:"стереть", color:"red", size:"", effect:"", activeStatus:"", jsClass:" js-clear-universe"})
             .wrap__control-item
-                +standard-button({text:"старт", color:"green", size:"", effect:"", activeStatus:"", jsClass:" start-game"})
+                +standard-button({text:"старт", color:"green", size:"", effect:"", activeStatus:"", jsClass:" js-start-game"})
             .wrap__control-item
-                +standard-button({text:"стоп", color:"red", size:"", effect:"", activeStatus:"", jsClass:" stop-game"})
+                +standard-button({text:"стоп", color:"red", size:"", effect:"", activeStatus:"", jsClass:" js-stop-game"})
             .wrap__control-item
-                +standard-button({text:"1 шаг", color:"green", size:"", effect:"", activeStatus:"inactive", jsClass:" step"})
+                +standard-button({text:"1 шаг", color:"green", size:"", effect:"", activeStatus:"inactive", jsClass:" js-step"})
             .wrap__control-item
                 a.wrap__link(href="test.html")
                     +standard-button({text:"тесты", color:"red", size:"", effect:"", activeStatus:"inactive"})
-        article.wrap__content
+        article.wrap__content.js-wrap__content
             +field({width: 3, height: 3})
         footer.wrap__footer Copyright @ & Designed by Sergey Karbyshev
+        +popup-message()
