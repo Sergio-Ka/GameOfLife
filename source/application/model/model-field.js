@@ -89,38 +89,36 @@ class Field {
   }
 
   createRandomField() {
-    this.field = Array(this.ySizeOfField).fill(null);
     this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION; // 1
     this.gameOver = false;
     this.endGameStatus = constants.GAME_IS_RUNNING; // 0
 
-    for (let i = 0; i < this.ySizeOfField; i += 1) {
+    this.field = Array(this.ySizeOfField).fill(null);
+    this.field.forEach((item, i) => {
       this.field[i] = Array(this.xSizeOfField).fill(null);
-      for (let j = 0; j < this.xSizeOfField; j += 1) {
+      this.field[i].forEach((itemInside, j) => {
         this.field[i][j] = new Cell();
-        if (i === 0 || i === this.ySizeOfField - 1 || j === 0 || j === this.xSizeOfField - 1) {
-          this.field[i][j].setLifeStatus(constants.DEAD_CELL); // 0
-        } else {
+        if (i !== 0 && i !== this.ySizeOfField - 1 && j !== 0 && j !== this.xSizeOfField - 1) {
           this.field[i][j].setLifeStatus(Math.round(Math.random()));
         }
-      }
-    }
+      });
+    });
 
     this._sumAllCells();
   }
 
   clearField() {
-    this.field = Array(this.ySizeOfField).fill(null);
     this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION; // 1
     this.gameOver = false;
     this.endGameStatus = constants.GAME_IS_RUNNING; // 0
 
-    for (let i = 0; i < this.ySizeOfField; i += 1) {
+    this.field = Array(this.ySizeOfField).fill(null);
+    this.field.forEach((item, i) => {
       this.field[i] = Array(this.xSizeOfField).fill(null);
-      for (let j = 0; j < this.xSizeOfField; j += 1) {
+      this.field[i].forEach((itemInside, j) => {
         this.field[i][j] = new Cell();
-      }
-    }
+      });
+    });
 
     this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS; // 0
   }
@@ -130,13 +128,10 @@ class Field {
       const numericXSize = Number(xSize);
       this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
 
-      for (let i = 0; i < this.field.length; i += 1) {
-        for (let j = this.field[i].length; this.field[i].length > numericXSize
-          + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; j -= 1) {
-          this.field[i].pop();
-        }
+      this.field.forEach((item, i) => {
+        item.splice(numericXSize + 2);
         this.field[i][numericXSize + 1].setLifeStatus(constants.DEAD_CELL); // 0
-      }
+      });
 
       this._sumAllCells();
     }
@@ -147,14 +142,11 @@ class Field {
       const numericYSize = Number(ySize);
       this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
 
-      for (let i = this.field.length; this.field.length > numericYSize
-        + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; i -= 1) {
-        this.field.pop();
-      }
+      this.field.splice(numericYSize + 2);
 
-      for (let j = 0; j < this.field[numericYSize + 1].length; j += 1) {
-        this.field[numericYSize + 1][j].setLifeStatus(constants.DEAD_CELL); // 0
-      }
+      this.field[numericYSize + 1].forEach((item) => {
+        item.setLifeStatus(constants.DEAD_CELL); // 0
+      });
 
       this._sumAllCells();
     }
@@ -166,11 +158,11 @@ class Field {
       const oldY = this.xSizeOfField;
       this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
 
-      for (let i = 0; i < this.ySizeOfField; i += 1) {
+      this.field.forEach((item, i) => {
         for (let j = oldY; j < this.xSizeOfField; j += 1) {
-          this.field[i][j] = new Cell();
+          this.field[i].push(new Cell());
         }
-      }
+      });
     }
   }
 
@@ -179,12 +171,11 @@ class Field {
       const numericYSize = Number(ySize);
       this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
 
-      for (let i = this.field.length; i < numericYSize
-        + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; i += 1) {
-        this.field[i] = Array(this.xSizeOfField).fill(null);
-        for (let j = 0; j < this.xSizeOfField; j += 1) {
+      for (let i = this.field.length; i < this.ySizeOfField; i += 1) {
+        this.field.push(Array(this.xSizeOfField).fill(null));
+        this.field[i].forEach((item, j) => {
           this.field[i][j] = new Cell();
-        }
+        });
       }
     }
   }

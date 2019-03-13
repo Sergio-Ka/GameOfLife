@@ -68,19 +68,19 @@ class View extends Observer {
     this.table.setAttribute('class', 'field js-field');
     const fragment = this.document.createDocumentFragment();
 
-    for (let i = 0; i < field.length; i += 1) {
+    field.forEach((item, i) => {
       tr = fragment.appendChild(this.document.createElement('div'));
       tr.setAttribute('class', 'field__line js-field__line');
-      for (let j = 0; j < field[i].length; j += 1) {
+      item.forEach((element, j) => {
         td = tr.appendChild(this.document.createElement('div'));
         td.setAttribute('data-id', `${i} ${j}`);
-        if (field[i][j].getLifeStatus() === constants.DEAD_CELL) { // 0
+        if (element.getLifeStatus() === constants.DEAD_CELL) { // 0
           td.setAttribute('class', 'field__cell field__cell_dead js-field__cell js-field__cell_dead');
-        } else if (field[i][j].getLifeStatus() === constants.ALIVE_CELL) { // 1
+        } else if (element.getLifeStatus() === constants.ALIVE_CELL) { // 1
           td.setAttribute('class', 'field__cell field__cell_alive js-field__cell js-field__cell_alive');
         }
-      }
-    }
+      });
+    });
 
     this.table.appendChild(fragment);
     this.generation.setAttribute('value', numberOfGeneration);

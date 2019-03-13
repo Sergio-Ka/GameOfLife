@@ -434,12 +434,36 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
   // проверка класса с отображением
   describe('Проверка класса View', () => {
     describe('проверка метода _createView отвечающего за отрисовку таблицы поля', () => {
+      it('передача методу поля 5*5 с отсутствующей жизнью и проверка того, что создана таблица 5*5', () => {
+        field.setXSizeOfField(5);
+        field.setYSizeOfField(5);
+        field.clearField();
+        view._createView(field.field, 0, 1);
+
+        assert.isNotNull(document.getElementsByClassName('js-field'));
+        assert.equal(document.getElementsByClassName('js-field__line').length, 7);
+        assert.equal(document.getElementsByClassName('js-field__cell').length, 49);
+      });
+      it('проверка того, что ячейкам присвоены соотвествующие классы и id = координаты', () => {
+        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 49);
+        let cellSquare;
+        let coordinate;
+        for (let i = 0; i < 7; i += 1) {
+          for (let j = 0; j < 7; j += 1) {
+            cellSquare = document.getElementsByClassName('js-field__cell_dead')[i * 7 + j];
+            coordinate = cellSquare.getAttribute('data-id').split(' ');
+            assert.equal(i, coordinate[0]);
+            assert.equal(j, coordinate[1]);
+          }
+        }
+      });
       it('передача методу поля с определенным рисунком (квадрат в верхнем левом углу) и проверка присвоения соответствующих классов соответствующим ячейкам', () => {
+        field.clearField();
         field.field[1][1].setLifeStatus(1);
         field.field[1][2].setLifeStatus(1);
         field.field[2][1].setLifeStatus(1);
         field.field[2][2].setLifeStatus(1);
-        view._createView(field, 0, 1);
+        view._createView(field.field, 0, 1);
 
         let coordinate;
         const cellSquare = document.getElementsByClassName('js-field__cell_alive');
@@ -450,6 +474,15 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
             assert.equal(coordinate[1], j + 1);
           }
         }
+      });
+      it('присвоение \'живым\' ячейкам класса \'мертвых\' и проверка всех ячеек на предмет наличия у них \'мертвого\' класса', () => {
+        field.field[1][1].setLifeStatus(0);
+        field.field[1][2].setLifeStatus(0);
+        field.field[2][1].setLifeStatus(0);
+        field.field[2][2].setLifeStatus(0);
+        view._createView(field.field, 0, 1);
+
+        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 49);
       });
     });
     describe('проверка части view, отвечающей за обработку событий, возникающих при взаимодействии с контролами', () => {
