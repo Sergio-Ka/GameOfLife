@@ -3,12 +3,12 @@ import constants from '../constants';
 
 class Field {
   constructor() {
-    this.xSizeOfField = constants.MIN_SIZE_OF_FIELD_WITH_BORDER; // 3
-    this.ySizeOfField = constants.MIN_SIZE_OF_FIELD_WITH_BORDER; // 3
-    this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION; // 1
+    this.xSizeOfField = constants.MIN_SIZE_OF_FIELD_WITH_BORDER;
+    this.ySizeOfField = constants.MIN_SIZE_OF_FIELD_WITH_BORDER;
+    this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION;
     this.gameOver = false;
-    this.endGameStatus = constants.GAME_IS_RUNNING; // 0
-    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS; // 0
+    this.endGameStatus = constants.GAME_IS_RUNNING;
+    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
   }
 
   getXSizeOfField() {
@@ -17,9 +17,9 @@ class Field {
 
   setXSizeOfField(value) {
     if (Number(value) >= constants.MIN_SIZE_OF_FIELD) {
-      this.xSizeOfField = Number(value) + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
+      this.xSizeOfField = Number(value) + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
     } else {
-      this.xSizeOfField = constants.MIN_SIZE_OF_FIELD_WITH_BORDER; // 3
+      this.xSizeOfField = constants.MIN_SIZE_OF_FIELD_WITH_BORDER;
     }
   }
 
@@ -29,9 +29,9 @@ class Field {
 
   setYSizeOfField(value) {
     if (Number(value) >= constants.MIN_SIZE_OF_FIELD) {
-      this.ySizeOfField = Number(value) + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
+      this.ySizeOfField = Number(value) + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
     } else {
-      this.y = constants.MIN_SIZE_OF_FIELD_WITH_BORDER; // 3
+      this.y = constants.MIN_SIZE_OF_FIELD_WITH_BORDER;
     }
   }
 
@@ -65,10 +65,10 @@ class Field {
 
   setEndGameStatus(value) {
     switch (value) {
-      case constants.GAME_IS_RUNNING: // 0
-      case constants.GAME_STOPPED_BY_DEAD_UNIVERSE: // 1
-      case constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_2_LATEST_GENERATIONS: // 2
-      case constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_LAST_AND_PENULTIMATE_GENERATION: // 3
+      case constants.GAME_IS_RUNNING:
+      case constants.GAME_STOPPED_BY_DEAD_UNIVERSE:
+      case constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_2_LATEST_GENERATIONS:
+      case constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_LAST_AND_PENULTIMATE_GENERATION:
         this.endGameStatus = value;
         break;
       default: this.endGameStatus = constants.GAME_IS_RUNNING;
@@ -89,9 +89,9 @@ class Field {
   }
 
   createRandomField() {
-    this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION; // 1
+    this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION;
     this.gameOver = false;
-    this.endGameStatus = constants.GAME_IS_RUNNING; // 0
+    this.endGameStatus = constants.GAME_IS_RUNNING;
 
     this.field = Array(this.ySizeOfField).fill(null);
     this.field.forEach((item, i) => {
@@ -108,9 +108,9 @@ class Field {
   }
 
   clearField() {
-    this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION; // 1
+    this.numberOfGeneraton = constants.DEFAULT_NUMBER_OF_GENERATION;
     this.gameOver = false;
-    this.endGameStatus = constants.GAME_IS_RUNNING; // 0
+    this.endGameStatus = constants.GAME_IS_RUNNING;
 
     this.field = Array(this.ySizeOfField).fill(null);
     this.field.forEach((item, i) => {
@@ -120,17 +120,17 @@ class Field {
       });
     });
 
-    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS; // 0
+    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
   }
 
   cropFieldOnXaxis(xSize) {
     if (this.field) {
       const numericXSize = Number(xSize);
-      this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
+      this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
       this.field.forEach((item, i) => {
         item.splice(numericXSize + 2);
-        this.field[i][numericXSize + 1].setLifeStatus(constants.DEAD_CELL); // 0
+        this.field[i][numericXSize + 1].setLifeStatus(constants.DEAD_CELL);
       });
 
       this._sumAllCells();
@@ -140,12 +140,12 @@ class Field {
   cropFieldOnYaxis(ySize) {
     if (this.field) {
       const numericYSize = Number(ySize);
-      this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
+      this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
       this.field.splice(numericYSize + 2);
 
       this.field[numericYSize + 1].forEach((item) => {
-        item.setLifeStatus(constants.DEAD_CELL); // 0
+        item.setLifeStatus(constants.DEAD_CELL);
       });
 
       this._sumAllCells();
@@ -156,7 +156,7 @@ class Field {
     if (this.field) {
       const numericXSize = Number(xSize);
       const oldY = this.xSizeOfField;
-      this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
+      this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
       this.field.forEach((item, i) => {
         for (let j = oldY; j < this.xSizeOfField; j += 1) {
@@ -169,7 +169,7 @@ class Field {
   enlargeFieldOnYaxis(ySize) {
     if (this.field) {
       const numericYSize = Number(ySize);
-      this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER; // 2
+      this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
       for (let i = this.field.length; i < this.ySizeOfField; i += 1) {
         this.field.push(Array(this.xSizeOfField).fill(null));
@@ -197,10 +197,10 @@ class Field {
     const xCoordinate = Number(j);
     if (yCoordinate === 0 || yCoordinate === this.ySizeOfField - 1
       || xCoordinate === 0 || xCoordinate === this.xSizeOfField - 1) {
-      this.field[yCoordinate][xCoordinate].setLifeStatus(constants.DEAD_CELL); // 0
+      this.field[yCoordinate][xCoordinate].setLifeStatus(constants.DEAD_CELL);
     } else {
       this.field[yCoordinate][xCoordinate].toggleLifeStatus();
-      if (this.field[yCoordinate][xCoordinate].getLifeStatus() === constants.ALIVE_CELL) { // 1
+      if (this.field[yCoordinate][xCoordinate].getLifeStatus() === constants.ALIVE_CELL) {
         this.sumOfAllCells += 1;
       } else {
         this.sumOfAllCells -= 1;
@@ -221,7 +221,7 @@ class Field {
   }
 
   _sumAllCells() {
-    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS; // 0
+    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
     this.field.forEach((item) => {
       item.forEach((element) => {
         this.sumOfAllCells += Number(element.getLifeStatus());

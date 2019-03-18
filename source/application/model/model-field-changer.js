@@ -2,9 +2,9 @@ import constants from '../constants';
 
 class FieldChanger {
   constructor() {
-    this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS; // 0
-    this.sameCellsOfFirstAndLastGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS; // 0
-    this.sameCellsOfFirstAndPenultimateGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS; // 0
+    this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS;
+    this.sameCellsOfFirstAndLastGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
+    this.sameCellsOfFirstAndPenultimateGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
   }
 
   calculateField(field) {
@@ -12,11 +12,11 @@ class FieldChanger {
     this.recountedField = Array(field.getYSizeOfField()).fill(null);
 
     field.field.forEach((item, i) => {
-      this.recountedField[i] = Array(field.getXSizeOfField()).fill(constants.DEAD_CELL); // 0
+      this.recountedField[i] = Array(field.getXSizeOfField()).fill(constants.DEAD_CELL);
       item.forEach((element, j) => {
         if (i !== 0 && i !== field.getYSizeOfField() - 1 && j !== 0
             && j !== field.getXSizeOfField() - 1) {
-          this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS; // 0
+          this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS;
           const upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j - 1, j + 2);
           const middleRowSumOfNeighborsStatuses = field.field[i].slice(j - 1, j + 2);
           const lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j - 1, j + 2);
@@ -30,17 +30,17 @@ class FieldChanger {
             });
           });
 
-          if (field.readCellLifeStatus(i, j) === constants.DEAD_CELL // 0
-            && this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS) { // 3
-            this.recountedField[i][j] = constants.ALIVE_CELL; // 1
-          } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL // 1
-              && (this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS // 3
-                || this.amountOfNeighborsStatuses === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) { // 4
-            this.recountedField[i][j] = constants.ALIVE_CELL; // 1
-          } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL // 1
-              && (this.amountOfNeighborsStatuses < constants.MIN_SUM_OF_ALIVE_NEIGHBOURS // 3
-                || this.amountOfNeighborsStatuses > constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) { // 4
-            this.recountedField[i][j] = constants.DEAD_CELL; // 0
+          if (field.readCellLifeStatus(i, j) === constants.DEAD_CELL
+            && this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS) {
+            this.recountedField[i][j] = constants.ALIVE_CELL;
+          } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
+              && (this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
+                || this.amountOfNeighborsStatuses === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
+            this.recountedField[i][j] = constants.ALIVE_CELL;
+          } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
+              && (this.amountOfNeighborsStatuses < constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
+                || this.amountOfNeighborsStatuses > constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
+            this.recountedField[i][j] = constants.DEAD_CELL;
           }
         }
       });
@@ -69,8 +69,8 @@ class FieldChanger {
   }
 
   _stopGame(field) {
-    this.sameCellsOfFirstAndLastGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS; // 0
-    this.sameCellsOfFirstAndPenultimateGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS; // 0
+    this.sameCellsOfFirstAndLastGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
+    this.sameCellsOfFirstAndPenultimateGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
 
     field.field.forEach((item, i) => {
       item.forEach((element, j) => {
@@ -85,23 +85,23 @@ class FieldChanger {
       });
     });
 
-    if (field.getSumOfAllCells() === constants.DEFAULT_SUM_OF_SAME_CELLS) { // 0
-      field.setEndGameStatus(constants.GAME_STOPPED_BY_DEAD_UNIVERSE); // 1
+    if (field.getSumOfAllCells() === constants.DEFAULT_SUM_OF_SAME_CELLS) {
+      field.setEndGameStatus(constants.GAME_STOPPED_BY_DEAD_UNIVERSE);
       field.setGameOver(true);
     } else if (this.sameCellsOfFirstAndPenultimateGeneration === field.getXSizeOfField()
                 * field.getYSizeOfField()) {
       field.setEndGameStatus(
         constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_LAST_AND_PENULTIMATE_GENERATION,
-      ); // 3
+      );
       field.setGameOver(true);
     } else if (this.sameCellsOfFirstAndLastGeneration === field.getXSizeOfField()
                 * field.getYSizeOfField()) {
       field.setEndGameStatus(
         constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_2_LATEST_GENERATIONS,
-      ); // 2
+      );
       field.setGameOver(true);
     } else {
-      field.setEndGameStatus(constants.GAME_IS_RUNNING); // 0
+      field.setEndGameStatus(constants.GAME_IS_RUNNING);
       field.setGameOver(false);
     }
   }

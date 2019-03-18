@@ -74,9 +74,9 @@ class View extends Observer {
       item.forEach((element, j) => {
         td = tr.appendChild(this.document.createElement('div'));
         td.setAttribute('data-id', `${i} ${j}`);
-        if (element.getLifeStatus() === constants.DEAD_CELL) { // 0
+        if (element.getLifeStatus() === constants.DEAD_CELL) {
           td.setAttribute('class', 'field__cell field__cell_dead js-field__cell js-field__cell_dead');
-        } else if (element.getLifeStatus() === constants.ALIVE_CELL) { // 1
+        } else if (element.getLifeStatus() === constants.ALIVE_CELL) {
           td.setAttribute('class', 'field__cell field__cell_alive js-field__cell js-field__cell_alive');
         }
       });

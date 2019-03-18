@@ -69,7 +69,7 @@ class FacadeOfModel extends Observer {
 
   _toggleCellStatus(row, column) {
     this._field.setGameOver(false);
-    this._field.setEndGameStatus(constants.GAME_IS_RUNNING); // 0
+    this._field.setEndGameStatus(constants.GAME_IS_RUNNING);
     this._field.toggleCellLifeStatus(row, column);
     this.publish(
       this._field.getYSizeOfField(),
@@ -108,7 +108,7 @@ class FacadeOfModel extends Observer {
 
   _resetGameStatus() {
     this._field.setGameOver(false);
-    this._field.setEndGameStatus(constants.GAME_IS_RUNNING); // 0
+    this._field.setEndGameStatus(constants.GAME_IS_RUNNING);
   }
 }
 
