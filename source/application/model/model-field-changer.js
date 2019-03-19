@@ -26,7 +26,7 @@ class FieldChanger {
           arrayOfNeighbors.push(lowerRowSumOfNeighborsStatuses);
           arrayOfNeighbors.forEach((neighborRow) => {
             neighborRow.forEach((neighbor) => {
-              this.amountOfNeighborsStatuses += Number(neighbor.getLifeStatus());
+              this.amountOfNeighborsStatuses += neighbor.getLifeStatus();
             });
           });
 

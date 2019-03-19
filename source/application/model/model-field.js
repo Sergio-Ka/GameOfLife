@@ -16,8 +16,8 @@ class Field {
   }
 
   setXSizeOfField(value) {
-    if (Number(value) >= constants.MIN_SIZE_OF_FIELD) {
-      this.xSizeOfField = Number(value) + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
+    if (value >= constants.MIN_SIZE_OF_FIELD) {
+      this.xSizeOfField = value + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
     } else {
       this.xSizeOfField = constants.MIN_SIZE_OF_FIELD_WITH_BORDER;
     }
@@ -28,8 +28,8 @@ class Field {
   }
 
   setYSizeOfField(value) {
-    if (Number(value) >= constants.MIN_SIZE_OF_FIELD) {
-      this.ySizeOfField = Number(value) + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
+    if (value >= constants.MIN_SIZE_OF_FIELD) {
+      this.ySizeOfField = value + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
     } else {
       this.y = constants.MIN_SIZE_OF_FIELD_WITH_BORDER;
     }
@@ -125,12 +125,11 @@ class Field {
 
   cropFieldOnXaxis(xSize) {
     if (this.field) {
-      const numericXSize = Number(xSize);
-      this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
+      this.xSizeOfField = xSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
       this.field.forEach((item, i) => {
-        item.splice(numericXSize + 2);
-        this.field[i][numericXSize + 1].setLifeStatus(constants.DEAD_CELL);
+        item.splice(xSize + 2);
+        this.field[i][xSize + 1].setLifeStatus(constants.DEAD_CELL);
       });
 
       this._sumAllCells();
@@ -139,12 +138,11 @@ class Field {
 
   cropFieldOnYaxis(ySize) {
     if (this.field) {
-      const numericYSize = Number(ySize);
-      this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
+      this.ySizeOfField = ySize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
-      this.field.splice(numericYSize + 2);
+      this.field.splice(ySize + 2);
 
-      this.field[numericYSize + 1].forEach((item) => {
+      this.field[ySize + 1].forEach((item) => {
         item.setLifeStatus(constants.DEAD_CELL);
       });
 
@@ -154,9 +152,8 @@ class Field {
 
   enlargeFieldOnXaxis(xSize) {
     if (this.field) {
-      const numericXSize = Number(xSize);
       const oldY = this.xSizeOfField;
-      this.xSizeOfField = numericXSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
+      this.xSizeOfField = xSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
       this.field.forEach((item, i) => {
         for (let j = oldY; j < this.xSizeOfField; j += 1) {
@@ -168,8 +165,7 @@ class Field {
 
   enlargeFieldOnYaxis(ySize) {
     if (this.field) {
-      const numericYSize = Number(ySize);
-      this.ySizeOfField = numericYSize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
+      this.ySizeOfField = ySize + constants.DOUBLE_WIDTH_OF_FIELD_BORDER;
 
       for (let i = this.field.length; i < this.ySizeOfField; i += 1) {
         this.field.push(Array(this.xSizeOfField).fill(null));
@@ -193,14 +189,11 @@ class Field {
   }
 
   toggleCellLifeStatus(i, j) {
-    const yCoordinate = Number(i);
-    const xCoordinate = Number(j);
-    if (yCoordinate === 0 || yCoordinate === this.ySizeOfField - 1
-      || xCoordinate === 0 || xCoordinate === this.xSizeOfField - 1) {
-      this.field[yCoordinate][xCoordinate].setLifeStatus(constants.DEAD_CELL);
+    if (i === 0 || i === this.ySizeOfField - 1 || j === 0 || j === this.xSizeOfField - 1) {
+      this.field[i][j].setLifeStatus(constants.DEAD_CELL);
     } else {
-      this.field[yCoordinate][xCoordinate].toggleLifeStatus();
-      if (this.field[yCoordinate][xCoordinate].getLifeStatus() === constants.ALIVE_CELL) {
+      this.field[i][j].toggleLifeStatus();
+      if (this.field[i][j].getLifeStatus() === constants.ALIVE_CELL) {
         this.sumOfAllCells += 1;
       } else {
         this.sumOfAllCells -= 1;
@@ -224,7 +217,7 @@ class Field {
     this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
     this.field.forEach((item) => {
       item.forEach((element) => {
-        this.sumOfAllCells += Number(element.getLifeStatus());
+        this.sumOfAllCells += element.getLifeStatus();
       });
     });
   }

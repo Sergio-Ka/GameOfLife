@@ -12,7 +12,9 @@ class Cell {
   }
 
   setLifeStatus(value) {
-    this.lifeStatus = value;
+    if (value === constants.ALIVE_CELL || value === constants.DEAD_CELL) {
+      this.lifeStatus = value;
+    }
   }
 
   getLifeStatusOnLastGeneration() {
@@ -20,7 +22,9 @@ class Cell {
   }
 
   setLifeStatusOnLastGeneration(value) {
-    this.lifeStatusOnLastGeneration = value;
+    if (value === constants.ALIVE_CELL || value === constants.DEAD_CELL) {
+      this.lifeStatusOnLastGeneration = value;
+    }
   }
 
   getLifeStatusOnPenultimateGeneration() {
@@ -28,7 +32,9 @@ class Cell {
   }
 
   setLifeStatusOnPenultimateGeneration(value) {
-    this.lifeStatusOnPenultimateGeneration = value;
+    if (value === constants.ALIVE_CELL || value === constants.DEAD_CELL) {
+      this.lifeStatusOnPenultimateGeneration = value;
+    }
   }
 
   toggleLifeStatus() {

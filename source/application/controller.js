@@ -9,23 +9,23 @@ class Controller extends Observer {
 
   processEventFromView(event, ...args) {
     switch (event) {
-      case 'createUniverse': this.publish(event, ...args);
+      case 'createUniverse': this.publish(event, Number(args[0]), Number(args[1]));
         break;
-      case 'clearUniverse': this.publish(event, ...args);
+      case 'clearUniverse': this.publish(event);
         break;
-      case 'startGame': this._startTimer(args[0]);
+      case 'startGame': this._startTimer(Number(args[0]));
         break;
-      case 'restartGame': this._restartTimer(args[0]);
+      case 'restartGame': this._restartTimer(Number(args[0]));
         break;
       case 'stopGame': this._resetTimer();
         break;
       case 'makeStep': this.publish(event);
         break;
-      case 'cellClick': this.publish(event, ...args);
+      case 'cellClick': this.publish(event, Number(args[0]), Number(args[1]));
         break;
-      case 'changeHightInput': this.publish('resizeField', 'Y', args[0]);
+      case 'changeHightInput': this.publish('resizeField', 'Y', Number(args[0]));
         break;
-      case 'changeWidthInput': this.publish('resizeField', 'X', args[0]);
+      case 'changeWidthInput': this.publish('resizeField', 'X', Number(args[0]));
         break;
       default:
         break;

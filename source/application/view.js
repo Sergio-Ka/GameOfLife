@@ -38,15 +38,15 @@ class View extends Observer {
   _addListeners() {
     window.addEventListener('load', () => { this.publish('createUniverse', this.heightInput.value, this.widthInput.value); });
     this.buttonCreateUniverse.addEventListener('click', () => { this.publish('createUniverse', this.heightInput.value, this.widthInput.value); });
-    this.buttonClearUniverse.addEventListener('click', () => { this.publish('clearUniverse', this.heightInput.value, this.widthInput.value); });
-    this.buttonStartGame.addEventListener('click', () => { this.publish('startGame', Number(this.sliderPopup.value)); });
+    this.buttonClearUniverse.addEventListener('click', () => { this.publish('clearUniverse'); });
+    this.buttonStartGame.addEventListener('click', () => { this.publish('startGame', this.sliderPopup.value); });
     this.buttonStopGame.addEventListener('click', () => { this.publish('stopGame'); });
     this.buttonMakeStep.addEventListener('click', () => { this.publish('makeStep'); });
     this.content.addEventListener('click', (event) => { this._cellClick(event); });
-    this.heightInput.addEventListener('change', () => { this.publish('changeHightInput', Number(this.heightInput.value)); });
-    this.widthInput.addEventListener('change', () => { this.publish('changeWidthInput', Number(this.widthInput.value)); });
-    this.slider.addEventListener('click', () => { this.publish('restartGame', Number(this.sliderPopup.value)); });
-    this.slider.addEventListener('mousemove', () => { this.publish('restartGame', Number(this.sliderPopup.value)); });
+    this.heightInput.addEventListener('change', () => { this.publish('changeHightInput', this.heightInput.value); });
+    this.widthInput.addEventListener('change', () => { this.publish('changeWidthInput', this.widthInput.value); });
+    this.slider.addEventListener('click', () => { this.publish('restartGame', this.sliderPopup.value); });
+    this.slider.addEventListener('mousemove', () => { this.publish('restartGame', this.sliderPopup.value); });
   }
 
   _cellClick(event) {
