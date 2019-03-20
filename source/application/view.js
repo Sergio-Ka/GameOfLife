@@ -36,24 +36,56 @@ class View extends Observer {
   }
 
   _addListeners() {
-    window.addEventListener('load', () => { this.publish('createUniverse', this.heightInput.value, this.widthInput.value); });
-    this.buttonCreateUniverse.addEventListener('click', () => { this.publish('createUniverse', this.heightInput.value, this.widthInput.value); });
-    this.buttonClearUniverse.addEventListener('click', () => { this.publish('clearUniverse'); });
-    this.buttonStartGame.addEventListener('click', () => { this.publish('startGame', this.sliderPopup.value); });
-    this.buttonStopGame.addEventListener('click', () => { this.publish('stopGame'); });
-    this.buttonMakeStep.addEventListener('click', () => { this.publish('makeStep'); });
-    this.content.addEventListener('click', (event) => { this._cellClick(event); });
-    this.heightInput.addEventListener('change', () => { this.publish('changeHightInput', this.heightInput.value); });
-    this.widthInput.addEventListener('change', () => { this.publish('changeWidthInput', this.widthInput.value); });
-    this.slider.addEventListener('click', () => { this.publish('restartGame', this.sliderPopup.value); });
-    this.slider.addEventListener('mousemove', () => { this.publish('restartGame', this.sliderPopup.value); });
+    window.addEventListener('load', this._handleCreateUniverseButtonClick.bind(this));
+    this.buttonCreateUniverse.addEventListener('click', this._handleCreateUniverseButtonClick.bind(this));
+    this.buttonClearUniverse.addEventListener('click', this._handleClearUniverseButtonClick.bind(this));
+    this.buttonStartGame.addEventListener('click', this._handleStartGameButtonClick.bind(this));
+    this.buttonStopGame.addEventListener('click', this._handleStopGameButtonClick.bind(this));
+    this.buttonMakeStep.addEventListener('click', this._handleMakeStepButtonClick.bind(this));
+    this.content.addEventListener('click', this._handleContentClick.bind(this));
+    this.heightInput.addEventListener('change', this._handleHightInputChange.bind(this));
+    this.widthInput.addEventListener('change', this._handleWidthInputChange.bind(this));
+    this.slider.addEventListener('click', this._handleSliderChange.bind(this));
+    this.slider.addEventListener('mousemove', this._handleSliderChange.bind(this));
   }
 
-  _cellClick(event) {
+  _handleCreateUniverseButtonClick() {
+    this.publish('createUniverse', this.heightInput.value, this.widthInput.value);
+  }
+
+  _handleClearUniverseButtonClick() {
+    this.publish('clearUniverse');
+  }
+
+  _handleStartGameButtonClick() {
+    this.publish('startGame', this.sliderPopup.value);
+  }
+
+  _handleStopGameButtonClick() {
+    this.publish('stopGame');
+  }
+
+  _handleMakeStepButtonClick() {
+    this.publish('makeStep');
+  }
+
+  _handleContentClick(event) {
     if (event.target.getAttribute('data-id') !== null) {
       this.coordinate = event.target.getAttribute('data-id').split(' ');
     }
     this.publish('cellClick', this.coordinate[0], this.coordinate[1]);
+  }
+
+  _handleHightInputChange() {
+    this.publish('changeHightInput', this.heightInput.value);
+  }
+
+  _handleWidthInputChange() {
+    this.publish('changeWidthInput', this.widthInput.value);
+  }
+
+  _handleSliderChange() {
+    this.publish('restartGame', this.sliderPopup.value);
   }
 
   _createView(field, endGameStatus, numberOfGeneration) {
