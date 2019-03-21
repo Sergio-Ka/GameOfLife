@@ -11,16 +11,16 @@ mixin wrap()
             .wrap__control-item
                 | Высота (5 - 100):
             .wrap__control-item
-                input.field-height.js-field-height(type="number", value="47", min="5", max="100")
+                input.field-height.js-field-height(type="number", value="50", min="5", max="100")
             .wrap__control-item
                 | Ширина (5 - 100):
             .wrap__control-item
-                input.field-width.js-field-width(type="number", value="100", min="5", max="100")
+                input.field-width.js-field-width(type="number", value="50", min="5", max="100")
         .wrap__controls
             .wrap__control-item
                 | Скорость:
             .wrap__control-item.wrap__control-item_size_big
-                +slider-with-pop-up({min: 1, max: 10, step: 1, value: 8, range: "", theme: "orange"})
+                +slider-with-pop-up({min: 1, max: 10, step: 1, value: 10, range: "", theme: "orange"})
             .wrap__control-item
                 | Поколение:
             .wrap__control-item

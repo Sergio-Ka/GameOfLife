@@ -14,34 +14,19 @@ class FieldChanger {
     field.field.forEach((item, i) => {
       this.recountedField[i] = Array(field.getXSizeOfField()).fill(constants.DEAD_CELL);
       item.forEach((element, j) => {
-        if (i !== 0 && i !== field.getYSizeOfField() - 1 && j !== 0
-            && j !== field.getXSizeOfField() - 1) {
-          this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS;
-          const upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j - 1, j + 2);
-          const middleRowSumOfNeighborsStatuses = field.field[i].slice(j - 1, j + 2);
-          const lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j - 1, j + 2);
-          const arrayOfNeighbors = [];
-          arrayOfNeighbors.push(upperRowSumOfNeighborsStatuses);
-          arrayOfNeighbors.push(middleRowSumOfNeighborsStatuses);
-          arrayOfNeighbors.push(lowerRowSumOfNeighborsStatuses);
-          arrayOfNeighbors.forEach((neighborRow) => {
-            neighborRow.forEach((neighbor) => {
-              this.amountOfNeighborsStatuses += neighbor.getLifeStatus();
-            });
-          });
+        this._countAliveNeighbors(i, j, field);
 
-          if (field.readCellLifeStatus(i, j) === constants.DEAD_CELL
-            && this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS) {
-            this.recountedField[i][j] = constants.ALIVE_CELL;
-          } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
-              && (this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
-                || this.amountOfNeighborsStatuses === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
-            this.recountedField[i][j] = constants.ALIVE_CELL;
-          } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
-              && (this.amountOfNeighborsStatuses < constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
-                || this.amountOfNeighborsStatuses > constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
-            this.recountedField[i][j] = constants.DEAD_CELL;
-          }
+        if (field.readCellLifeStatus(i, j) === constants.DEAD_CELL
+          && this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS) {
+          this.recountedField[i][j] = constants.ALIVE_CELL;
+        } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
+            && (this.amountOfNeighborsStatuses === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
+              || this.amountOfNeighborsStatuses === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
+          this.recountedField[i][j] = constants.ALIVE_CELL;
+        } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
+            && (this.amountOfNeighborsStatuses < constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
+              || this.amountOfNeighborsStatuses > constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
+          this.recountedField[i][j] = constants.DEAD_CELL;
         }
       });
     });
@@ -66,6 +51,51 @@ class FieldChanger {
     });
 
     field.setNumberOfGeneration(field.getNumberOfGeneration() + 1);
+  }
+
+  _countAliveNeighbors(i, j, field) {
+    this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS;
+    let upperRowSumOfNeighborsStatuses = [];
+    let middleRowSumOfNeighborsStatuses = [];
+    let lowerRowSumOfNeighborsStatuses = [];
+    const arrayOfNeighbors = [];
+
+    if (i !== 0) {
+      if (j === 0) {
+        upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j, j + 2);
+      } else if (j === field.getXSizeOfField() - 1) {
+        upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j - 1, j + 1);
+      } else {
+        upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j - 1, j + 2);
+      }
+      arrayOfNeighbors.push(upperRowSumOfNeighborsStatuses);
+    }
+
+    if (j === 0) {
+      middleRowSumOfNeighborsStatuses = field.field[i].slice(j, j + 2);
+    } else if (j === field.getXSizeOfField() - 1) {
+      middleRowSumOfNeighborsStatuses = field.field[i].slice(j - 1, j + 1);
+    } else {
+      middleRowSumOfNeighborsStatuses = field.field[i].slice(j - 1, j + 2);
+    }
+    arrayOfNeighbors.push(middleRowSumOfNeighborsStatuses);
+
+    if (i !== field.getYSizeOfField() - 1) {
+      if (j === 0) {
+        lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j, j + 2);
+      } else if (j === field.getXSizeOfField() - 1) {
+        lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j - 1, j + 1);
+      } else {
+        lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j - 1, j + 2);
+      }
+      arrayOfNeighbors.push(lowerRowSumOfNeighborsStatuses);
+    }
+
+    arrayOfNeighbors.forEach((neighborRow) => {
+      neighborRow.forEach((neighbor) => {
+        this.amountOfNeighborsStatuses += neighbor.getLifeStatus();
+      });
+    });
   }
 
   _stopGame(field) {

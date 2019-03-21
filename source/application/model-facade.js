@@ -83,16 +83,16 @@ class FacadeOfModel extends Observer {
 
   _resizeField(axis, size) {
     if (axis === 'X') {
-      if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER > this._field.getXSizeOfField()) {
+      if (size > this._field.getXSizeOfField()) {
         this._field.enlargeFieldOnXaxis(size);
-      } else if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER < this._field.getXSizeOfField()) {
+      } else if (size < this._field.getXSizeOfField()) {
         this._field.cropFieldOnXaxis(size);
       }
     }
     if (axis === 'Y') {
-      if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER > this._field.getYSizeOfField()) {
+      if (size > this._field.getYSizeOfField()) {
         this._field.enlargeFieldOnYaxis(size);
-      } else if (size + constants.DOUBLE_WIDTH_OF_FIELD_BORDER < this._field.getYSizeOfField()) {
+      } else if (size < this._field.getYSizeOfField()) {
         this._field.cropFieldOnYaxis(size);
       }
     }
