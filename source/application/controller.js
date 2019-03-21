@@ -32,9 +32,9 @@ class Controller extends Observer {
     }
   }
 
-  processEventFromModel(rows, colums, field, gameOverStatus, endGameStatus, numberOfGeneration) {
+  processEventFromModel(rows, colums, field, gameOverStatus, gameStatus, numberOfGeneration) {
     this.gameOverStatus = gameOverStatus;
-    this.publish('updateView', field, endGameStatus, numberOfGeneration);
+    this.publish('updateView', field, gameStatus, numberOfGeneration);
   }
 
   _actionOnTimer() {

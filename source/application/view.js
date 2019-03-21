@@ -88,7 +88,7 @@ class View extends Observer {
     this.publish('restartGame', this.sliderPopup.value);
   }
 
-  _createView(field, endGameStatus, numberOfGeneration) {
+  _createView(field, gameStatus, numberOfGeneration) {
     let tr;
     let td;
 
@@ -100,15 +100,15 @@ class View extends Observer {
     this.table.setAttribute('class', 'field js-field');
     const fragment = this.document.createDocumentFragment();
 
-    field.forEach((item, i) => {
+    field.forEach((row, i) => {
       tr = fragment.appendChild(this.document.createElement('div'));
       tr.setAttribute('class', 'field__line js-field__line');
-      item.forEach((element, j) => {
+      row.forEach((column, j) => {
         td = tr.appendChild(this.document.createElement('div'));
         td.setAttribute('data-id', `${i} ${j}`);
-        if (element.getLifeStatus() === constants.DEAD_CELL) {
+        if (column.getLifeStatus() === constants.DEAD_CELL) {
           td.setAttribute('class', 'field__cell field__cell_dead js-field__cell js-field__cell_dead');
-        } else if (element.getLifeStatus() === constants.ALIVE_CELL) {
+        } else if (column.getLifeStatus() === constants.ALIVE_CELL) {
           td.setAttribute('class', 'field__cell field__cell_alive js-field__cell js-field__cell_alive');
         }
       });
@@ -118,7 +118,7 @@ class View extends Observer {
     this.generation.setAttribute('value', numberOfGeneration);
     const popupMessage = new PopupMessage();
 
-    switch (endGameStatus) {
+    switch (gameStatus) {
       case constants.GAME_STOPPED_BY_DEAD_UNIVERSE:
         popupMessage.message('Игра закончена, так как во вселенной не осталось жизни!');
         break;

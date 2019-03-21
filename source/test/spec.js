@@ -97,16 +97,16 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
 
     describe('проверка методов чтения и записи значения поля класса содержащего данные о причине окончания игры', () => {
       it('начальное значение поля = 0', () => {
-        assert.equal(field.getEndGameStatus(), 0);
+        assert.equal(field.getGameStatus(), 0);
       });
       it('установка значения флага = 3 и проверка значения методом чтения', () => {
-        field.setEndGameStatus(3);
-        assert.equal(field.getEndGameStatus(), 3);
-        field.setEndGameStatus(0);
+        field.setGameStatus(3);
+        assert.equal(field.getGameStatus(), 3);
+        field.setGameStatus(0);
       });
       it('попытка ввода значения флага отличного от допустимых (0, 1, 2, 3) приводит к значению флага 0', () => {
-        field.setEndGameStatus(10);
-        assert.equal(field.getEndGameStatus(), 0);
+        field.setGameStatus(10);
+        assert.equal(field.getGameStatus(), 0);
       });
     });
 
@@ -290,19 +290,19 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         field.setYSizeOfField(4);
         field.clearField();
 
+        field.field[0][1].setLifeStatus(1);
         field.field[1][2].setLifeStatus(1);
-        field.field[2][3].setLifeStatus(1);
-        field.field[3][1].setLifeStatus(1);
-        field.field[3][2].setLifeStatus(1);
-        field.field[3][3].setLifeStatus(1);
+        field.field[2][0].setLifeStatus(1);
+        field.field[2][1].setLifeStatus(1);
+        field.field[2][2].setLifeStatus(1);
 
         fieldChanger.calculateField(field);
 
+        assert.equal(field.readCellLifeStatus(1, 0), 1);
+        assert.equal(field.readCellLifeStatus(1, 2), 1);
         assert.equal(field.readCellLifeStatus(2, 1), 1);
-        assert.equal(field.readCellLifeStatus(2, 3), 1);
-        assert.equal(field.readCellLifeStatus(3, 2), 1);
-        assert.equal(field.readCellLifeStatus(3, 3), 1);
-        assert.equal(field.readCellLifeStatus(4, 2), 1);
+        assert.equal(field.readCellLifeStatus(2, 2), 1);
+        assert.equal(field.readCellLifeStatus(3, 1), 1);
       });
       it('второй вызов метода пересчета поля и проверка состояния ячеек на третьем поколении', () => {
         fieldChanger.calculateField(field);
@@ -429,20 +429,21 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
       it('передача методу поля 5*5 с отсутствующей жизнью и проверка того, что создана таблица 5*5', () => {
         field.setXSizeOfField(5);
         field.setYSizeOfField(5);
+        field.createRandomField();
         field.clearField();
         view._createView(field.field, 0, 1);
 
         assert.isNotNull(document.getElementsByClassName('js-field'));
-        assert.equal(document.getElementsByClassName('js-field__line').length, 7);
-        assert.equal(document.getElementsByClassName('js-field__cell').length, 49);
+        assert.equal(document.getElementsByClassName('js-field__line').length, 5);
+        assert.equal(document.getElementsByClassName('js-field__cell').length, 25);
       });
       it('проверка того, что ячейкам присвоены соотвествующие классы и id = координаты', () => {
-        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 49);
+        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 25);
         let cellSquare;
         let coordinate;
-        for (let i = 0; i < 7; i += 1) {
-          for (let j = 0; j < 7; j += 1) {
-            cellSquare = document.getElementsByClassName('js-field__cell_dead')[i * 7 + j];
+        for (let i = 0; i < 5; i += 1) {
+          for (let j = 0; j < 5; j += 1) {
+            cellSquare = document.getElementsByClassName('js-field__cell_dead')[i * 5 + j];
             coordinate = cellSquare.getAttribute('data-id').split(' ');
             assert.equal(i, coordinate[0]);
             assert.equal(j, coordinate[1]);
@@ -474,7 +475,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         field.field[2][2].setLifeStatus(0);
         view._createView(field.field, 0, 1);
 
-        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 49);
+        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 25);
       });
     });
     describe('проверка части view, отвечающей за обработку событий, возникающих при взаимодействии с контролами', () => {
