@@ -43,7 +43,7 @@ class View extends Observer {
     this.buttonStopGame.addEventListener('click', this._handleStopGameButtonClick.bind(this));
     this.buttonMakeStep.addEventListener('click', this._handleMakeStepButtonClick.bind(this));
     this.content.addEventListener('click', this._handleContentClick.bind(this));
-    this.heightInput.addEventListener('change', this._handleHightInputChange.bind(this));
+    this.heightInput.addEventListener('change', this._handleHeightInputChange.bind(this));
     this.widthInput.addEventListener('change', this._handleWidthInputChange.bind(this));
     this.slider.addEventListener('click', this._handleSliderChange.bind(this));
     this.slider.addEventListener('mousemove', this._handleSliderChange.bind(this));
@@ -76,7 +76,7 @@ class View extends Observer {
     this.publish('cellClick', this.coordinate[0], this.coordinate[1]);
   }
 
-  _handleHightInputChange() {
+  _handleHeightInputChange() {
     this.publish('changeHightInput', this.heightInput.value);
   }
 

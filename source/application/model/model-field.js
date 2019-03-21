@@ -110,11 +110,11 @@ class Field {
     this.gameOver = false;
     this.endGameStatus = constants.GAME_IS_RUNNING;
 
-    this.field = Array(this.ySizeOfField).fill(null);
     this.field.forEach((item, i) => {
-      this.field[i] = Array(this.xSizeOfField).fill(null);
       this.field[i].forEach((itemInside, j) => {
-        this.field[i][j] = new Cell();
+        this.field[i][j].setLifeStatus(0);
+        this.field[i][j].setLifeStatusOnLastGeneration(0);
+        this.field[i][j].setLifeStatusOnPenultimateGeneration(0);
       });
     });
 

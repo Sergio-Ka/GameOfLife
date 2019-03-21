@@ -64,13 +64,13 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
       it('начальный размер поля Y = 3', () => {
         assert.equal(field.getYSizeOfField(), 3);
       });
-      it('при установке размера X = 3 полю размер равен x + 2 = 5', () => {
+      it('при установке размера X = 3 полю размер равен 3', () => {
         field.setXSizeOfField(3);
-        assert.equal(field.getXSizeOfField(), 5);
+        assert.equal(field.getXSizeOfField(), 3);
       });
-      it('при установке размера Y = 3 полю размер равен y + 2 = 5', () => {
+      it('при установке размера Y = 3 полю размер равен 3', () => {
         field.setYSizeOfField(3);
-        assert.equal(field.getYSizeOfField(), 5);
+        assert.equal(field.getYSizeOfField(), 3);
       });
     });
 
@@ -126,6 +126,8 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         assert.isUndefined(field.field);
       });
       it('при вызове метода создается поле размером 5*5 ячеек', () => {
+        field.setYSizeOfField(5);
+        field.setXSizeOfField(5);
         field.createRandomField();
         assert.lengthOf(field.field, 5);
         for (let i = 0; i < field.field.length; i += 1) {
@@ -147,16 +149,6 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
           }
         }
       });
-      it('значение каждой ячейки по краям поля = 0', () => {
-        for (let i = 0; i < field.field.length; i += 1) {
-          for (let j = 0; j < field.field[0].length; j += 1) {
-            if (i === 0 || i === field.field.length - 1
-              || j === 0 || j === field.field[0].length - 1) {
-              assert.equal(field.field[i][j].getLifeStatus(), 0);
-            }
-          }
-        }
-      });
     });
 
     describe('проверка метода очистки поля', () => {
@@ -173,12 +165,12 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
     });
 
     describe('проверка методов обрезки поля по высоте и ширине', () => {
-      it('при установке размера полю Y = 2 размер поля становится y + 2 = 4', () => {
-        field.cropFieldOnYaxis(2);
+      it('при установке размера полю Y = 4 размер поля становится 4', () => {
+        field.cropFieldOnYaxis(4);
         assert.lengthOf(field.field, 4);
       });
-      it('при установке размера полю X = 2 размер поля становится x + 2 = 4', () => {
-        field.cropFieldOnXaxis(2);
+      it('при установке размера полю X = 4 размер поля становится 4', () => {
+        field.cropFieldOnXaxis(4);
         for (let i = 0; i < field.field.length; i += 1) {
           assert.lengthOf(field.field[i], 4);
         }
@@ -201,14 +193,14 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
     });
 
     describe('проверка методов увеличения поля по высоте и ширине', () => {
-      it('при установке размера полю Y = 8 размер поля становится y + 2 = 10', () => {
+      it('при установке размера полю Y = 8 размер поля становится 8', () => {
         field.enlargeFieldOnYaxis(8);
-        assert.lengthOf(field.field, 10);
+        assert.lengthOf(field.field, 8);
       });
-      it('при установке размера полю X = 8 размер поля становится x + 2 = 10', () => {
+      it('при установке размера полю X = 8 размер поля становится 8', () => {
         field.enlargeFieldOnXaxis(8);
         for (let i = 0; i < field.field.length; i += 1) {
-          assert.lengthOf(field.field[i], 10);
+          assert.lengthOf(field.field[i], 8);
         }
       });
       it('ячейки поля являются по прежнему объектом', () => {

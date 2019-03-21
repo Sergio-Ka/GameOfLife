@@ -1,12 +1,6 @@
 import constants from '../constants';
 
 class FieldChanger {
-  constructor() {
-    this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS;
-    this.sameCellsOfFirstAndLastGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
-    this.sameCellsOfFirstAndPenultimateGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
-  }
-
   calculateField(field) {
     this._stopGame(field);
     this.recountedField = Array(field.getYSizeOfField()).fill(null);
@@ -54,7 +48,7 @@ class FieldChanger {
   }
 
   _countAliveNeighbors(i, j, field) {
-    this.amountOfNeighborsStatuses = constants.DEFAULT_SUM_OF_ALIVE_NEIGHBOURS;
+    this.amountOfNeighborsStatuses = constants.MIN_AMOUNT_OF_ALIVE_NEIGHBOURS;
     let upperRowSumOfNeighborsStatuses = [];
     let middleRowSumOfNeighborsStatuses = [];
     let lowerRowSumOfNeighborsStatuses = [];
