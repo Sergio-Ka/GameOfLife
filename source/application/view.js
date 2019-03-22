@@ -105,8 +105,8 @@ class View extends Observer {
   }
 
   _createView(field, gameStatus, numberOfGeneration) {
-    let tr;
-    let td;
+    let line;
+    let cell;
 
     if (this.table) {
       this.content.removeChild(this.table);
@@ -117,21 +117,28 @@ class View extends Observer {
     const fragment = this.document.createDocumentFragment();
 
     field.forEach((row, i) => {
-      tr = fragment.appendChild(this.document.createElement('div'));
-      tr.setAttribute('class', 'field__line js-field__line');
+      line = fragment.appendChild(this.document.createElement('div'));
+      line.setAttribute('class', 'field__line js-field__line');
       row.forEach((column, j) => {
-        td = tr.appendChild(this.document.createElement('div'));
-        td.setAttribute('data-id', `${i} ${j}`);
+        cell = line.appendChild(this.document.createElement('div'));
+        cell.setAttribute('data-id', `${i} ${j}`);
         if (column.getLifeStatus() === constants.DEAD_CELL) {
-          td.setAttribute('class', 'field__cell field__cell_dead js-field__cell js-field__cell_dead');
+          cell.setAttribute('class', 'field__cell field__cell_dead js-field__cell js-field__cell_dead');
         } else if (column.getLifeStatus() === constants.ALIVE_CELL) {
-          td.setAttribute('class', 'field__cell field__cell_alive js-field__cell js-field__cell_alive');
+          cell.setAttribute('class', 'field__cell field__cell_alive js-field__cell js-field__cell_alive');
         }
       });
     });
 
     this.table.appendChild(fragment);
     this.generation.setAttribute('value', numberOfGeneration);
+
+    this._showMessage(gameStatus);
+  }
+
+  /* eslint-disable */
+
+  _showMessage(gameStatus) {
     const popupMessage = new PopupMessage();
 
     switch (gameStatus) {

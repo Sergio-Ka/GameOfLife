@@ -8,7 +8,6 @@ class Field {
     this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
     this.gameOver = false;
     this.gameStatus = constants.GAME_IS_RUNNING;
-    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
   }
 
   getXSizeOfField() {
@@ -76,18 +75,6 @@ class Field {
     }
   }
 
-  getSumOfAllCells() {
-    return this.sumOfAllCells;
-  }
-
-  setSumOfAllCells(value) {
-    if (value >= constants.DEFAULT_SUM_OF_ALL_CELLS) {
-      this.sumOfAllCells = value;
-    } else {
-      this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
-    }
-  }
-
   createRandomField() {
     this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
     this.gameOver = false;
@@ -101,8 +88,6 @@ class Field {
         this.field[i][j].setLifeStatus(Math.round(Math.random()));
       });
     });
-
-    this._sumAllCells();
   }
 
   clearField() {
@@ -117,8 +102,6 @@ class Field {
         this.field[i][j].setLifeStatusOnPenultimateGeneration(0);
       });
     });
-
-    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
   }
 
   cropFieldOnXaxis(xSize) {
@@ -128,7 +111,6 @@ class Field {
       this.field.forEach((row) => {
         row.splice(xSize);
       });
-      this._sumAllCells();
     }
   }
 
@@ -137,7 +119,6 @@ class Field {
       this.ySizeOfField = ySize;
 
       this.field.splice(ySize);
-      this._sumAllCells();
     }
   }
 
@@ -181,11 +162,6 @@ class Field {
 
   toggleCellLifeStatus(i, j) {
     this.field[i][j].toggleLifeStatus();
-    if (this.field[i][j].getLifeStatus() === constants.ALIVE_CELL) {
-      this.sumOfAllCells += 1;
-    } else {
-      this.sumOfAllCells -= 1;
-    }
   }
 
   setCellLifeStatus(i, j, value) {
@@ -198,15 +174,6 @@ class Field {
 
   setCellLifeStatusOnPenultimateGeneration(i, j, value) {
     this.field[i][j].setLifeStatusOnPenultimateGeneration(value);
-  }
-
-  _sumAllCells() {
-    this.sumOfAllCells = constants.DEFAULT_SUM_OF_ALL_CELLS;
-    this.field.forEach((row) => {
-      row.forEach((column) => {
-        this.sumOfAllCells += column.getLifeStatus();
-      });
-    });
   }
 }
 

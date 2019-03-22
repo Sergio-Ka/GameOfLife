@@ -30,17 +30,7 @@ class FieldChanger {
         field.setCellLifeStatusOnPenultimateGeneration(i, j,
           field.readCellLifeStatusOnLastGeneration(i, j));
         field.setCellLifeStatusOnLastGeneration(i, j, field.readCellLifeStatus(i, j));
-        const previousCellLifeStatus = field.readCellLifeStatus(i, j);
         field.setCellLifeStatus(i, j, this.recountedField[i][j]);
-
-        if (previousCellLifeStatus === constants.ALIVE_CELL
-          && field.readCellLifeStatus(i, j) === constants.DEAD_CELL) {
-          field.setSumOfAllCells(field.getSumOfAllCells() - 1);
-        }
-        if (previousCellLifeStatus === constants.DEAD_CELL
-          && field.readCellLifeStatus(i, j) === constants.ALIVE_CELL) {
-          field.setSumOfAllCells(field.getSumOfAllCells() + 1);
-        }
       });
     });
 
@@ -109,11 +99,8 @@ class FieldChanger {
       });
     });
 
-    if (field.getSumOfAllCells() === constants.DEFAULT_SUM_OF_SAME_CELLS) {
-      field.setGameStatus(constants.GAME_STOPPED_BY_DEAD_UNIVERSE);
-      field.setGameOver(true);
-    } else if (this.sameCellsOfFirstAndPenultimateGeneration === field.getXSizeOfField()
-                * field.getYSizeOfField()) {
+    if (this.sameCellsOfFirstAndPenultimateGeneration === field.getXSizeOfField()
+          * field.getYSizeOfField()) {
       field.setGameStatus(
         constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_LAST_AND_PENULTIMATE_GENERATION,
       );
