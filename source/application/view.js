@@ -78,9 +78,9 @@ class View extends Observer {
   }
 
   _handleContentClick(event) {
-    if (event.target.nodeName === 'DIV' && event.target.getAttribute('data-id') !== null) {
-      this.coordinate = event.target.getAttribute('data-id').split(' ');
-      this.publish('cellClick', this.coordinate[0], this.coordinate[1]);
+    if (event.target.getAttribute('data-id') !== null) {
+      const [i, j] = event.target.getAttribute('data-id').split(' ');
+      this.publish('cellClick', i, j);
     }
   }
 
