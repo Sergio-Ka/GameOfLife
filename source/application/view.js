@@ -36,7 +36,7 @@ class View extends Observer {
   }
 
   _addListeners() {
-    window.addEventListener('load', this._handleCreateUniverseButtonClick.bind(this));
+    window.addEventListener('load', this._handleWindowLoad.bind(this));
     this.buttonCreateUniverse.addEventListener('click', this._handleCreateUniverseButtonClick.bind(this));
     this.buttonClearUniverse.addEventListener('click', this._handleClearUniverseButtonClick.bind(this));
     this.buttonStartGame.addEventListener('click', this._handleStartGameButtonClick.bind(this));
@@ -45,11 +45,19 @@ class View extends Observer {
     this.content.addEventListener('click', this._handleContentClick.bind(this));
     this.heightInput.addEventListener('change', this._handleHeightInputChange.bind(this));
     this.widthInput.addEventListener('change', this._handleWidthInputChange.bind(this));
-    this.slider.addEventListener('click', this._handleSliderChange.bind(this));
-    this.slider.addEventListener('mousemove', this._handleSliderChange.bind(this));
+    this.slider.addEventListener('click', this._handleSliderClick.bind(this));
+    this.slider.addEventListener('mousemove', this._handleSliderMousemove.bind(this));
+  }
+
+  _handleWindowLoad() {
+    this._createUniverse();
   }
 
   _handleCreateUniverseButtonClick() {
+    this._createUniverse();
+  }
+
+  _createUniverse() {
     this.publish('createUniverse', this.heightInput.value, this.widthInput.value);
   }
 
@@ -84,7 +92,15 @@ class View extends Observer {
     this.publish('changeWidthInput', this.widthInput.value);
   }
 
-  _handleSliderChange() {
+  _handleSliderClick() {
+    this._restartGame();
+  }
+
+  _handleSliderMousemove() {
+    this._restartGame();
+  }
+
+  _restartGame() {
     this.publish('restartGame', this.sliderPopup.value);
   }
 
