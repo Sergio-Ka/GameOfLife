@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-/* eslint-disable no-underscore-dangle */
 
 import Cell from '../application/model/model-cell';
 import Field from '../application/model/model-field';
@@ -16,15 +15,9 @@ const controller = new Controller();
 describe('Тест JS кода игры Жизнь Конвея', () => {
   // проверяем класс ячейки
   describe('Проверка класса Cell', () => {
-    describe('проверка инициализации полей состояния ячейки', () => {
+    describe('проверка инициализации поля состояния ячейки', () => {
       it('состояние в текущем поколении = 0', () => {
         assert.equal(cellFromClass.getLifeStatus(), 0);
-      });
-      it('состояние в прошлом поколении = 0', () => {
-        assert.equal(cellFromClass.getLifeStatusOnLastGeneration(), 0);
-      });
-      it('состояние в позапрошлом поколении = 0', () => {
-        assert.equal(cellFromClass.getLifeStatusOnPenultimateGeneration(), 0);
       });
     });
 
@@ -43,14 +36,6 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
       it('запись в текущем поколении 1 и чтение', () => {
         cellFromClass.setLifeStatus(1);
         assert.equal(cellFromClass.getLifeStatus(), 1);
-      });
-      it('запись в предыдущем поколении 1 и чтение', () => {
-        cellFromClass.setLifeStatusOnLastGeneration(1);
-        assert.equal(cellFromClass.getLifeStatusOnLastGeneration(), 1);
-      });
-      it('запись в позапрошлом поколении 1 и чтение', () => {
-        cellFromClass.setLifeStatusOnPenultimateGeneration(1);
-        assert.equal(cellFromClass.getLifeStatusOnPenultimateGeneration(), 1);
       });
     });
   });
@@ -95,32 +80,6 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
       });
     });
 
-    describe('проверка методов чтения и записи значения поля класса содержащего данные о причине окончания игры', () => {
-      it('начальное значение поля = 0', () => {
-        assert.equal(field.getGameStatus(), 0);
-      });
-      it('установка значения флага = 3 и проверка значения методом чтения', () => {
-        field.setGameStatus(3);
-        assert.equal(field.getGameStatus(), 3);
-        field.setGameStatus(0);
-      });
-      it('попытка ввода значения флага отличного от допустимых (0, 1, 2, 3) приводит к значению флага 0', () => {
-        field.setGameStatus(10);
-        assert.equal(field.getGameStatus(), 0);
-      });
-    });
-
-    describe('проверка методов чтения и записи значения поля класса содержащего данные о сумме живых ячеек', () => {
-      it('начальное значение поля = 0', () => {
-        assert.equal(field.getSumOfAllCells(), 0);
-      });
-      it('установка значения поля = 1111 и проверка значения методом чтения', () => {
-        field.setSumOfAllCells(1111);
-        assert.equal(field.getSumOfAllCells(), 1111);
-        field.setSumOfAllCells(0);
-      });
-    });
-
     describe('проверка метода создания рандомно заполненного поля', () => {
       it('при создании экземпляра класса поля (массив объектов класса ячейка) не существует', () => {
         assert.isUndefined(field.field);
@@ -152,13 +111,11 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
     });
 
     describe('проверка метода очистки поля', () => {
-      it('значение каждой ячейки поля после вызова метода на всех поколениях = 0', () => {
+      it('значение каждой ячейки поля после вызова метода = 0', () => {
         field.clearField();
         for (let i = 0; i < field.field.length; i += 1) {
           for (let j = 0; j < field.field[0].length; j += 1) {
             assert.equal(field.field[i][j].getLifeStatus(), 0);
-            assert.equal(field.field[i][j].getLifeStatusOnLastGeneration(), 0);
-            assert.equal(field.field[i][j].getLifeStatusOnPenultimateGeneration(), 0);
           }
         }
       });
@@ -227,29 +184,21 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
       });
     });
 
-    describe('проверка методов чтения и записи значений ячейки в текущем, прошлом и позапрошлом поколении', () => {
-      it('установка значения всех ячеек поля в состояние 1 на всех поколениях и проверка методов чтения по значениям', () => {
+    describe('проверка методов чтения и записи значений ячейки', () => {
+      it('установка значения всех ячеек поля в состояние 1 и проверка методов чтения по значениям', () => {
         field.clearField();
         for (let i = 0; i < field.field.length; i += 1) {
           for (let j = 0; j < field.field[i].length; j += 1) {
             field.setCellLifeStatus(i, j, 1);
-            field.setCellLifeStatusOnLastGeneration(i, j, 1);
-            field.setCellLifeStatusOnPenultimateGeneration(i, j, 1);
             assert(field.readCellLifeStatus(i, j) === 1);
-            assert(field.readCellLifeStatusOnLastGeneration(i, j) === 1);
-            assert(field.readCellLifeStatusOnPenultimateGeneration(i, j) === 1);
           }
         }
       });
-      it('установка значения всех ячеек поля в состояние 0 c помощью методов записи на всех поколениях и проверка значений', () => {
+      it('установка значения всех ячеек поля в состояние 0 c помощью методов записи и проверка значений', () => {
         for (let i = 0; i < field.field.length; i += 1) {
           for (let j = 0; j < field.field[i].length; j += 1) {
             field.setCellLifeStatus(i, j, 0);
-            field.setCellLifeStatusOnLastGeneration(i, j, 0);
-            field.setCellLifeStatusOnPenultimateGeneration(i, j, 0);
             assert(field.readCellLifeStatus(i, j) === 0);
-            assert(field.readCellLifeStatusOnLastGeneration(i, j) === 0);
-            assert(field.readCellLifeStatusOnPenultimateGeneration(i, j) === 0);
           }
         }
       });
@@ -261,23 +210,6 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
             assert.equal(field.readCellLifeStatus(i, j), 1);
           }
         }
-      });
-    });
-
-    describe('проверка метода подсчета живых ячеек поля', () => {
-      it('установка определенного рисунка поля с количеством живых ячеек = 5 и проверка значения поля', () => {
-        field.setXSizeOfField(4);
-        field.setYSizeOfField(4);
-        field.clearField();
-
-        field.field[1][2].setLifeStatus(1);
-        field.field[2][3].setLifeStatus(1);
-        field.field[3][1].setLifeStatus(1);
-        field.field[3][2].setLifeStatus(1);
-        field.field[3][3].setLifeStatus(1);
-
-        field._sumAllCells();
-        assert.equal(field.getSumOfAllCells(), 5);
       });
     });
   });

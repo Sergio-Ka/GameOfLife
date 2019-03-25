@@ -3,7 +3,7 @@
     "parserOptions": { "ecmaVersion": 2018 },
     "rules": {
         "linebreak-style": ["error", "windows"],
-        "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+        "no-underscore-dangle": "off", // ["error", { "allowAfterThis": true }],
         "no-new": "off"
     },
     "env": {

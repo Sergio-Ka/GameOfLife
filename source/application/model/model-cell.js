@@ -3,8 +3,6 @@ import constants from '../constants';
 class Cell {
   constructor() {
     this.lifeStatus = constants.DEAD_CELL;
-    this.lifeStatusOnLastGeneration = constants.DEAD_CELL;
-    this.lifeStatusOnPenultimateGeneration = constants.DEAD_CELL;
   }
 
   getLifeStatus() {
@@ -14,26 +12,6 @@ class Cell {
   setLifeStatus(value) {
     if (value === constants.ALIVE_CELL || value === constants.DEAD_CELL) {
       this.lifeStatus = value;
-    }
-  }
-
-  getLifeStatusOnLastGeneration() {
-    return this.lifeStatusOnLastGeneration;
-  }
-
-  setLifeStatusOnLastGeneration(value) {
-    if (value === constants.ALIVE_CELL || value === constants.DEAD_CELL) {
-      this.lifeStatusOnLastGeneration = value;
-    }
-  }
-
-  getLifeStatusOnPenultimateGeneration() {
-    return this.lifeStatusOnPenultimateGeneration;
-  }
-
-  setLifeStatusOnPenultimateGeneration(value) {
-    if (value === constants.ALIVE_CELL || value === constants.DEAD_CELL) {
-      this.lifeStatusOnPenultimateGeneration = value;
     }
   }
 

@@ -1,7 +1,6 @@
 import Field from './model/model-field';
 import FieldChanger from './model/model-field-changer';
 import Observer from './observer';
-import constants from './constants';
 
 class FacadeOfModel extends Observer {
   constructor() {
@@ -36,7 +35,6 @@ class FacadeOfModel extends Observer {
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
-      this._field.getGameStatus(),
       this._field.getNumberOfGeneration(),
     );
   }
@@ -50,7 +48,6 @@ class FacadeOfModel extends Observer {
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
-      this._field.getGameStatus(),
       this._field.getNumberOfGeneration(),
     );
   }
@@ -62,21 +59,18 @@ class FacadeOfModel extends Observer {
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
-      this._field.getGameStatus(),
       this._field.getNumberOfGeneration(),
     );
   }
 
   _toggleCellStatus(row, column) {
     this._field.setGameOver(false);
-    this._field.setGameStatus(constants.GAME_IS_RUNNING);
     this._field.toggleCellLifeStatus(row, column);
     this.publish(
       this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
-      this._field.getGameStatus(),
       this._field.getNumberOfGeneration(),
     );
   }
@@ -101,14 +95,12 @@ class FacadeOfModel extends Observer {
       this._field.getXSizeOfField(),
       this._field.field,
       this._field.getGameOver(),
-      this._field.getGameStatus(),
       this._field.getNumberOfGeneration(),
     );
   }
 
   _resetGameStatus() {
     this._field.setGameOver(false);
-    this._field.setGameStatus(constants.GAME_IS_RUNNING);
   }
 }
 

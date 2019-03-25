@@ -104,7 +104,7 @@ class View extends Observer {
     this.publish('restartGame', this.sliderPopup.value);
   }
 
-  _createView(field, gameStatus, numberOfGeneration) {
+  _createView(field, gameOverStatus, numberOfGeneration) {
     let line;
     let cell;
 
@@ -132,28 +132,14 @@ class View extends Observer {
 
     this.table.appendChild(fragment);
     this.generation.setAttribute('value', numberOfGeneration);
-
-    this._showMessage(gameStatus);
+    if (gameOverStatus) {
+      this.constructor._showMessage();
+    }
   }
 
-  /* eslint-disable */
-
-  _showMessage(gameStatus) {
+  static _showMessage() {
     const popupMessage = new PopupMessage();
-
-    switch (gameStatus) {
-      case constants.GAME_STOPPED_BY_DEAD_UNIVERSE:
-        popupMessage.message('Игра закончена, так как во вселенной не осталось жизни!');
-        break;
-      case constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_2_LATEST_GENERATIONS:
-        popupMessage.message('Игра закончена, так как во вселенной сложились устойчивые комбинации на 2-х последних поколениях!');
-        break;
-      case constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_LAST_AND_PENULTIMATE_GENERATION:
-        popupMessage.message('Игра закончена, так как во вселенной сложились устойчивые комбинации на текущем и предпоследнем поколениях!');
-        break;
-      default:
-        break;
-    }
+    popupMessage.message('Игра закончена! Измените поле вручную или создайте новое.');
   }
 }
 

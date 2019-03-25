@@ -25,11 +25,10 @@ class FieldChanger {
       });
     });
 
+    field.fieldHistory.push(this.recountedField);
+
     field.field.forEach((row, i) => {
       row.forEach((column, j) => {
-        field.setCellLifeStatusOnPenultimateGeneration(i, j,
-          field.readCellLifeStatusOnLastGeneration(i, j));
-        field.setCellLifeStatusOnLastGeneration(i, j, field.readCellLifeStatus(i, j));
         field.setCellLifeStatus(i, j, this.recountedField[i][j]);
       });
     });
@@ -83,38 +82,29 @@ class FieldChanger {
   }
 
   _stopGame(field) {
-    this.sameCellsOfFirstAndLastGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
-    this.sameCellsOfFirstAndPenultimateGeneration = constants.DEFAULT_SUM_OF_SAME_CELLS;
+    field.fieldHistory.forEach((historyField, i) => {
+      if (i !== field.fieldHistory.length - 1
+          && this.constructor._compareFields(field, i) === true) {
+        field.setGameOver(true);
+      }
+    });
+  }
 
+  static _compareFields(field, numberOfHistoryGeneration) {
+    let result = 0;
+    let resultOfCompare = false;
     field.field.forEach((row, i) => {
-      row.forEach((column, j) => {
-        if (field.readCellLifeStatusOnLastGeneration(i, j)
-        === field.readCellLifeStatus(i, j)) {
-          this.sameCellsOfFirstAndLastGeneration += 1;
-        }
-        if (field.readCellLifeStatusOnPenultimateGeneration(i, j)
-        === field.readCellLifeStatus(i, j)) {
-          this.sameCellsOfFirstAndPenultimateGeneration += 1;
+      row.forEach((cell, j) => {
+        if (field.readCellLifeStatus(i, j)
+            === field.fieldHistory[numberOfHistoryGeneration][i][j]) {
+          result += 1;
         }
       });
     });
-
-    if (this.sameCellsOfFirstAndPenultimateGeneration === field.getXSizeOfField()
-          * field.getYSizeOfField()) {
-      field.setGameStatus(
-        constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_LAST_AND_PENULTIMATE_GENERATION,
-      );
-      field.setGameOver(true);
-    } else if (this.sameCellsOfFirstAndLastGeneration === field.getXSizeOfField()
-                * field.getYSizeOfField()) {
-      field.setGameStatus(
-        constants.GAME_STOPPED_BY_STABLE_COMBINATION_ON_2_LATEST_GENERATIONS,
-      );
-      field.setGameOver(true);
-    } else {
-      field.setGameStatus(constants.GAME_IS_RUNNING);
-      field.setGameOver(false);
+    if (result === (field.getXSizeOfField() * field.getYSizeOfField())) {
+      resultOfCompare = true;
     }
+    return resultOfCompare;
   }
 }
 
