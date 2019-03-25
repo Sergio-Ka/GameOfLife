@@ -66,7 +66,7 @@ class Field {
     this.field = Array(this.ySizeOfField).fill(null);
     this.field.forEach((row, i) => {
       this.field[i] = Array(this.xSizeOfField).fill(null);
-      this.field[i].forEach((column, j) => {
+      this.field[i].forEach((cell, j) => {
         this.field[i][j] = new Cell();
         this.field[i][j].setLifeStatus(Math.round(Math.random()));
       });
@@ -79,7 +79,7 @@ class Field {
     this.fieldHistory = [];
 
     this.field.forEach((row, i) => {
-      this.field[i].forEach((column, j) => {
+      this.field[i].forEach((cell, j) => {
         this.field[i][j].setLifeStatus(0);
       });
     });
@@ -117,7 +117,7 @@ class Field {
 
     for (let i = this.field.length; i < this.ySizeOfField; i += 1) {
       this.field.push(Array(this.xSizeOfField).fill(null));
-      this.field[i].forEach((column, j) => {
+      this.field[i].forEach((cell, j) => {
         this.field[i][j] = new Cell();
       });
     }

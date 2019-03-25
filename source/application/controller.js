@@ -41,7 +41,6 @@ class Controller extends Observer {
     this.publish('makeStep');
     if (this.gameOverStatus) {
       this._resetTimer();
-      this.publish('resetGame');
     }
   }
 
@@ -63,6 +62,7 @@ class Controller extends Observer {
   _resetTimer() {
     clearInterval(this.timerId);
     this.firstStartFlag = true;
+    this.publish('resetGame');
   }
 }
 

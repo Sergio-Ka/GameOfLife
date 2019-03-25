@@ -43,6 +43,7 @@ class FacadeOfModel extends Observer {
     this._field.setXSizeOfField(numberOfColumns);
     this._field.setYSizeOfField(numberOfRows);
     this._field.createRandomField();
+    this._fieldChanger.runOnceFlag = true;
     this.publish(
       this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
@@ -54,6 +55,7 @@ class FacadeOfModel extends Observer {
 
   _clearField() {
     this._field.clearField();
+    this._fieldChanger.runOnceFlag = true;
     this.publish(
       this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),
