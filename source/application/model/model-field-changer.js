@@ -11,18 +11,18 @@ class FieldChanger {
     field.field.forEach((row, i) => {
       this.recountedField[i] = Array(field.getXSizeOfField()).fill(constants.DEAD_CELL);
       row.forEach((cell, j) => {
-        this._countAliveNeighbors(i, j, field);
+        const aliveNeighbors = this.constructor._countAliveNeighbors(i, j, field);
 
         if (field.readCellLifeStatus(i, j) === constants.DEAD_CELL
-          && this.aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS) {
+          && aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS) {
           this.recountedField[i][j] = constants.ALIVE_CELL;
         } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
-            && (this.aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
-              || this.aliveNeighbors === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
+            && (aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
+              || aliveNeighbors === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
           this.recountedField[i][j] = constants.ALIVE_CELL;
         } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
-            && (this.aliveNeighbors < constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
-              || this.aliveNeighbors > constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
+            && (aliveNeighbors < constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
+              || aliveNeighbors > constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
           this.recountedField[i][j] = constants.DEAD_CELL;
         }
       });
@@ -55,8 +55,8 @@ class FieldChanger {
     field.fieldHistory.push(transformedField);
   }
 
-  _countAliveNeighbors(i, j, field) {
-    this.aliveNeighbors = constants.MIN_AMOUNT_OF_ALIVE_NEIGHBOURS;
+  static _countAliveNeighbors(i, j, field) {
+    let aliveNeighbors = constants.MIN_AMOUNT_OF_ALIVE_NEIGHBOURS;
     let upperRowSumOfNeighborsStatuses = [];
     let middleRowSumOfNeighborsStatuses = [];
     let lowerRowSumOfNeighborsStatuses = [];
@@ -94,8 +94,10 @@ class FieldChanger {
     }
     arrayOfNeighbors = arrayOfNeighbors.flat();
 
-    this.aliveNeighbors = arrayOfNeighbors.reduce((accumulator, neighbor) => accumulator
+    aliveNeighbors = arrayOfNeighbors.reduce((accumulator, neighbor) => accumulator
       + neighbor.getLifeStatus(), 0);
+
+    return aliveNeighbors;
   }
 
   _stopGame(field) {
