@@ -29,7 +29,7 @@ class FacadeOfModel extends Observer {
   }
 
   _calculateGeneration() {
-    this._fieldChanger.calculateField(this._field);
+    this._fieldChanger.makeStep(this._field);
     this.publish(
       this._field.getYSizeOfField(),
       this._field.getXSizeOfField(),

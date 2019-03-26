@@ -5,43 +5,48 @@ class FieldChanger {
     this.runOnceFlag = true;
   }
 
-  calculateField(field) {
-    this.recountedField = Array(field.getYSizeOfField()).fill(null);
-
-    field.field.forEach((row, i) => {
-      this.recountedField[i] = Array(field.getXSizeOfField()).fill(constants.DEAD_CELL);
-      row.forEach((cell, j) => {
-        const aliveNeighbors = this.constructor._countAliveNeighbors(i, j, field);
-
-        if (field.readCellLifeStatus(i, j) === constants.DEAD_CELL
-          && aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS) {
-          this.recountedField[i][j] = constants.ALIVE_CELL;
-        } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
-            && (aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
-              || aliveNeighbors === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
-          this.recountedField[i][j] = constants.ALIVE_CELL;
-        } else if (field.readCellLifeStatus(i, j) === constants.ALIVE_CELL
-            && (aliveNeighbors < constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
-              || aliveNeighbors > constants.MAX_SUM_OF_ALIVE_NEIGHBOURS)) {
-          this.recountedField[i][j] = constants.DEAD_CELL;
-        }
-      });
-    });
+  makeStep(field) {
+    const recountedField = this._calculateField(field);
 
     if (this.runOnceFlag) {
       this.constructor._addOnceFieldToHistory(field);
       this.runOnceFlag = false;
     }
-    field.fieldHistory.push(this.recountedField);
+    field.fieldHistory.push(recountedField);
 
-    field.field.forEach((row, i) => {
-      row.forEach((cell, j) => {
-        field.setCellLifeStatus(i, j, this.recountedField[i][j]);
-      });
-    });
+    this.constructor._updateField(field, recountedField);
 
     field.setNumberOfGeneration(field.getNumberOfGeneration() + 1);
     this._stopGame(field);
+  }
+
+  static _updateField(field, recountedField) {
+    field.field.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        cell.setLifeStatus(recountedField[i][j]);
+      });
+    });
+  }
+
+  _calculateField(field) {
+    const recountedField = field.field.map((row, i) => field.field[i].map((cell, j) => {
+      const aliveNeighbors = this.constructor._countAliveNeighbors(i, j, field);
+      const cellLifeStatus = cell.getLifeStatus();
+      const deadCell = constants.DEAD_CELL;
+      const aliveCell = constants.ALIVE_CELL;
+      const minAliveNighbors = constants.MIN_SUM_OF_ALIVE_NEIGHBOURS;
+      const maxAliveNighbors = constants.MAX_SUM_OF_ALIVE_NEIGHBOURS;
+      let recountedCellLifeStatus = deadCell;
+
+      if (cellLifeStatus === deadCell && aliveNeighbors === minAliveNighbors) {
+        recountedCellLifeStatus = aliveCell;
+      } else if (cellLifeStatus === aliveCell && (aliveNeighbors === minAliveNighbors
+        || aliveNeighbors === maxAliveNighbors)) {
+        recountedCellLifeStatus = aliveCell;
+      }
+      return recountedCellLifeStatus;
+    }));
+    return recountedField;
   }
 
   static _addOnceFieldToHistory(field) {
@@ -56,48 +61,14 @@ class FieldChanger {
   }
 
   static _countAliveNeighbors(i, j, field) {
-    let aliveNeighbors = constants.MIN_AMOUNT_OF_ALIVE_NEIGHBOURS;
-    let upperRowSumOfNeighborsStatuses = [];
-    let middleRowSumOfNeighborsStatuses = [];
-    let lowerRowSumOfNeighborsStatuses = [];
-    let arrayOfNeighbors = [];
+    const cellColumn = j === 0 ? j : j - 1;
+    const upperNeighborsRow = field.field[i - 1] ? field.field[i - 1].slice(cellColumn, j + 2) : [];
+    const middleNeighborsRow = field.field[i].slice(cellColumn, j + 2);
+    const lowerNeighborsRow = field.field[i + 1] ? field.field[i + 1].slice(cellColumn, j + 2) : [];
+    const arrayOfNeighbors = upperNeighborsRow.concat(middleNeighborsRow, lowerNeighborsRow);
 
-    if (i !== 0) {
-      if (j === 0) {
-        upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j, j + 2);
-      } else if (j === field.getXSizeOfField() - 1) {
-        upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j - 1, j + 1);
-      } else {
-        upperRowSumOfNeighborsStatuses = field.field[i - 1].slice(j - 1, j + 2);
-      }
-      arrayOfNeighbors.push(upperRowSumOfNeighborsStatuses);
-    }
-
-    if (j === 0) {
-      middleRowSumOfNeighborsStatuses = field.field[i].slice(j, j + 2);
-    } else if (j === field.getXSizeOfField() - 1) {
-      middleRowSumOfNeighborsStatuses = field.field[i].slice(j - 1, j + 1);
-    } else {
-      middleRowSumOfNeighborsStatuses = field.field[i].slice(j - 1, j + 2);
-    }
-    arrayOfNeighbors.push(middleRowSumOfNeighborsStatuses);
-
-    if (i !== field.getYSizeOfField() - 1) {
-      if (j === 0) {
-        lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j, j + 2);
-      } else if (j === field.getXSizeOfField() - 1) {
-        lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j - 1, j + 1);
-      } else {
-        lowerRowSumOfNeighborsStatuses = field.field[i + 1].slice(j - 1, j + 2);
-      }
-      arrayOfNeighbors.push(lowerRowSumOfNeighborsStatuses);
-    }
-    arrayOfNeighbors = arrayOfNeighbors.flat();
-
-    aliveNeighbors = arrayOfNeighbors.reduce((accumulator, neighbor) => accumulator
-      + neighbor.getLifeStatus(), 0);
-
-    return aliveNeighbors;
+    return arrayOfNeighbors.reduce((accumulator, neighbor) => accumulator
+            + neighbor.getLifeStatus(), 0);
   }
 
   _stopGame(field) {
@@ -111,19 +82,18 @@ class FieldChanger {
 
   static _compareFields(field, numberOfHistoryGeneration) {
     let result = 0;
-    let resultOfCompare = false;
     field.field.forEach((row, i) => {
       row.forEach((cell, j) => {
-        if (field.readCellLifeStatus(i, j)
+        if (cell.getLifeStatus()
             === field.fieldHistory[numberOfHistoryGeneration][i][j]) {
           result += 1;
         }
       });
     });
     if (result === (field.getXSizeOfField() * field.getYSizeOfField())) {
-      resultOfCompare = true;
+      return true;
     }
-    return resultOfCompare;
+    return false;
   }
 }
 

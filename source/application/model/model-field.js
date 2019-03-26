@@ -123,14 +123,6 @@ class Field {
     }
   }
 
-  readCellLifeStatus(i, j) {
-    return this.field[i][j].getLifeStatus();
-  }
-
-  setCellLifeStatus(i, j, value) {
-    this.field[i][j].setLifeStatus(value);
-  }
-
   toggleCellLifeStatus(i, j) {
     this.field[i][j].toggleLifeStatus();
   }

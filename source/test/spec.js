@@ -189,16 +189,16 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         field.clearField();
         for (let i = 0; i < field.field.length; i += 1) {
           for (let j = 0; j < field.field[i].length; j += 1) {
-            field.setCellLifeStatus(i, j, 1);
-            assert(field.readCellLifeStatus(i, j) === 1);
+            field.field[i][j].setLifeStatus(1);
+            assert(field.field[i][j].getLifeStatus() === 1);
           }
         }
       });
       it('установка значения всех ячеек поля в состояние 0 c помощью методов записи и проверка значений', () => {
         for (let i = 0; i < field.field.length; i += 1) {
           for (let j = 0; j < field.field[i].length; j += 1) {
-            field.setCellLifeStatus(i, j, 0);
-            assert(field.readCellLifeStatus(i, j) === 0);
+            field.field[i][j].setLifeStatus(0);
+            assert(field.field[i][j].getLifeStatus() === 0);
           }
         }
       });
@@ -207,7 +207,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         for (let i = 1; i < field.field.length - 1; i += 1) {
           for (let j = 1; j < field.field[i].length - 1; j += 1) {
             field.toggleCellLifeStatus(i, j);
-            assert.equal(field.readCellLifeStatus(i, j), 1);
+            assert.equal(field.field[i][j].getLifeStatus(), 1);
           }
         }
       });
@@ -216,7 +216,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
 
   // проверка класса с логикой игры
   describe('Проверка класса fieldChanger', () => {
-    describe('проверка метода calculateField отвечающего за изменение состояния поля в соответствии с алгоритмом', () => {
+    describe('проверка метода makeStep отвечающего за изменение состояния поля в соответствии с алгоритмом', () => {
       it('создание поля 4*4, передача определенного рисунка (планер) поля методу и проверка состояния ячеек на втором поколении', () => {
         field.setXSizeOfField(4);
         field.setYSizeOfField(4);
@@ -229,70 +229,70 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         field.field[2][1].setLifeStatus(1);
         field.field[2][2].setLifeStatus(1);
 
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
 
-        assert.equal(field.readCellLifeStatus(1, 0), 1);
-        assert.equal(field.readCellLifeStatus(1, 2), 1);
-        assert.equal(field.readCellLifeStatus(2, 1), 1);
-        assert.equal(field.readCellLifeStatus(2, 2), 1);
-        assert.equal(field.readCellLifeStatus(3, 1), 1);
+        assert.equal(field.field[1][0].getLifeStatus(), 1);
+        assert.equal(field.field[1][2].getLifeStatus(), 1);
+        assert.equal(field.field[2][1].getLifeStatus(), 1);
+        assert.equal(field.field[2][2].getLifeStatus(), 1);
+        assert.equal(field.field[3][1].getLifeStatus(), 1);
       });
       it('второй вызов метода пересчета поля и проверка состояния ячеек на третьем поколении', () => {
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
 
-        assert.equal(field.readCellLifeStatus(1, 2), 1);
-        assert.equal(field.readCellLifeStatus(2, 0), 1);
-        assert.equal(field.readCellLifeStatus(2, 2), 1);
-        assert.equal(field.readCellLifeStatus(3, 1), 1);
-        assert.equal(field.readCellLifeStatus(3, 2), 1);
+        assert.equal(field.field[1][2].getLifeStatus(), 1);
+        assert.equal(field.field[2][0].getLifeStatus(), 1);
+        assert.equal(field.field[2][2].getLifeStatus(), 1);
+        assert.equal(field.field[3][1].getLifeStatus(), 1);
+        assert.equal(field.field[3][2].getLifeStatus(), 1);
       });
       it('третий вызов метода пересчета поля и проверка состояния ячеек на четвертом поколении', () => {
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
 
-        assert.equal(field.readCellLifeStatus(1, 1), 1);
-        assert.equal(field.readCellLifeStatus(2, 2), 1);
-        assert.equal(field.readCellLifeStatus(2, 3), 1);
-        assert.equal(field.readCellLifeStatus(3, 1), 1);
-        assert.equal(field.readCellLifeStatus(3, 2), 1);
+        assert.equal(field.field[1][1].getLifeStatus(), 1);
+        assert.equal(field.field[2][2].getLifeStatus(), 1);
+        assert.equal(field.field[2][3].getLifeStatus(), 1);
+        assert.equal(field.field[3][1].getLifeStatus(), 1);
+        assert.equal(field.field[3][2].getLifeStatus(), 1);
       });
       it('четвертый вызов метода пересчета поля и проверка состояния ячеек на пятом поколении', () => {
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
 
-        assert.equal(field.readCellLifeStatus(1, 2), 1);
-        assert.equal(field.readCellLifeStatus(2, 3), 1);
-        assert.equal(field.readCellLifeStatus(3, 1), 1);
-        assert.equal(field.readCellLifeStatus(3, 2), 1);
-        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.field[1][2].getLifeStatus(), 1);
+        assert.equal(field.field[2][3].getLifeStatus(), 1);
+        assert.equal(field.field[3][1].getLifeStatus(), 1);
+        assert.equal(field.field[3][2].getLifeStatus(), 1);
+        assert.equal(field.field[3][3].getLifeStatus(), 1);
       });
       it('пятый вызов метода пересчета поля и проверка состояния ячеек на шестом поколении', () => {
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
 
-        assert.equal(field.readCellLifeStatus(2, 1), 1);
-        assert.equal(field.readCellLifeStatus(2, 3), 1);
-        assert.equal(field.readCellLifeStatus(3, 2), 1);
-        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.field[2][1].getLifeStatus(), 1);
+        assert.equal(field.field[2][3].getLifeStatus(), 1);
+        assert.equal(field.field[3][2].getLifeStatus(), 1);
+        assert.equal(field.field[3][3].getLifeStatus(), 1);
       });
       it('шестой вызов метода пересчета поля и проверка состояния ячеек на седьмом поколении', () => {
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
 
-        assert.equal(field.readCellLifeStatus(2, 3), 1);
-        assert.equal(field.readCellLifeStatus(3, 2), 1);
-        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.field[2][3].getLifeStatus(), 1);
+        assert.equal(field.field[3][2].getLifeStatus(), 1);
+        assert.equal(field.field[3][3].getLifeStatus(), 1);
       });
       it('седьмой вызов метода пересчета поля и проверка состояния ячеек на восьмом поколении', () => {
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
 
-        assert.equal(field.readCellLifeStatus(2, 2), 1);
-        assert.equal(field.readCellLifeStatus(2, 3), 1);
-        assert.equal(field.readCellLifeStatus(3, 2), 1);
-        assert.equal(field.readCellLifeStatus(3, 3), 1);
+        assert.equal(field.field[2][2].getLifeStatus(), 1);
+        assert.equal(field.field[2][3].getLifeStatus(), 1);
+        assert.equal(field.field[3][2].getLifeStatus(), 1);
+        assert.equal(field.field[3][3].getLifeStatus(), 1);
       });
       it('проверка того, что на 8 поколении остальные ячейки мертвы', () => {
 
-        field.setCellLifeStatus(2, 2, 0);
-        field.setCellLifeStatus(2, 3, 0);
-        field.setCellLifeStatus(3, 2, 0);
-        field.setCellLifeStatus(3, 3, 0);
+        field.field[2][2].setLifeStatus(0);
+        field.field[2][3].setLifeStatus(0);
+        field.field[3][2].setLifeStatus(0);
+        field.field[3][3].setLifeStatus(0);
 
         for (let i = 0; i < field.field.length; i += 1) {
           for (let j = 0; j < field.field[0].length; j += 1) {
@@ -309,7 +309,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         field.createRandomField();
         field.clearField();
         fieldChanger.runOnceFlag = true;
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
         assert.isTrue(field.getGameOver());
       });
       it('передача методу поля с одинаковым рисунком на последних двух поколениях вызывает остановку игры', () => {
@@ -320,13 +320,13 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         field.field[2][1].setLifeStatus(1);
         field.field[2][2].setLifeStatus(1);
 
-        fieldChanger.calculateField(field);
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
+        fieldChanger.makeStep(field);
         assert.isTrue(field.getGameOver());
       });
 
       it('передача методу поля с одинаковым рисунком на текущем и предпоследнем поколениях вызывает остановку игры', () => {
-        fieldChanger.calculateField(field);
+        fieldChanger.makeStep(field);
         assert.isTrue(field.getGameOver());
       });
     });
@@ -389,7 +389,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
     });
     describe('проверка части view, отвечающей за обработку событий, возникающих при взаимодействии с контролами', () => {
       const spyCreateView = sinon.spy(view, '_createView');
-      const spyFieldChanger = sinon.spy(fieldChanger, 'calculateField');
+      const spyFieldChanger = sinon.spy(fieldChanger, 'makeStep');
       const spyOnBlurHeightCrop = sinon.spy(field, 'cropFieldOnXaxis');
       const spyOnBlurWidthCrop = sinon.spy(field, 'cropFieldOnYaxis');
       const spyOnBlurWidthtEnlarge = sinon.spy(field, 'enlargeFieldOnYaxis');
