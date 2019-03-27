@@ -288,7 +288,6 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         assert.equal(field.field[3][3].getLifeStatus(), 1);
       });
       it('проверка того, что на 8 поколении остальные ячейки мертвы', () => {
-
         field.field[2][2].setLifeStatus(0);
         field.field[2][3].setLifeStatus(0);
         field.field[3][2].setLifeStatus(0);
@@ -353,7 +352,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         for (let i = 0; i < 5; i += 1) {
           for (let j = 0; j < 5; j += 1) {
             cellSquare = document.getElementsByClassName('js-field__cell_dead')[i * 5 + j];
-            coordinate = cellSquare.getAttribute('data-id').split(' ');
+            coordinate = cellSquare.getAttribute('data-cell-id').split(' ');
             assert.equal(i, coordinate[0]);
             assert.equal(j, coordinate[1]);
           }
@@ -371,7 +370,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         const cellSquare = document.getElementsByClassName('js-field__cell_alive');
         for (let i = 0; i < cellSquare.length / 2; i += 1) {
           for (let j = 0; j < cellSquare.length / 2; j += 1) {
-            coordinate = cellSquare[i * 2 + j].getAttribute('data-id').split(' ');
+            coordinate = cellSquare[i * 2 + j].getAttribute('data-cell-id').split(' ');
             assert.equal(coordinate[0], i + 1);
             assert.equal(coordinate[1], j + 1);
           }

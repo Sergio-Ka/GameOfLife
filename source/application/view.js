@@ -5,7 +5,6 @@ import constants from './constants';
 class View extends Observer {
   constructor() {
     super();
-    this.document = window.document;
     this._findElements();
     this._addListeners();
   }
@@ -20,19 +19,19 @@ class View extends Observer {
   }
 
   _findElements() {
-    [this.buttonCreateUniverse] = this.document.getElementsByClassName('js-create-universe');
-    [this.buttonClearUniverse] = this.document.getElementsByClassName('js-clear-universe');
-    [this.buttonStartGame] = this.document.getElementsByClassName('js-start-game');
-    [this.buttonStopGame] = this.document.getElementsByClassName('js-stop-game');
-    [this.buttonMakeStep] = this.document.getElementsByClassName('js-step');
-    [this.heightInput] = this.document.getElementsByClassName('js-field-height');
-    [this.widthInput] = this.document.getElementsByClassName('js-field-width');
-    [this.slider] = this.document.getElementsByClassName('ui-slider-handle');
-    [this.sliderPopup] = this.document.getElementsByClassName('js-slider-with-pop-up__value');
+    [this.buttonCreateUniverse] = document.getElementsByClassName('js-create-universe');
+    [this.buttonClearUniverse] = document.getElementsByClassName('js-clear-universe');
+    [this.buttonStartGame] = document.getElementsByClassName('js-start-game');
+    [this.buttonStopGame] = document.getElementsByClassName('js-stop-game');
+    [this.buttonMakeStep] = document.getElementsByClassName('js-step');
+    [this.heightInput] = document.getElementsByClassName('js-field-height');
+    [this.widthInput] = document.getElementsByClassName('js-field-width');
+    [this.slider] = document.getElementsByClassName('ui-slider-handle');
+    [this.sliderPopup] = document.getElementsByClassName('js-slider-with-pop-up__value');
 
-    [this.content] = this.document.getElementsByClassName('js-wrap__content');
-    [this.generation] = this.document.getElementsByClassName('js-generation');
-    [this.table] = this.document.getElementsByClassName('js-field');
+    [this.content] = document.getElementsByClassName('js-wrap__content');
+    [this.generation] = document.getElementsByClassName('js-generation');
+    [this.table] = document.getElementsByClassName('js-field');
   }
 
   _addListeners() {
@@ -78,8 +77,8 @@ class View extends Observer {
   }
 
   _handleContentClick(event) {
-    if (event.target.getAttribute('data-id') !== null) {
-      const [i, j] = event.target.getAttribute('data-id').split(' ');
+    if (event.target.getAttribute('data-cell-id') !== null) {
+      const [i, j] = event.target.getAttribute('data-cell-id').split(' ');
       this.publish('cellClick', i, j);
     }
   }
@@ -104,42 +103,40 @@ class View extends Observer {
     this.publish('restartGame', this.sliderPopup.value);
   }
 
-  _createView(field, gameOverStatus, numberOfGeneration) {
-    let line;
-    let cell;
-
-    if (this.table) {
+  _createView(fieldMatrix, gameOver, numberOfGeneration) {
+    if (this.table !== null) {
       this.content.removeChild(this.table);
     }
 
-    this.table = this.content.appendChild(this.document.createElement('div'));
+    this.table = this.content.appendChild(document.createElement('div'));
     this.table.setAttribute('class', 'field js-field');
-    const fragment = this.document.createDocumentFragment();
+    const fragment = document.createDocumentFragment();
 
-    field.forEach((row, i) => {
-      line = fragment.appendChild(this.document.createElement('div'));
+    const aliveCellClass = 'field__cell field__cell_alive js-field__cell js-field__cell_alive';
+    const deadCellClass = 'field__cell field__cell_dead js-field__cell js-field__cell_dead';
+
+    fieldMatrix.forEach((row, i) => {
+      const line = fragment.appendChild(document.createElement('div'));
       line.setAttribute('class', 'field__line js-field__line');
-      row.forEach((column, j) => {
-        cell = line.appendChild(this.document.createElement('div'));
-        cell.setAttribute('data-id', `${i} ${j}`);
-        if (column.getLifeStatus() === constants.DEAD_CELL) {
-          cell.setAttribute('class', 'field__cell field__cell_dead js-field__cell js-field__cell_dead');
-        } else if (column.getLifeStatus() === constants.ALIVE_CELL) {
-          cell.setAttribute('class', 'field__cell field__cell_alive js-field__cell js-field__cell_alive');
-        }
+      row.forEach((cell, j) => {
+        const cellBlock = line.appendChild(document.createElement('div'));
+        cellBlock.setAttribute('data-cell-id', `${i} ${j}`);
+        const cellBlockClass = cell.getLifeStatus() === constants.DEAD_CELL
+          ? deadCellClass : aliveCellClass;
+        cellBlock.setAttribute('class', cellBlockClass);
       });
     });
 
     this.table.appendChild(fragment);
     this.generation.setAttribute('value', numberOfGeneration);
-    if (gameOverStatus) {
-      this.constructor._showMessage();
+    if (gameOver) {
+      this._showMessage();
     }
   }
 
-  static _showMessage() {
+  _showMessage() {
     const popupMessage = new PopupMessage();
-    popupMessage.message('Игра закончена! Измените поле вручную или создайте новое.');
+    popupMessage.setMessage('Игра закончена! Измените поле вручную или создайте новое.');
   }
 }
 

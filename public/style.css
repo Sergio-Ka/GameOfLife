@@ -190,18 +190,23 @@
   background: #24cc08;
 }
 .popup-message {
+  display: none;
   width: 100%;
   height: 100%;
   background: #444;
   opacity: 0.9;
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
 }
-.popup-message__content {
+.popup-message_invisible {
   display: none;
+}
+.popup-message_visible {
+  display: block;
+}
+.popup-message__content {
   position: absolute;
   border-radius: 0.222rem;
   width: 24rem;

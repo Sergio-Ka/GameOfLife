@@ -26,16 +26,16 @@ mixin wrap()
             .wrap__control-item
                 input.generation.js-generation(type="number", value="1", disabled)
         .wrap__controls
-            .wrap__control-item
-                +standard-button({text:"создать", color:"green", size:"", effect:"", activeStatus:"", jsClass:" js-create-universe"})
-            .wrap__control-item
-                +standard-button({text:"стереть", color:"red", size:"", effect:"", activeStatus:"", jsClass:" js-clear-universe"})
-            .wrap__control-item
-                +standard-button({text:"старт", color:"green", size:"", effect:"", activeStatus:"", jsClass:" js-start-game"})
-            .wrap__control-item
-                +standard-button({text:"стоп", color:"red", size:"", effect:"", activeStatus:"", jsClass:" js-stop-game"})
-            .wrap__control-item
-                +standard-button({text:"1 шаг", color:"green", size:"", effect:"", activeStatus:"inactive", jsClass:" js-step"})
+            .wrap__control-item.js-create-universe
+                +standard-button({text:"создать", color:"green", size:"", effect:"", activeStatus:""})
+            .wrap__control-item.js-clear-universe
+                +standard-button({text:"стереть", color:"red", size:"", effect:"", activeStatus:""})
+            .wrap__control-item.js-start-game
+                +standard-button({text:"старт", color:"green", size:"", effect:"", activeStatus:""})
+            .wrap__control-item.js-stop-game
+                +standard-button({text:"стоп", color:"red", size:"", effect:"", activeStatus:""})
+            .wrap__control-item.js-step
+                +standard-button({text:"1 шаг", color:"green", size:"", effect:"", activeStatus:"inactive"})
             .wrap__control-item
                 a.wrap__link(href="test.html")
                     +standard-button({text:"тесты", color:"red", size:"", effect:"", activeStatus:"inactive"})

@@ -31,9 +31,7 @@ class FacadeOfModel extends Observer {
   _calculateGeneration() {
     this._fieldChanger.makeStep(this._field);
     this.publish(
-      this._field.getYSizeOfField(),
-      this._field.getXSizeOfField(),
-      this._field.field,
+      this._field.fieldMatrix,
       this._field.getGameOver(),
       this._field.getNumberOfGeneration(),
     );
@@ -45,9 +43,7 @@ class FacadeOfModel extends Observer {
     this._field.createRandomField();
     this._fieldChanger.runOnceFlag = true;
     this.publish(
-      this._field.getYSizeOfField(),
-      this._field.getXSizeOfField(),
-      this._field.field,
+      this._field.fieldMatrix,
       this._field.getGameOver(),
       this._field.getNumberOfGeneration(),
     );
@@ -57,9 +53,7 @@ class FacadeOfModel extends Observer {
     this._field.clearField();
     this._fieldChanger.runOnceFlag = true;
     this.publish(
-      this._field.getYSizeOfField(),
-      this._field.getXSizeOfField(),
-      this._field.field,
+      this._field.fieldMatrix,
       this._field.getGameOver(),
       this._field.getNumberOfGeneration(),
     );
@@ -69,9 +63,7 @@ class FacadeOfModel extends Observer {
     this._field.setGameOver(false);
     this._field.toggleCellLifeStatus(row, column);
     this.publish(
-      this._field.getYSizeOfField(),
-      this._field.getXSizeOfField(),
-      this._field.field,
+      this._field.fieldMatrix,
       this._field.getGameOver(),
       this._field.getNumberOfGeneration(),
     );
@@ -93,9 +85,7 @@ class FacadeOfModel extends Observer {
       }
     }
     this.publish(
-      this._field.getYSizeOfField(),
-      this._field.getXSizeOfField(),
-      this._field.field,
+      this._field.fieldMatrix,
       this._field.getGameOver(),
       this._field.getNumberOfGeneration(),
     );

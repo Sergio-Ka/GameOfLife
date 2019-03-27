@@ -4,7 +4,9 @@
     "rules": {
         "linebreak-style": ["error", "windows"],
         "no-underscore-dangle": "off", // ["error", { "allowAfterThis": true }],
-        "no-new": "off"
+        "no-new": "off",
+        "class-methods-use-this": "off",
+        "no-unused-expressions": "off"
     },
     "env": {
         "browser": true,

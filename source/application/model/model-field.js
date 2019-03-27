@@ -59,28 +59,24 @@ class Field {
   }
 
   createRandomField() {
-    this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
-    this.gameOver = false;
-    this.fieldHistory = [];
+    this._resetField();
 
-    this.field = Array(this.ySizeOfField).fill(null);
-    this.field.forEach((row, i) => {
-      this.field[i] = Array(this.xSizeOfField).fill(null);
-      this.field[i].forEach((cell, j) => {
-        this.field[i][j] = new Cell();
-        this.field[i][j].setLifeStatus(Math.round(Math.random()));
+    this.fieldMatrix = Array(this.ySizeOfField).fill(null);
+    this.fieldMatrix.forEach((row, i) => {
+      this.fieldMatrix[i] = Array(this.xSizeOfField).fill(null);
+      this.fieldMatrix[i].forEach((cell, j) => {
+        this.fieldMatrix[i][j] = new Cell();
+        this.fieldMatrix[i][j].setLifeStatus(Math.round(Math.random()));
       });
     });
   }
 
   clearField() {
-    this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
-    this.gameOver = false;
-    this.fieldHistory = [];
+    this._resetField();
 
-    this.field.forEach((row, i) => {
-      this.field[i].forEach((cell, j) => {
-        this.field[i][j].setLifeStatus(0);
+    this.fieldMatrix.forEach((row, i) => {
+      this.fieldMatrix[i].forEach((cell, j) => {
+        this.fieldMatrix[i][j].setLifeStatus(constants.DEAD_CELL);
       });
     });
   }
@@ -88,7 +84,7 @@ class Field {
   cropFieldOnXaxis(xSize) {
     this.xSizeOfField = xSize;
 
-    this.field.forEach((row) => {
+    this.fieldMatrix.forEach((row) => {
       row.splice(xSize);
     });
   }
@@ -96,7 +92,7 @@ class Field {
   cropFieldOnYaxis(ySize) {
     this.ySizeOfField = ySize;
 
-    this.field.splice(ySize);
+    this.fieldMatrix.splice(ySize);
   }
 
   enlargeFieldOnXaxis(xSize) {
@@ -104,9 +100,9 @@ class Field {
     this.xSizeOfField = xSize;
     this.fieldHistory = [];
 
-    this.field.forEach((row, i) => {
+    this.fieldMatrix.forEach((row, i) => {
       for (let j = oldXSize; j < this.xSizeOfField; j += 1) {
-        this.field[i].push(new Cell());
+        this.fieldMatrix[i].push(new Cell());
       }
     });
   }
@@ -115,16 +111,22 @@ class Field {
     this.ySizeOfField = ySize;
     this.fieldHistory = [];
 
-    for (let i = this.field.length; i < this.ySizeOfField; i += 1) {
-      this.field.push(Array(this.xSizeOfField).fill(null));
-      this.field[i].forEach((cell, j) => {
-        this.field[i][j] = new Cell();
+    for (let i = this.fieldMatrix.length; i < this.ySizeOfField; i += 1) {
+      this.fieldMatrix.push(Array(this.xSizeOfField).fill(null));
+      this.fieldMatrix[i].forEach((cell, j) => {
+        this.fieldMatrix[i][j] = new Cell();
       });
     }
   }
 
   toggleCellLifeStatus(i, j) {
-    this.field[i][j].toggleLifeStatus();
+    this.fieldMatrix[i][j].toggleLifeStatus();
+  }
+
+  _resetField() {
+    this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
+    this.gameOver = false;
+    this.fieldHistory = [];
   }
 }
 

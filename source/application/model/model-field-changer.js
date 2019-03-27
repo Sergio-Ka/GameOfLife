@@ -9,19 +9,19 @@ class FieldChanger {
     const recountedField = this._calculateField(field);
 
     if (this.runOnceFlag) {
-      this.constructor._addOnceFieldToHistory(field);
+      this._addOnceFieldToHistory(field);
       this.runOnceFlag = false;
     }
     field.fieldHistory.push(recountedField);
 
-    this.constructor._updateField(field, recountedField);
+    this._updateField(field, recountedField);
 
     field.setNumberOfGeneration(field.getNumberOfGeneration() + 1);
     this._stopGame(field);
   }
 
-  static _updateField(field, recountedField) {
-    field.field.forEach((row, i) => {
+  _updateField(field, recountedField) {
+    field.fieldMatrix.forEach((row, i) => {
       row.forEach((cell, j) => {
         cell.setLifeStatus(recountedField[i][j]);
       });
@@ -29,29 +29,29 @@ class FieldChanger {
   }
 
   _calculateField(field) {
-    const recountedField = field.field.map((row, i) => field.field[i].map((cell, j) => {
-      const aliveNeighbors = this.constructor._countAliveNeighbors(i, j, field);
+    const recountedField = field.fieldMatrix.map((row, i) => row.map((cell, j) => {
+      const aliveNeighbors = this._countAliveNeighbors(i, j, field);
       const cellLifeStatus = cell.getLifeStatus();
-      const deadCell = constants.DEAD_CELL;
-      const aliveCell = constants.ALIVE_CELL;
-      const minAliveNighbors = constants.MIN_SUM_OF_ALIVE_NEIGHBOURS;
-      const maxAliveNighbors = constants.MAX_SUM_OF_ALIVE_NEIGHBOURS;
-      let recountedCellLifeStatus = deadCell;
+      let recountedCellLifeStatus = constants.DEAD_CELL;
+      const conditionForRevive = cellLifeStatus === constants.DEAD_CELL
+        && aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS;
+      const conditionForDie = cellLifeStatus === constants.ALIVE_CELL
+        && (aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
+        || aliveNeighbors === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS);
 
-      if (cellLifeStatus === deadCell && aliveNeighbors === minAliveNighbors) {
-        recountedCellLifeStatus = aliveCell;
-      } else if (cellLifeStatus === aliveCell && (aliveNeighbors === minAliveNighbors
-        || aliveNeighbors === maxAliveNighbors)) {
-        recountedCellLifeStatus = aliveCell;
+      if (conditionForRevive) {
+        recountedCellLifeStatus = constants.ALIVE_CELL;
+      } else if (conditionForDie) {
+        recountedCellLifeStatus = constants.ALIVE_CELL;
       }
       return recountedCellLifeStatus;
     }));
     return recountedField;
   }
 
-  static _addOnceFieldToHistory(field) {
+  _addOnceFieldToHistory(field) {
     const transformedField = Array(field.getYSizeOfField()).fill(null);
-    field.field.forEach((row, i) => {
+    field.fieldMatrix.forEach((row, i) => {
       transformedField[i] = Array(field.getXSizeOfField()).fill(constants.DEAD_CELL);
       row.forEach((cell, j) => {
         transformedField[i][j] = cell.getLifeStatus();
@@ -60,11 +60,13 @@ class FieldChanger {
     field.fieldHistory.push(transformedField);
   }
 
-  static _countAliveNeighbors(i, j, field) {
+  _countAliveNeighbors(i, j, field) {
     const cellColumn = j === 0 ? j : j - 1;
-    const upperNeighborsRow = field.field[i - 1] ? field.field[i - 1].slice(cellColumn, j + 2) : [];
-    const middleNeighborsRow = field.field[i].slice(cellColumn, j + 2);
-    const lowerNeighborsRow = field.field[i + 1] ? field.field[i + 1].slice(cellColumn, j + 2) : [];
+    const upperNeighborsRow = field.fieldMatrix[i - 1]
+      ? field.fieldMatrix[i - 1].slice(cellColumn, j + 2) : [];
+    const middleNeighborsRow = field.fieldMatrix[i].slice(cellColumn, j + 2);
+    const lowerNeighborsRow = field.fieldMatrix[i + 1]
+      ? field.fieldMatrix[i + 1].slice(cellColumn, j + 2) : [];
     const arrayOfNeighbors = upperNeighborsRow.concat(middleNeighborsRow, lowerNeighborsRow);
 
     return arrayOfNeighbors.reduce((accumulator, neighbor) => accumulator
@@ -74,15 +76,15 @@ class FieldChanger {
   _stopGame(field) {
     field.fieldHistory.forEach((historyField, i) => {
       if (i !== field.fieldHistory.length - 1
-          && this.constructor._compareFields(field, i) === true) {
+          && this._compareFields(field, i) === true) {
         field.setGameOver(true);
       }
     });
   }
 
-  static _compareFields(field, numberOfHistoryGeneration) {
+  _compareFields(field, numberOfHistoryGeneration) {
     let result = 0;
-    field.field.forEach((row, i) => {
+    field.fieldMatrix.forEach((row, i) => {
       row.forEach((cell, j) => {
         if (cell.getLifeStatus()
             === field.fieldHistory[numberOfHistoryGeneration][i][j]) {

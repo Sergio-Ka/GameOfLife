@@ -4,27 +4,33 @@ class PopupMessage {
   }
 
   _init() {
-    [this.element] = document.getElementsByClassName('js-popup-message');
-    this.button = this.element.querySelector('.js-popup-message-close');
-    this.content = this.element.querySelector('.popup-message__content');
-    this.elementText = this.element.querySelector('.popup-message__text');
+    [this.messageWindow] = document.getElementsByClassName('js-popup-message');
+    this.buttonClose = this.messageWindow.querySelector('.js-popup-message__button');
+    this.content = this.messageWindow.querySelector('.js-popup-message__content');
+    this.messageWindowText = this.messageWindow.querySelector('.js-popup-message__text');
 
-    this.button.addEventListener('click', () => { this._visibleStatus(false); });
+    this.buttonClose.addEventListener('click', this._handlerButtonCloseClick.bind(this));
   }
 
-  message(textOfMessage) {
-    this.elementText.innerHTML = textOfMessage;
-    this._visibleStatus(true);
+  setMessage(textOfMessage) {
+    this.messageWindowText.innerHTML = textOfMessage;
+    this._setVisibleStatus(true);
   }
 
-  _visibleStatus(status) {
-    if (status) {
-      this.element.style.display = 'block';
-      this.content.style.display = 'block';
-    } else {
-      this.element.style.display = 'none';
-      this.content.style.display = 'none';
-    }
+  _handlerButtonCloseClick() {
+    this._setVisibleStatus(false);
+  }
+
+  _makeMessageVisible() {
+    this.messageWindow.setAttribute('class', 'popup-message js-popup-message popup-message_visible');
+  }
+
+  _makeMessageInvisible() {
+    this.messageWindow.setAttribute('class', 'popup-message js-popup-message popup-message_invisible');
+  }
+
+  _setVisibleStatus(status) {
+    status ? this._makeMessageVisible() : this._makeMessageInvisible();
   }
 }
 
