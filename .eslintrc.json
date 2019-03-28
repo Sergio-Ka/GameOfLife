@@ -4,8 +4,7 @@
     "rules": {
         "no-underscore-dangle": "off",
         "no-new": "off",
-        "class-methods-use-this": "off",
-        "no-unused-expressions": "off"
+        "class-methods-use-this": "off"
     },
     "env": {
         "browser": true,
