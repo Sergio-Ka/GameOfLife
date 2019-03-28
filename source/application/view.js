@@ -109,7 +109,7 @@ class View extends Observer {
     }
 
     this.table = this.content.appendChild(document.createElement('div'));
-    this.table.setAttribute('class', 'field js-field');
+    this.table.classList = 'field js-field';
     const fragment = document.createDocumentFragment();
 
     const aliveCellClass = 'field__cell field__cell_alive js-field__cell js-field__cell_alive';
@@ -117,13 +117,12 @@ class View extends Observer {
 
     fieldMatrix.forEach((row, i) => {
       const line = fragment.appendChild(document.createElement('div'));
-      line.setAttribute('class', 'field__line js-field__line');
+      line.classList = 'field__line js-field__line';
       row.forEach((cell, j) => {
         const cellBlock = line.appendChild(document.createElement('div'));
         cellBlock.setAttribute('data-cell-id', `${i} ${j}`);
-        const cellBlockClass = cell.getLifeStatus() === constants.DEAD_CELL
+        cellBlock.classList = cell.getLifeStatus() === constants.DEAD_CELL
           ? deadCellClass : aliveCellClass;
-        cellBlock.setAttribute('class', cellBlockClass);
       });
     });
 

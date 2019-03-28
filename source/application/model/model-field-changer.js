@@ -1,23 +1,16 @@
 import constants from '../constants';
 
 class FieldChanger {
-  constructor() {
-    this.runOnceFlag = true;
-  }
-
   makeStep(field) {
-    const recountedField = this._calculateField(field);
-
-    if (this.runOnceFlag) {
-      this._addOnceFieldToHistory(field);
-      this.runOnceFlag = false;
-    }
-    field.fieldHistory.push(recountedField);
-
+    this._addFieldToHistory(field);
+    const recountedField = this._calculateField(field.fieldMatrix);
     this._updateField(field, recountedField);
-
     field.setNumberOfGeneration(field.getNumberOfGeneration() + 1);
-    this._stopGame(field);
+    const shouldGameOver = field.fieldHistory
+      .some(historyField => this._compareField(historyField, recountedField));
+    if (shouldGameOver) {
+      field.setGameOver(true);
+    }
   }
 
   _updateField(field, recountedField) {
@@ -28,9 +21,9 @@ class FieldChanger {
     });
   }
 
-  _calculateField(field) {
-    const recountedField = field.fieldMatrix.map((row, i) => row.map((cell, j) => {
-      const aliveNeighbors = this._countAliveNeighbors(i, j, field);
+  _calculateField(fieldMatrix) {
+    const recountedField = fieldMatrix.map((row, i) => row.map((cell, j) => {
+      const aliveNeighbors = this._countAliveNeighbors(i, j, fieldMatrix);
       const cellLifeStatus = cell.getLifeStatus();
       let recountedCellLifeStatus = constants.DEAD_CELL;
       const conditionForRevive = cellLifeStatus === constants.DEAD_CELL
@@ -49,7 +42,7 @@ class FieldChanger {
     return recountedField;
   }
 
-  _addOnceFieldToHistory(field) {
+  _addFieldToHistory(field) {
     const transformedField = Array(field.getYSizeOfField()).fill(null);
     field.fieldMatrix.forEach((row, i) => {
       transformedField[i] = Array(field.getXSizeOfField()).fill(constants.DEAD_CELL);
@@ -60,39 +53,30 @@ class FieldChanger {
     field.fieldHistory.push(transformedField);
   }
 
-  _countAliveNeighbors(i, j, field) {
+  _countAliveNeighbors(i, j, fieldMatrix) {
     const cellColumn = j === 0 ? j : j - 1;
-    const upperNeighborsRow = field.fieldMatrix[i - 1]
-      ? field.fieldMatrix[i - 1].slice(cellColumn, j + 2) : [];
-    const middleNeighborsRow = field.fieldMatrix[i].slice(cellColumn, j + 2);
-    const lowerNeighborsRow = field.fieldMatrix[i + 1]
-      ? field.fieldMatrix[i + 1].slice(cellColumn, j + 2) : [];
+    const upperNeighborsRow = fieldMatrix[i - 1]
+      ? fieldMatrix[i - 1].slice(cellColumn, j + 2) : [];
+    const middleNeighborsRow = fieldMatrix[i].slice(cellColumn, j + 2);
+    const lowerNeighborsRow = fieldMatrix[i + 1]
+      ? fieldMatrix[i + 1].slice(cellColumn, j + 2) : [];
     const arrayOfNeighbors = upperNeighborsRow.concat(middleNeighborsRow, lowerNeighborsRow);
 
     return arrayOfNeighbors.reduce((accumulator, neighbor) => accumulator
             + neighbor.getLifeStatus(), 0);
   }
 
-  _stopGame(field) {
-    field.fieldHistory.forEach((historyField, i) => {
-      if (i !== field.fieldHistory.length - 1
-          && this._compareFields(field, i) === true) {
-        field.setGameOver(true);
-      }
-    });
-  }
-
-  _compareFields(field, numberOfHistoryGeneration) {
+  _compareField(historyField, recountedField) {
     let result = 0;
-    field.fieldMatrix.forEach((row, i) => {
+    recountedField.forEach((row, i) => {
       row.forEach((cell, j) => {
-        if (cell.getLifeStatus()
-            === field.fieldHistory[numberOfHistoryGeneration][i][j]) {
+        if (recountedField[i][j]
+            === historyField[i][j]) {
           result += 1;
         }
       });
     });
-    if (result === (field.getXSizeOfField() * field.getYSizeOfField())) {
+    if (result === (recountedField[0].length * recountedField.length)) {
       return true;
     }
     return false;

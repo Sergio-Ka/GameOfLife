@@ -22,11 +22,11 @@ class PopupMessage {
   }
 
   _makeMessageVisible() {
-    this.messageWindow.setAttribute('class', 'popup-message js-popup-message popup-message_visible');
+    this.messageWindow.classList = 'popup-message js-popup-message popup-message_visible';
   }
 
   _makeMessageInvisible() {
-    this.messageWindow.setAttribute('class', 'popup-message js-popup-message popup-message_invisible');
+    this.messageWindow.classList = 'popup-message js-popup-message popup-message_invisible';
   }
 
   _setVisibleStatus(status) {

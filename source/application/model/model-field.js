@@ -61,24 +61,20 @@ class Field {
   createRandomField() {
     this._resetField();
 
-    this.fieldMatrix = Array(this.ySizeOfField).fill(null);
-    this.fieldMatrix.forEach((row, i) => {
-      this.fieldMatrix[i] = Array(this.xSizeOfField).fill(null);
-      this.fieldMatrix[i].forEach((cell, j) => {
-        this.fieldMatrix[i][j] = new Cell();
-        this.fieldMatrix[i][j].setLifeStatus(Math.round(Math.random()));
-      });
-    });
+    this.fieldMatrix = Array(this.ySizeOfField).fill(null)
+      .map(() => Array(this.xSizeOfField).fill(null)
+        .map(() => {
+          const newCell = new Cell();
+          newCell.setLifeStatus(Math.round(Math.random()));
+          return newCell;
+        }));
   }
 
   clearField() {
     this._resetField();
 
-    this.fieldMatrix.forEach((row, i) => {
-      this.fieldMatrix[i].forEach((cell, j) => {
-        this.fieldMatrix[i][j].setLifeStatus(constants.DEAD_CELL);
-      });
-    });
+    this.fieldMatrix = Array(this.ySizeOfField).fill(null)
+      .map(() => Array(this.xSizeOfField).fill(null).map(() => new Cell()));
   }
 
   cropFieldOnXaxis(xSize) {
@@ -99,24 +95,24 @@ class Field {
     const oldXSize = this.xSizeOfField;
     this.xSizeOfField = xSize;
     this.fieldHistory = [];
+    const cellToAdd = xSize - oldXSize;
 
-    this.fieldMatrix.forEach((row, i) => {
-      for (let j = oldXSize; j < this.xSizeOfField; j += 1) {
-        this.fieldMatrix[i].push(new Cell());
-      }
+    this.fieldMatrix = this.fieldMatrix.map((row) => {
+      const newCells = Array(cellToAdd).fill(null).map(() => new Cell());
+      return [...row, ...newCells];
     });
   }
 
   enlargeFieldOnYaxis(ySize) {
+    const rowsToAdd = ySize - this.ySizeOfField;
     this.ySizeOfField = ySize;
     this.fieldHistory = [];
 
-    for (let i = this.fieldMatrix.length; i < this.ySizeOfField; i += 1) {
-      this.fieldMatrix.push(Array(this.xSizeOfField).fill(null));
-      this.fieldMatrix[i].forEach((cell, j) => {
-        this.fieldMatrix[i][j] = new Cell();
-      });
-    }
+    const newRows = Array(rowsToAdd).fill(null)
+      .map(() => Array(this.xSizeOfField).fill(null)
+        .map(() => new Cell()));
+
+    this.fieldMatrix = [...this.fieldMatrix, ...newRows];
   }
 
   toggleCellLifeStatus(i, j) {
