@@ -100,10 +100,9 @@ class Field {
   }
 
   enlargeFieldOnXaxis(xSize) {
-    const oldXSize = this.xSizeOfField;
+    const cellsToAdd = xSize - this.xSizeOfField;
     this.xSizeOfField = xSize;
     this.fieldHistory = [];
-    const cellsToAdd = xSize - oldXSize;
 
     this.fieldMatrix = this.fieldMatrix.map((row) => {
       const newCells = Array(cellsToAdd).fill(null).map(() => new Cell());

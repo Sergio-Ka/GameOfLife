@@ -135,10 +135,9 @@ class View extends Observer {
   }
 
   _getCellCSSClass(cellLifeStatus) {
-    const cellCSSClass = cellLifeStatus === constants.DEAD_CELL
+    return cellLifeStatus === constants.DEAD_CELL
       ? 'field__cell field__cell_dead'
       : 'field__cell field__cell_alive';
-    return cellCSSClass;
   }
 }
 

@@ -2,8 +2,7 @@
     "extends": "airbnb-base",
     "parserOptions": { "ecmaVersion": 2018 },
     "rules": {
-        "linebreak-style": ["error", "windows"],
-        "no-underscore-dangle": "off", // ["error", { "allowAfterThis": true }],
+        "no-underscore-dangle": "off",
         "no-new": "off",
         "class-methods-use-this": "off",
         "no-unused-expressions": "off"

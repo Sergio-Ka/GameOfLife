@@ -60,10 +60,8 @@ class FieldChanger {
   }
 
   _areFieldsEqual(historyField, recountedField) {
-    const result = recountedField.every((row, i) => row
+    return recountedField.every((row, i) => row
       .every((cell, j) => cell === historyField[i][j]));
-
-    return result;
   }
 }
 

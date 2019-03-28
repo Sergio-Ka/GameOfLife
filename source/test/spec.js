@@ -43,11 +43,11 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
   // проверяем класс поля
   describe('Проверка класса Field', () => {
     describe('проверка инициализации полей размера поля при создании', () => {
-      it('начальный размер поля X = 3', () => {
-        assert.equal(field.getXSizeOfField(), 3);
+      it('начальный размер поля X = 50', () => {
+        assert.equal(field.getXSizeOfField(), 50);
       });
-      it('начальный размер поля Y = 3', () => {
-        assert.equal(field.getYSizeOfField(), 3);
+      it('начальный размер поля Y = 50', () => {
+        assert.equal(field.getYSizeOfField(), 50);
       });
       it('при установке размера X = 3 полю размер равен 3', () => {
         field.setXSizeOfField(3);
@@ -81,8 +81,8 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
     });
 
     describe('проверка метода создания рандомно заполненного поля', () => {
-      it('при создании экземпляра класса поля (массив объектов класса ячейка) не существует', () => {
-        assert.isUndefined(field.fieldMatrix);
+      it('при создании экземпляра класса поля создается массив поля fieldMatrix', () => {
+        assert.isDefined(field.fieldMatrix);
       });
       it('при вызове метода создается поле размером 5*5 ячеек', () => {
         field.setYSizeOfField(5);
@@ -346,16 +346,16 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         view._createView(field.fieldMatrix, 0, 1);
 
         assert.isNotNull(document.getElementsByClassName('js-field'));
-        assert.equal(document.getElementsByClassName('js-field__line').length, 5);
-        assert.equal(document.getElementsByClassName('js-field__cell').length, 25);
+        assert.equal(document.getElementsByClassName('field__line').length, 5);
+        assert.equal(document.getElementsByClassName('field__cell').length, 25);
       });
       it('проверка того, что ячейкам присвоены соотвествующие классы и id = координаты', () => {
-        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 25);
+        assert.equal(document.getElementsByClassName('field__cell_dead').length, 25);
         let cellSquare;
         let coordinate;
         for (let i = 0; i < 5; i += 1) {
           for (let j = 0; j < 5; j += 1) {
-            cellSquare = document.getElementsByClassName('js-field__cell_dead')[i * 5 + j];
+            cellSquare = document.getElementsByClassName('field__cell_dead')[i * 5 + j];
             coordinate = cellSquare.getAttribute('data-cell-id').split(' ');
             assert.equal(i, coordinate[0]);
             assert.equal(j, coordinate[1]);
@@ -371,7 +371,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         view._createView(field.fieldMatrix, 0, 1);
 
         let coordinate;
-        const cellSquare = document.getElementsByClassName('js-field__cell_alive');
+        const cellSquare = document.getElementsByClassName('field__cell_alive');
         for (let i = 0; i < cellSquare.length / 2; i += 1) {
           for (let j = 0; j < cellSquare.length / 2; j += 1) {
             coordinate = cellSquare[i * 2 + j].getAttribute('data-cell-id').split(' ');
@@ -387,7 +387,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         field.fieldMatrix[2][2].setLifeStatus(0);
         view._createView(field.fieldMatrix, 0, 1);
 
-        assert.equal(document.getElementsByClassName('js-field__cell_dead').length, 25);
+        assert.equal(document.getElementsByClassName('field__cell_dead').length, 25);
       });
     });
     describe('проверка части view, отвечающей за обработку событий, возникающих при взаимодействии с контролами', () => {
@@ -397,13 +397,15 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
       const spyOnBlurWidthCrop = sinon.spy(field, 'cropFieldOnYaxis');
       const spyOnBlurWidthtEnlarge = sinon.spy(field, 'enlargeFieldOnYaxis');
       const spyOnBlurHeightEnlarge = sinon.spy(field, 'enlargeFieldOnXaxis');
-      const spyCreate = sinon.spy(field, 'createRandomField');
+      const spyCreate = sinon.spy(field, 'createField');
+      const spyFill = sinon.spy(field, 'fillFieldRandom');
       const spyClear = sinon.spy(field, 'clearField');
       const spytoggleCellLifeStatus = sinon.spy(field, 'toggleCellLifeStatus');
 
-      it('нажатие на кнопку СОЗДАТЬ метод создания рандомно заполненного поля', () => {
+      it('нажатие на кнопку СОЗДАТЬ метод создания поля и метод его рандомного заполнения', () => {
         $('.js-create-universe').trigger('click');
         sinon.assert.called(spyCreate);
+        sinon.assert.called(spyFill);
       });
       it('нажатие на кнопку СОЗДАТЬ вызывает метод отрисовки поля', () => {
         $('.js-create-universe').trigger('click');
@@ -476,7 +478,7 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
     });
   });
 
-  /*/ проверка класса контроллера
+  // проверка класса контроллера */
   describe('Проверка класса Controller', () => {
     describe('проверка метода processEventFromView отвечающего за обработку событий из View', () => {
       const spyPublish = sinon.spy(controller, 'publish');
@@ -521,5 +523,5 @@ describe('Тест JS кода игры Жизнь Конвея', () => {
         sinon.assert.called(spyResetTimer);
       });
     });
-  });*/
+  });
 });
