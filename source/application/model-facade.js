@@ -40,8 +40,8 @@ class FacadeOfModel extends Observer {
   _createField(numberOfRows, numberOfColumns) {
     this._field.setXSizeOfField(numberOfColumns);
     this._field.setYSizeOfField(numberOfRows);
-    this._field.createRandomField();
-    this._fieldChanger.runOnceFlag = true;
+    this._field.createField();
+    this._field.fillFieldRandom();
     this.publish(
       this._field.fieldMatrix,
       this._field.getGameOver(),

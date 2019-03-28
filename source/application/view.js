@@ -109,20 +109,16 @@ class View extends Observer {
     }
 
     this.table = this.content.appendChild(document.createElement('div'));
-    this.table.classList = 'field js-field';
+    this.table.className = 'field js-field';
     const fragment = document.createDocumentFragment();
 
-    const aliveCellClass = 'field__cell field__cell_alive js-field__cell js-field__cell_alive';
-    const deadCellClass = 'field__cell field__cell_dead js-field__cell js-field__cell_dead';
-
     fieldMatrix.forEach((row, i) => {
-      const line = fragment.appendChild(document.createElement('div'));
-      line.classList = 'field__line js-field__line';
+      const rowBlock = fragment.appendChild(document.createElement('div'));
+      rowBlock.className = 'field__line';
       row.forEach((cell, j) => {
-        const cellBlock = line.appendChild(document.createElement('div'));
+        const cellBlock = rowBlock.appendChild(document.createElement('div'));
         cellBlock.setAttribute('data-cell-id', `${i} ${j}`);
-        cellBlock.classList = cell.getLifeStatus() === constants.DEAD_CELL
-          ? deadCellClass : aliveCellClass;
+        cellBlock.className = this._getCellCSSClass(cell.getLifeStatus());
       });
     });
 
@@ -136,6 +132,13 @@ class View extends Observer {
   _showMessage() {
     const popupMessage = new PopupMessage();
     popupMessage.setMessage('Игра закончена! Измените поле вручную или создайте новое.');
+  }
+
+  _getCellCSSClass(cellLifeStatus) {
+    const cellCSSClass = cellLifeStatus === constants.DEAD_CELL
+      ? 'field__cell field__cell_dead'
+      : 'field__cell field__cell_alive';
+    return cellCSSClass;
   }
 }
 

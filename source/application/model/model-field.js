@@ -3,11 +3,12 @@ import constants from '../constants';
 
 class Field {
   constructor() {
-    this.xSizeOfField = constants.MIN_SIZE_OF_FIELD;
-    this.ySizeOfField = constants.MIN_SIZE_OF_FIELD;
+    this.xSizeOfField = constants.DEFAULT_SIZE_OF_FIELD;
+    this.ySizeOfField = constants.DEFAULT_SIZE_OF_FIELD;
     this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
     this.gameOver = false;
     this.fieldHistory = [];
+    this.createField();
   }
 
   getXSizeOfField() {
@@ -58,23 +59,30 @@ class Field {
     }
   }
 
-  createRandomField() {
+  createField() {
     this._resetField();
 
     this.fieldMatrix = Array(this.ySizeOfField).fill(null)
       .map(() => Array(this.xSizeOfField).fill(null)
-        .map(() => {
-          const newCell = new Cell();
-          newCell.setLifeStatus(Math.round(Math.random()));
-          return newCell;
-        }));
+        .map(() => new Cell()));
+  }
+
+  fillFieldRandom() {
+    this.fieldMatrix = this.fieldMatrix.map(row => row
+      .map((cell) => {
+        cell.setLifeStatus(Math.round(Math.random()));
+        return cell;
+      }));
   }
 
   clearField() {
     this._resetField();
 
-    this.fieldMatrix = Array(this.ySizeOfField).fill(null)
-      .map(() => Array(this.xSizeOfField).fill(null).map(() => new Cell()));
+    this.fieldMatrix = this.fieldMatrix.map(row => row
+      .map((cell) => {
+        cell.setLifeStatus(constants.DEAD_CELL);
+        return cell;
+      }));
   }
 
   cropFieldOnXaxis(xSize) {
@@ -95,10 +103,10 @@ class Field {
     const oldXSize = this.xSizeOfField;
     this.xSizeOfField = xSize;
     this.fieldHistory = [];
-    const cellToAdd = xSize - oldXSize;
+    const cellsToAdd = xSize - oldXSize;
 
     this.fieldMatrix = this.fieldMatrix.map((row) => {
-      const newCells = Array(cellToAdd).fill(null).map(() => new Cell());
+      const newCells = Array(cellsToAdd).fill(null).map(() => new Cell());
       return [...row, ...newCells];
     });
   }

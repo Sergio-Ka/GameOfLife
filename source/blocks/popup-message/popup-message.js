@@ -21,16 +21,10 @@ class PopupMessage {
     this._setVisibleStatus(false);
   }
 
-  _makeMessageVisible() {
-    this.messageWindow.classList = 'popup-message js-popup-message popup-message_visible';
-  }
-
-  _makeMessageInvisible() {
-    this.messageWindow.classList = 'popup-message js-popup-message popup-message_invisible';
-  }
-
   _setVisibleStatus(status) {
-    status ? this._makeMessageVisible() : this._makeMessageInvisible();
+    this.messageWindow.className = status
+      ? 'popup-message js-popup-message popup-message_visible'
+      : 'popup-message js-popup-message';
   }
 }
 

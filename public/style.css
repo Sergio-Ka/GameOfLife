@@ -200,9 +200,6 @@
   left: 0;
   z-index: 1000;
 }
-.popup-message_invisible {
-  display: none;
-}
 .popup-message_visible {
   display: block;
 }
