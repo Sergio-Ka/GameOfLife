@@ -1,4 +1,8 @@
-import constants from '../constants';
+import {
+  DEAD_CELL, ALIVE_CELL,
+  MAX_SUM_OF_ALIVE_NEIGHBOURS,
+  MIN_SUM_OF_ALIVE_NEIGHBOURS,
+} from '../constants';
 
 class FieldChanger {
   makeStep(field) {
@@ -25,16 +29,16 @@ class FieldChanger {
     const recountedField = fieldMatrix.map((row, i) => row.map((cell, j) => {
       const aliveNeighbors = this._countAliveNeighbors(i, j, fieldMatrix);
       const cellLifeStatus = cell.getLifeStatus();
-      const cellWillRevive = cellLifeStatus === constants.DEAD_CELL
-        && aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS;
-      const cellWillDie = cellLifeStatus === constants.ALIVE_CELL
-        && (aliveNeighbors === constants.MIN_SUM_OF_ALIVE_NEIGHBOURS
-        || aliveNeighbors === constants.MAX_SUM_OF_ALIVE_NEIGHBOURS);
+      const cellWillRevive = cellLifeStatus === DEAD_CELL
+        && aliveNeighbors === MIN_SUM_OF_ALIVE_NEIGHBOURS;
+      const cellWillDie = cellLifeStatus === ALIVE_CELL
+        && (aliveNeighbors === MIN_SUM_OF_ALIVE_NEIGHBOURS
+        || aliveNeighbors === MAX_SUM_OF_ALIVE_NEIGHBOURS);
 
       if (cellWillRevive || cellWillDie) {
-        return constants.ALIVE_CELL;
+        return ALIVE_CELL;
       }
-      return constants.DEAD_CELL;
+      return DEAD_CELL;
     }));
     return recountedField;
   }

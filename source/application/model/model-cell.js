@@ -1,8 +1,8 @@
-import constants from '../constants';
+import { DEAD_CELL, ALIVE_CELL } from '../constants';
 
 class Cell {
   constructor() {
-    this.lifeStatus = constants.DEAD_CELL;
+    this.lifeStatus = DEAD_CELL;
   }
 
   getLifeStatus() {
@@ -10,14 +10,14 @@ class Cell {
   }
 
   setLifeStatus(value) {
-    if (value === constants.ALIVE_CELL || value === constants.DEAD_CELL) {
+    if (value === ALIVE_CELL || value === DEAD_CELL) {
       this.lifeStatus = value;
     }
   }
 
   toggleLifeStatus() {
-    this.lifeStatus = (this.lifeStatus === constants.DEAD_CELL)
-      ? constants.ALIVE_CELL : constants.DEAD_CELL;
+    this.lifeStatus = (this.lifeStatus === DEAD_CELL)
+      ? ALIVE_CELL : DEAD_CELL;
   }
 }
 

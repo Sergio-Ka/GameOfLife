@@ -1,11 +1,16 @@
 import Cell from './model-cell';
-import constants from '../constants';
+import {
+  DEAD_CELL,
+  MIN_SIZE_OF_FIELD,
+  DEFAULT_SIZE_OF_FIELD,
+  INITIAL_NUMBER_OF_GENERATION,
+} from '../constants';
 
 class Field {
   constructor() {
-    this.xSizeOfField = constants.DEFAULT_SIZE_OF_FIELD;
-    this.ySizeOfField = constants.DEFAULT_SIZE_OF_FIELD;
-    this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
+    this.xSizeOfField = DEFAULT_SIZE_OF_FIELD;
+    this.ySizeOfField = DEFAULT_SIZE_OF_FIELD;
+    this.numberOfGeneraton = INITIAL_NUMBER_OF_GENERATION;
     this.gameOver = false;
     this.fieldHistory = [];
     this.createField();
@@ -16,10 +21,10 @@ class Field {
   }
 
   setXSizeOfField(value) {
-    if (value >= constants.MIN_SIZE_OF_FIELD) {
+    if (value >= MIN_SIZE_OF_FIELD) {
       this.xSizeOfField = value;
     } else {
-      this.xSizeOfField = constants.MIN_SIZE_OF_FIELD;
+      this.xSizeOfField = MIN_SIZE_OF_FIELD;
     }
   }
 
@@ -28,10 +33,10 @@ class Field {
   }
 
   setYSizeOfField(value) {
-    if (value >= constants.MIN_SIZE_OF_FIELD) {
+    if (value >= MIN_SIZE_OF_FIELD) {
       this.ySizeOfField = value;
     } else {
-      this.ySizeOfField = constants.MIN_SIZE_OF_FIELD;
+      this.ySizeOfField = MIN_SIZE_OF_FIELD;
     }
   }
 
@@ -40,10 +45,10 @@ class Field {
   }
 
   setNumberOfGeneration(value) {
-    if (value >= constants.INITIAL_NUMBER_OF_GENERATION) {
+    if (value >= INITIAL_NUMBER_OF_GENERATION) {
       this.numberOfGeneraton = value;
     } else {
-      this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
+      this.numberOfGeneraton = INITIAL_NUMBER_OF_GENERATION;
     }
   }
 
@@ -80,7 +85,7 @@ class Field {
 
     this.fieldMatrix = this.fieldMatrix.map(row => row
       .map((cell) => {
-        cell.setLifeStatus(constants.DEAD_CELL);
+        cell.setLifeStatus(DEAD_CELL);
         return cell;
       }));
   }
@@ -127,7 +132,7 @@ class Field {
   }
 
   _resetField() {
-    this.numberOfGeneraton = constants.INITIAL_NUMBER_OF_GENERATION;
+    this.numberOfGeneraton = INITIAL_NUMBER_OF_GENERATION;
     this.gameOver = false;
     this.fieldHistory = [];
   }

@@ -1,6 +1,6 @@
 import Observer from './observer';
 import PopupMessage from '../blocks/popup-message/popup-message';
-import constants from './constants';
+import { DEAD_CELL } from './constants';
 
 class View extends Observer {
   constructor() {
@@ -135,7 +135,7 @@ class View extends Observer {
   }
 
   _getCellCSSClass(cellLifeStatus) {
-    return cellLifeStatus === constants.DEAD_CELL
+    return cellLifeStatus === DEAD_CELL
       ? 'field__cell field__cell_dead'
       : 'field__cell field__cell_alive';
   }

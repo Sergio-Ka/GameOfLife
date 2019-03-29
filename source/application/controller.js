@@ -1,5 +1,5 @@
 import Observer from './observer';
-import constants from './constants';
+import { STEP_OF_DELAY, MAX_SPEED } from './constants';
 
 class Controller extends Observer {
   constructor() {
@@ -47,7 +47,7 @@ class Controller extends Observer {
   _startTimer(speed) {
     clearInterval(this.timerId);
     this.timerId = setInterval(this._actionOnTimer.bind(this),
-      (constants.MAX_SPEED - speed) * constants.STEP_OF_DELAY);
+      (MAX_SPEED - speed) * STEP_OF_DELAY);
     this.firstStartFlag = false;
   }
 
@@ -55,7 +55,7 @@ class Controller extends Observer {
     if (!this.firstStartFlag) {
       clearInterval(this.timerId);
       this.timerId = setInterval(this._actionOnTimer.bind(this),
-        (constants.MAX_SPEED - speed) * constants.STEP_OF_DELAY);
+        (MAX_SPEED - speed) * STEP_OF_DELAY);
     }
   }
 
