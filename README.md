@@ -5,7 +5,7 @@ JavaScript Game of Life by John Conway
 
 GitHubPages: https://sergio-ka.github.io/GameOfLife/
 
-Диаграмма классов UML: https://sergio-ka.github.io/GameOfLife/UML-diagram-of-class.png
+Диаграмма классов UML: https://sergio-ka.github.io/GameOfLife/UML-class-diagram.png
 
 Клонирование репозитория:
 git clone https://github.com/Sergio-Ka/GameOfLife.git
