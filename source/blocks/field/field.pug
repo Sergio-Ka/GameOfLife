@@ -1,9 +1,0 @@
-mixin field(options = {width: 3, height: 3})
-    -let {width = 3, height = 3} = options;
-    .field.js-field
-        -for(let i = 0; i < height; i += 1) {
-            .field__line.js-field__line
-            -for( let j = 0; j < width; j += 1){
-                .field__cell.field__cell_dead.js-field__cell.js-field__cell_dead
-            -}
-        -}

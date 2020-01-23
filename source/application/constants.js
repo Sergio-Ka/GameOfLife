@@ -1,9 +1,0 @@
-export const DEAD_CELL = 0;
-export const ALIVE_CELL = 1;
-export const MIN_SIZE_OF_FIELD = 3;
-export const DEFAULT_SIZE_OF_FIELD = 50;
-export const INITIAL_NUMBER_OF_GENERATION = 1;
-export const MAX_SUM_OF_ALIVE_NEIGHBOURS = 4;
-export const MIN_SUM_OF_ALIVE_NEIGHBOURS = 3;
-export const STEP_OF_DELAY = 100;
-export const MAX_SPEED = 10;
